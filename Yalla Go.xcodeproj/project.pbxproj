@@ -1,0 +1,1026 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1E251A5E2D4D111800FE1206 /* LocationSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E251A5D2D4D111800FE1206 /* LocationSearchView.swift */; };
+		1E251A612D4D327400FE1206 /* LocationSearchResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E251A602D4D327400FE1206 /* LocationSearchResultCell.swift */; };
+		1E251A632D4D5A0400FE1206 /* LocationSearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E251A622D4D5A0400FE1206 /* LocationSearchViewModel.swift */; };
+		1E4C38552C91E90C006AB83B /* Yalla_GoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4C38542C91E90C006AB83B /* Yalla_GoApp.swift */; };
+		1E4C38592C91E90E006AB83B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1E4C38582C91E90E006AB83B /* Assets.xcassets */; };
+		1E4C385C2C91E90E006AB83B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1E4C385B2C91E90E006AB83B /* Preview Assets.xcassets */; };
+		1E4C386B2C91EA79006AB83B /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4C386A2C91EA79006AB83B /* HomeView.swift */; };
+		1E4C386D2C926DB5006AB83B /* YallaMapViewRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4C386C2C926DB5006AB83B /* YallaMapViewRepresentable.swift */; };
+		1E4C386F2C93C37C006AB83B /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4C386E2C93C37C006AB83B /* LocationManager.swift */; };
+		1E7D95012D93B897008D9FC9 /* Double.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E7D95002D93B897008D9FC9 /* Double.swift */; };
+		1E9131902D733D5B004C386F /* MapViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E91318F2D733D5B004C386F /* MapViewState.swift */; };
+		1EA2B90B2D4BFFFD00440D86 /* MapActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA2B90A2D4BFFFD00440D86 /* MapActionButton.swift */; };
+		1EA6E3B02D9CAF6D00F8E47A /* YallaGoLocation .swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA6E3AF2D9CAF6D00F8E47A /* YallaGoLocation .swift */; };
+		1EBCD6AA2D7D2078002D1B8D /* RideRequestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBCD6A92D7D2078002D1B8D /* RideRequestView.swift */; };
+		1EBCD6AC2D85A137002D1B8D /* RideType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBCD6AB2D85A137002D1B8D /* RideType.swift */; };
+		1EBCF7DF2D4BC11F00BDFBE8 /* LocationSearchActivationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBCF7DE2D4BC11F00BDFBE8 /* LocationSearchActivationView.swift */; };
+		B1329C353019752B007D8AA6 /* RouteRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329C343019752B007D8AA6 /* RouteRepository.swift */; };
+		B1329C3730197676007D8AA6 /* LocationUpdatePolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329C3630197676007D8AA6 /* LocationUpdatePolicy.swift */; };
+		B1329C4130198018007D8AA6 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329C4030198018007D8AA6 /* User.swift */; };
+		B1329C433019801A007D8AA6 /* RegistrationDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329C423019801A007D8AA6 /* RegistrationDetails.swift */; };
+		B1329C453019801E007D8AA6 /* AuthenticationError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329C443019801E007D8AA6 /* AuthenticationError.swift */; };
+		B1329C4730198022007D8AA6 /* AuthenticationRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329C4630198022007D8AA6 /* AuthenticationRepository.swift */; };
+		B1329C4930198029007D8AA6 /* LoginUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329C4830198029007D8AA6 /* LoginUseCase.swift */; };
+		B1329C4B3019802D007D8AA6 /* RegisterUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329C4A3019802D007D8AA6 /* RegisterUseCase.swift */; };
+		B1329C4D30198030007D8AA6 /* LogoutUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329C4C30198030007D8AA6 /* LogoutUseCase.swift */; };
+		B1329C4F30198032007D8AA6 /* GetCurrentUserUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329C4E30198032007D8AA6 /* GetCurrentUserUseCase.swift */; };
+		B1329C513019804F007D8AA6 /* MockAuthenticationRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329C503019804F007D8AA6 /* MockAuthenticationRepository.swift */; };
+		B1329C57301981A3007D8AA6 /* AuthInputValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329C56301981A3007D8AA6 /* AuthInputValidator.swift */; };
+		B1329C59301981A7007D8AA6 /* AuthErrorPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329C58301981A7007D8AA6 /* AuthErrorPresenter.swift */; };
+		B1329C5B301981B2007D8AA6 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329C5A301981B2007D8AA6 /* LoginViewModel.swift */; };
+		B1329C5D301981BB007D8AA6 /* RegisterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329C5C301981BB007D8AA6 /* RegisterViewModel.swift */; };
+		B1329C61301982C7007D8AA6 /* AuthenticationDependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329C60301982C7007D8AA6 /* AuthenticationDependencies.swift */; };
+		B1329C63301982D3007D8AA6 /* AuthTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329C62301982D3007D8AA6 /* AuthTextField.swift */; };
+		B1329C65301982D8007D8AA6 /* AuthPrimaryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329C64301982D8007D8AA6 /* AuthPrimaryButton.swift */; };
+		B1329C67301982DE007D8AA6 /* AuthMessageBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329C66301982DE007D8AA6 /* AuthMessageBanner.swift */; };
+		B1329C69301982F8007D8AA6 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329C68301982F8007D8AA6 /* LoginView.swift */; };
+		B1329C6B30198304007D8AA6 /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329C6A30198304007D8AA6 /* RegisterView.swift */; };
+		B1329C6D3019830B007D8AA6 /* ForgotPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329C6C3019830B007D8AA6 /* ForgotPasswordView.swift */; };
+		B1329C6F3019830F007D8AA6 /* AuthenticationRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329C6E3019830F007D8AA6 /* AuthenticationRootView.swift */; };
+		B1329C7C301983B5007D8AA6 /* ProfileUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329C7B301983B5007D8AA6 /* ProfileUpdate.swift */; };
+		B1329C7E301983B8007D8AA6 /* ProfileError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329C7D301983B8007D8AA6 /* ProfileError.swift */; };
+		B1329C80301983BB007D8AA6 /* ProfileRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329C7F301983BB007D8AA6 /* ProfileRepository.swift */; };
+		B1329C82301983BD007D8AA6 /* GetProfileUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329C81301983BD007D8AA6 /* GetProfileUseCase.swift */; };
+		B1329C84301983BF007D8AA6 /* UpdateProfileUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329C83301983BF007D8AA6 /* UpdateProfileUseCase.swift */; };
+		B1329C86301983CB007D8AA6 /* MockProfileRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329C85301983CB007D8AA6 /* MockProfileRepository.swift */; };
+		B1329C88301983CE007D8AA6 /* ProfileErrorPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329C87301983CE007D8AA6 /* ProfileErrorPresenter.swift */; };
+		B1329C8A301983DB007D8AA6 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329C89301983DB007D8AA6 /* ProfileViewModel.swift */; };
+		B1329C8E3019DE94007D8AA6 /* ProfileDependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329C8D3019DE94007D8AA6 /* ProfileDependencies.swift */; };
+		B1329C903019DEBB007D8AA6 /* ProfileAvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329C8F3019DEBB007D8AA6 /* ProfileAvatarView.swift */; };
+		B1329C923019DEBC007D8AA6 /* ProfileInfoRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329C913019DEBC007D8AA6 /* ProfileInfoRow.swift */; };
+		B1329C943019DED4007D8AA6 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329C933019DED4007D8AA6 /* ProfileView.swift */; };
+		B1329C963019DEDE007D8AA6 /* EditProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329C953019DEDE007D8AA6 /* EditProfileView.swift */; };
+		B1329CA33019E109007D8AA6 /* TripCoordinate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329CA23019E109007D8AA6 /* TripCoordinate.swift */; };
+		B1329CA53019E10B007D8AA6 /* TripStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329CA43019E10B007D8AA6 /* TripStatus.swift */; };
+		B1329CA73019E10F007D8AA6 /* Trip.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329CA63019E10F007D8AA6 /* Trip.swift */; };
+		B1329CA93019E111007D8AA6 /* TripHistoryError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329CA83019E111007D8AA6 /* TripHistoryError.swift */; };
+		B1329CAB3019E114007D8AA6 /* TripRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329CAA3019E114007D8AA6 /* TripRepository.swift */; };
+		B1329CAD3019E117007D8AA6 /* GetTripHistoryUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329CAC3019E117007D8AA6 /* GetTripHistoryUseCase.swift */; };
+		B1329CAF3019E127007D8AA6 /* MockTripRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329CAE3019E127007D8AA6 /* MockTripRepository.swift */; };
+		B1329CB13019E12A007D8AA6 /* TripHistoryErrorPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329CB03019E12A007D8AA6 /* TripHistoryErrorPresenter.swift */; };
+		B1329CB33019E139007D8AA6 /* TripHistoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329CB23019E139007D8AA6 /* TripHistoryViewModel.swift */; };
+		B1329CB7301A261A007D8AA6 /* TripHistoryDependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329CB6301A261A007D8AA6 /* TripHistoryDependencies.swift */; };
+		B1329CB9301A2620007D8AA6 /* TripFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329CB8301A2620007D8AA6 /* TripFormatter.swift */; };
+		B1329CBB301A262C007D8AA6 /* TripCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329CBA301A262C007D8AA6 /* TripCard.swift */; };
+		B1329CBD301A263A007D8AA6 /* TripDetailsPlaceholderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329CBC301A263A007D8AA6 /* TripDetailsPlaceholderView.swift */; };
+		B1329CBF301A2647007D8AA6 /* TripHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329CBE301A2647007D8AA6 /* TripHistoryView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		1E251A5D2D4D111800FE1206 /* LocationSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchView.swift; sourceTree = "<group>"; };
+		1E251A602D4D327400FE1206 /* LocationSearchResultCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchResultCell.swift; sourceTree = "<group>"; };
+		1E251A622D4D5A0400FE1206 /* LocationSearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchViewModel.swift; sourceTree = "<group>"; };
+		1E4C38512C91E90C006AB83B /* Yalla Go.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Yalla Go.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1E4C38542C91E90C006AB83B /* Yalla_GoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Yalla_GoApp.swift; sourceTree = "<group>"; };
+		1E4C38582C91E90E006AB83B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		1E4C385B2C91E90E006AB83B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		1E4C386A2C91EA79006AB83B /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		1E4C386C2C926DB5006AB83B /* YallaMapViewRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YallaMapViewRepresentable.swift; sourceTree = "<group>"; };
+		1E4C386E2C93C37C006AB83B /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		1E7D95002D93B897008D9FC9 /* Double.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Double.swift; sourceTree = "<group>"; };
+		1E91318F2D733D5B004C386F /* MapViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewState.swift; sourceTree = "<group>"; };
+		1EA2B90A2D4BFFFD00440D86 /* MapActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapActionButton.swift; sourceTree = "<group>"; };
+		1EA6E3AF2D9CAF6D00F8E47A /* YallaGoLocation .swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "YallaGoLocation .swift"; sourceTree = "<group>"; };
+		1EBCD6A92D7D2078002D1B8D /* RideRequestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RideRequestView.swift; sourceTree = "<group>"; };
+		1EBCD6AB2D85A137002D1B8D /* RideType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RideType.swift; sourceTree = "<group>"; };
+		1EBCD6AD2D85C30D002D1B8D /* Yalla-Go-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Yalla-Go-Info.plist"; sourceTree = SOURCE_ROOT; };
+		1EBCF7DE2D4BC11F00BDFBE8 /* LocationSearchActivationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchActivationView.swift; sourceTree = "<group>"; };
+		B1329C343019752B007D8AA6 /* RouteRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteRepository.swift; sourceTree = "<group>"; };
+		B1329C3630197676007D8AA6 /* LocationUpdatePolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationUpdatePolicy.swift; sourceTree = "<group>"; };
+		B1329C4030198018007D8AA6 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		B1329C423019801A007D8AA6 /* RegistrationDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationDetails.swift; sourceTree = "<group>"; };
+		B1329C443019801E007D8AA6 /* AuthenticationError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationError.swift; sourceTree = "<group>"; };
+		B1329C4630198022007D8AA6 /* AuthenticationRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationRepository.swift; sourceTree = "<group>"; };
+		B1329C4830198029007D8AA6 /* LoginUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginUseCase.swift; sourceTree = "<group>"; };
+		B1329C4A3019802D007D8AA6 /* RegisterUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterUseCase.swift; sourceTree = "<group>"; };
+		B1329C4C30198030007D8AA6 /* LogoutUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoutUseCase.swift; sourceTree = "<group>"; };
+		B1329C4E30198032007D8AA6 /* GetCurrentUserUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCurrentUserUseCase.swift; sourceTree = "<group>"; };
+		B1329C503019804F007D8AA6 /* MockAuthenticationRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAuthenticationRepository.swift; sourceTree = "<group>"; };
+		B1329C56301981A3007D8AA6 /* AuthInputValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthInputValidator.swift; sourceTree = "<group>"; };
+		B1329C58301981A7007D8AA6 /* AuthErrorPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthErrorPresenter.swift; sourceTree = "<group>"; };
+		B1329C5A301981B2007D8AA6 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
+		B1329C5C301981BB007D8AA6 /* RegisterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewModel.swift; sourceTree = "<group>"; };
+		B1329C60301982C7007D8AA6 /* AuthenticationDependencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationDependencies.swift; sourceTree = "<group>"; };
+		B1329C62301982D3007D8AA6 /* AuthTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthTextField.swift; sourceTree = "<group>"; };
+		B1329C64301982D8007D8AA6 /* AuthPrimaryButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthPrimaryButton.swift; sourceTree = "<group>"; };
+		B1329C66301982DE007D8AA6 /* AuthMessageBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthMessageBanner.swift; sourceTree = "<group>"; };
+		B1329C68301982F8007D8AA6 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		B1329C6A30198304007D8AA6 /* RegisterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
+		B1329C6C3019830B007D8AA6 /* ForgotPasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPasswordView.swift; sourceTree = "<group>"; };
+		B1329C6E3019830F007D8AA6 /* AuthenticationRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationRootView.swift; sourceTree = "<group>"; };
+		B1329C7B301983B5007D8AA6 /* ProfileUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileUpdate.swift; sourceTree = "<group>"; };
+		B1329C7D301983B8007D8AA6 /* ProfileError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileError.swift; sourceTree = "<group>"; };
+		B1329C7F301983BB007D8AA6 /* ProfileRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileRepository.swift; sourceTree = "<group>"; };
+		B1329C81301983BD007D8AA6 /* GetProfileUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetProfileUseCase.swift; sourceTree = "<group>"; };
+		B1329C83301983BF007D8AA6 /* UpdateProfileUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateProfileUseCase.swift; sourceTree = "<group>"; };
+		B1329C85301983CB007D8AA6 /* MockProfileRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockProfileRepository.swift; sourceTree = "<group>"; };
+		B1329C87301983CE007D8AA6 /* ProfileErrorPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileErrorPresenter.swift; sourceTree = "<group>"; };
+		B1329C89301983DB007D8AA6 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
+		B1329C8D3019DE94007D8AA6 /* ProfileDependencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDependencies.swift; sourceTree = "<group>"; };
+		B1329C8F3019DEBB007D8AA6 /* ProfileAvatarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileAvatarView.swift; sourceTree = "<group>"; };
+		B1329C913019DEBC007D8AA6 /* ProfileInfoRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileInfoRow.swift; sourceTree = "<group>"; };
+		B1329C933019DED4007D8AA6 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		B1329C953019DEDE007D8AA6 /* EditProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileView.swift; sourceTree = "<group>"; };
+		B1329CA23019E109007D8AA6 /* TripCoordinate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripCoordinate.swift; sourceTree = "<group>"; };
+		B1329CA43019E10B007D8AA6 /* TripStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripStatus.swift; sourceTree = "<group>"; };
+		B1329CA63019E10F007D8AA6 /* Trip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Trip.swift; sourceTree = "<group>"; };
+		B1329CA83019E111007D8AA6 /* TripHistoryError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripHistoryError.swift; sourceTree = "<group>"; };
+		B1329CAA3019E114007D8AA6 /* TripRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripRepository.swift; sourceTree = "<group>"; };
+		B1329CAC3019E117007D8AA6 /* GetTripHistoryUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetTripHistoryUseCase.swift; sourceTree = "<group>"; };
+		B1329CAE3019E127007D8AA6 /* MockTripRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockTripRepository.swift; sourceTree = "<group>"; };
+		B1329CB03019E12A007D8AA6 /* TripHistoryErrorPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripHistoryErrorPresenter.swift; sourceTree = "<group>"; };
+		B1329CB23019E139007D8AA6 /* TripHistoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripHistoryViewModel.swift; sourceTree = "<group>"; };
+		B1329CB6301A261A007D8AA6 /* TripHistoryDependencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripHistoryDependencies.swift; sourceTree = "<group>"; };
+		B1329CB8301A2620007D8AA6 /* TripFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripFormatter.swift; sourceTree = "<group>"; };
+		B1329CBA301A262C007D8AA6 /* TripCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripCard.swift; sourceTree = "<group>"; };
+		B1329CBC301A263A007D8AA6 /* TripDetailsPlaceholderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripDetailsPlaceholderView.swift; sourceTree = "<group>"; };
+		B1329CBE301A2647007D8AA6 /* TripHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripHistoryView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1E4C384E2C91E90C006AB83B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1E4C38482C91E90C006AB83B = {
+			isa = PBXGroup;
+			children = (
+				1E4C38532C91E90C006AB83B /* Yalla Go */,
+				1E4C38522C91E90C006AB83B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		1E4C38522C91E90C006AB83B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1E4C38512C91E90C006AB83B /* Yalla Go.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1E4C38532C91E90C006AB83B /* Yalla Go */ = {
+			isa = PBXGroup;
+			children = (
+				1EBCD6AD2D85C30D002D1B8D /* Yalla-Go-Info.plist */,
+				1E4C38642C91E937006AB83B /* App */,
+				1E4C38632C91E936006AB83B /* Core */,
+				1E4C38622C91E935006AB83B /* Extension */,
+				1E4C38662C91E9CB006AB83B /* Managers */,
+				1E4C38652C91E9C9006AB83B /* Models */,
+				1E4C38582C91E90E006AB83B /* Assets.xcassets */,
+				1E4C385A2C91E90E006AB83B /* Preview Content */,
+				B1329C3830198002007D8AA6 /* Authentication */,
+				B1329C70301983A2007D8AA6 /* Profile */,
+				B1329C973019E0F6007D8AA6 /* TripHistory */,
+			);
+			path = "Yalla Go";
+			sourceTree = "<group>";
+		};
+		1E4C385A2C91E90E006AB83B /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				1E4C385B2C91E90E006AB83B /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		1E4C38622C91E935006AB83B /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				1E7D95002D93B897008D9FC9 /* Double.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
+		1E4C38632C91E936006AB83B /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				1EB67B3B2D79171A00B21142 /* Trips */,
+				1EBCF7DB2D4BB05600BDFBE8 /* LocationSearch */,
+				1EBCF7DA2D4BB03200BDFBE8 /* Home */,
+				B1329C333019752B007D8AA6 /* Repositories */,
+			);
+			name = Core;
+			path = "New Group/Core";
+			sourceTree = "<group>";
+		};
+		1E4C38642C91E937006AB83B /* App */ = {
+			isa = PBXGroup;
+			children = (
+				1E4C38542C91E90C006AB83B /* Yalla_GoApp.swift */,
+			);
+			name = App;
+			path = "New Group/New Group/App";
+			sourceTree = "<group>";
+		};
+		1E4C38652C91E9C9006AB83B /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				1E91318F2D733D5B004C386F /* MapViewState.swift */,
+				1EBCD6AB2D85A137002D1B8D /* RideType.swift */,
+				1EA6E3AF2D9CAF6D00F8E47A /* YallaGoLocation .swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		1E4C38662C91E9CB006AB83B /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				1E4C386E2C93C37C006AB83B /* LocationManager.swift */,
+				B1329C3630197676007D8AA6 /* LocationUpdatePolicy.swift */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
+		1E4C38682C91EA1D006AB83B /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				1E4C386A2C91EA79006AB83B /* HomeView.swift */,
+				1E4C386C2C926DB5006AB83B /* YallaMapViewRepresentable.swift */,
+				1EA2B90A2D4BFFFD00440D86 /* MapActionButton.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		1E4C38692C91EA1E006AB83B /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		1EB67B3B2D79171A00B21142 /* Trips */ = {
+			isa = PBXGroup;
+			children = (
+				1EBCD6A92D7D2078002D1B8D /* RideRequestView.swift */,
+			);
+			path = Trips;
+			sourceTree = "<group>";
+		};
+		1EBCF7DA2D4BB03200BDFBE8 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				1E4C38692C91EA1E006AB83B /* ViewModel */,
+				1E4C38682C91EA1D006AB83B /* Views */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		1EBCF7DB2D4BB05600BDFBE8 /* LocationSearch */ = {
+			isa = PBXGroup;
+			children = (
+				1EBCF7DD2D4BC08F00BDFBE8 /* ViewModel */,
+				1EBCF7DC2D4BC07400BDFBE8 /* View */,
+			);
+			path = LocationSearch;
+			sourceTree = "<group>";
+		};
+		1EBCF7DC2D4BC07400BDFBE8 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				1EBCF7DE2D4BC11F00BDFBE8 /* LocationSearchActivationView.swift */,
+				1E251A5D2D4D111800FE1206 /* LocationSearchView.swift */,
+				1E251A602D4D327400FE1206 /* LocationSearchResultCell.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		1EBCF7DD2D4BC08F00BDFBE8 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				1E251A622D4D5A0400FE1206 /* LocationSearchViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		B1329C333019752B007D8AA6 /* Repositories */ = {
+			isa = PBXGroup;
+			children = (
+				B1329C343019752B007D8AA6 /* RouteRepository.swift */,
+			);
+			path = Repositories;
+			sourceTree = "<group>";
+		};
+		B1329C3830198002007D8AA6 /* Authentication */ = {
+			isa = PBXGroup;
+			children = (
+				B1329C3930198007007D8AA6 /* Domain */,
+				B1329C3A30198007007D8AA6 /* Data */,
+				B1329C5230198190007D8AA6 /* Presentation */,
+			);
+			path = Authentication;
+			sourceTree = "<group>";
+		};
+		B1329C3930198007007D8AA6 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				B1329C3B3019800B007D8AA6 /* Models */,
+				B1329C3C3019800C007D8AA6 /* Errors */,
+				B1329C3D3019800D007D8AA6 /* Repositories */,
+				B1329C3E3019800D007D8AA6 /* UseCases */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		B1329C3A30198007007D8AA6 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				B1329C3F3019800E007D8AA6 /* Mock */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		B1329C3B3019800B007D8AA6 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B1329C4030198018007D8AA6 /* User.swift */,
+				B1329C423019801A007D8AA6 /* RegistrationDetails.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		B1329C3C3019800C007D8AA6 /* Errors */ = {
+			isa = PBXGroup;
+			children = (
+				B1329C443019801E007D8AA6 /* AuthenticationError.swift */,
+			);
+			path = Errors;
+			sourceTree = "<group>";
+		};
+		B1329C3D3019800D007D8AA6 /* Repositories */ = {
+			isa = PBXGroup;
+			children = (
+				B1329C4630198022007D8AA6 /* AuthenticationRepository.swift */,
+			);
+			path = Repositories;
+			sourceTree = "<group>";
+		};
+		B1329C3E3019800D007D8AA6 /* UseCases */ = {
+			isa = PBXGroup;
+			children = (
+				B1329C4830198029007D8AA6 /* LoginUseCase.swift */,
+				B1329C4A3019802D007D8AA6 /* RegisterUseCase.swift */,
+				B1329C4C30198030007D8AA6 /* LogoutUseCase.swift */,
+				B1329C4E30198032007D8AA6 /* GetCurrentUserUseCase.swift */,
+			);
+			path = UseCases;
+			sourceTree = "<group>";
+		};
+		B1329C3F3019800E007D8AA6 /* Mock */ = {
+			isa = PBXGroup;
+			children = (
+				B1329C503019804F007D8AA6 /* MockAuthenticationRepository.swift */,
+			);
+			path = Mock;
+			sourceTree = "<group>";
+		};
+		B1329C5230198190007D8AA6 /* Presentation */ = {
+			isa = PBXGroup;
+			children = (
+				B1329C5330198194007D8AA6 /* ViewModels */,
+				B1329C5430198195007D8AA6 /* Validation */,
+				B1329C5530198195007D8AA6 /* Support */,
+				B1329C5E301982C0007D8AA6 /* Views */,
+				B1329C5F301982C0007D8AA6 /* Components */,
+			);
+			path = Presentation;
+			sourceTree = "<group>";
+		};
+		B1329C5330198194007D8AA6 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				B1329C5A301981B2007D8AA6 /* LoginViewModel.swift */,
+				B1329C5C301981BB007D8AA6 /* RegisterViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		B1329C5430198195007D8AA6 /* Validation */ = {
+			isa = PBXGroup;
+			children = (
+				B1329C56301981A3007D8AA6 /* AuthInputValidator.swift */,
+			);
+			path = Validation;
+			sourceTree = "<group>";
+		};
+		B1329C5530198195007D8AA6 /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				B1329C58301981A7007D8AA6 /* AuthErrorPresenter.swift */,
+				B1329C60301982C7007D8AA6 /* AuthenticationDependencies.swift */,
+			);
+			path = Support;
+			sourceTree = "<group>";
+		};
+		B1329C5E301982C0007D8AA6 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				B1329C68301982F8007D8AA6 /* LoginView.swift */,
+				B1329C6A30198304007D8AA6 /* RegisterView.swift */,
+				B1329C6C3019830B007D8AA6 /* ForgotPasswordView.swift */,
+				B1329C6E3019830F007D8AA6 /* AuthenticationRootView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		B1329C5F301982C0007D8AA6 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				B1329C62301982D3007D8AA6 /* AuthTextField.swift */,
+				B1329C64301982D8007D8AA6 /* AuthPrimaryButton.swift */,
+				B1329C66301982DE007D8AA6 /* AuthMessageBanner.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		B1329C70301983A2007D8AA6 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				B1329C71301983A6007D8AA6 /* Domain */,
+				B1329C72301983A6007D8AA6 /* Data */,
+				B1329C73301983A7007D8AA6 /* Presentation */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
+		B1329C71301983A6007D8AA6 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				B1329C74301983AA007D8AA6 /* Models */,
+				B1329C75301983AB007D8AA6 /* Errors */,
+				B1329C76301983AB007D8AA6 /* Repositories */,
+				B1329C77301983AC007D8AA6 /* UseCases */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		B1329C72301983A6007D8AA6 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				B1329C78301983AD007D8AA6 /* Mock */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		B1329C73301983A7007D8AA6 /* Presentation */ = {
+			isa = PBXGroup;
+			children = (
+				B1329C79301983AE007D8AA6 /* ViewModels */,
+				B1329C7A301983AE007D8AA6 /* Support */,
+				B1329C8B3019DE8A007D8AA6 /* Views */,
+				B1329C8C3019DE8A007D8AA6 /* Components */,
+			);
+			path = Presentation;
+			sourceTree = "<group>";
+		};
+		B1329C74301983AA007D8AA6 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B1329C7B301983B5007D8AA6 /* ProfileUpdate.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		B1329C75301983AB007D8AA6 /* Errors */ = {
+			isa = PBXGroup;
+			children = (
+				B1329C7D301983B8007D8AA6 /* ProfileError.swift */,
+			);
+			path = Errors;
+			sourceTree = "<group>";
+		};
+		B1329C76301983AB007D8AA6 /* Repositories */ = {
+			isa = PBXGroup;
+			children = (
+				B1329C7F301983BB007D8AA6 /* ProfileRepository.swift */,
+			);
+			path = Repositories;
+			sourceTree = "<group>";
+		};
+		B1329C77301983AC007D8AA6 /* UseCases */ = {
+			isa = PBXGroup;
+			children = (
+				B1329C81301983BD007D8AA6 /* GetProfileUseCase.swift */,
+				B1329C83301983BF007D8AA6 /* UpdateProfileUseCase.swift */,
+			);
+			path = UseCases;
+			sourceTree = "<group>";
+		};
+		B1329C78301983AD007D8AA6 /* Mock */ = {
+			isa = PBXGroup;
+			children = (
+				B1329C85301983CB007D8AA6 /* MockProfileRepository.swift */,
+			);
+			path = Mock;
+			sourceTree = "<group>";
+		};
+		B1329C79301983AE007D8AA6 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				B1329C89301983DB007D8AA6 /* ProfileViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		B1329C7A301983AE007D8AA6 /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				B1329C87301983CE007D8AA6 /* ProfileErrorPresenter.swift */,
+				B1329C8D3019DE94007D8AA6 /* ProfileDependencies.swift */,
+			);
+			path = Support;
+			sourceTree = "<group>";
+		};
+		B1329C8B3019DE8A007D8AA6 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				B1329C933019DED4007D8AA6 /* ProfileView.swift */,
+				B1329C953019DEDE007D8AA6 /* EditProfileView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		B1329C8C3019DE8A007D8AA6 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				B1329C8F3019DEBB007D8AA6 /* ProfileAvatarView.swift */,
+				B1329C913019DEBC007D8AA6 /* ProfileInfoRow.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		B1329C973019E0F6007D8AA6 /* TripHistory */ = {
+			isa = PBXGroup;
+			children = (
+				B1329C983019E0FA007D8AA6 /* Domain */,
+				B1329C993019E0FB007D8AA6 /* Data */,
+				B1329C9A3019E0FB007D8AA6 /* Presentation */,
+			);
+			path = TripHistory;
+			sourceTree = "<group>";
+		};
+		B1329C983019E0FA007D8AA6 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				B1329C9B3019E0FE007D8AA6 /* Models */,
+				B1329C9C3019E0FF007D8AA6 /* Errors */,
+				B1329C9D3019E100007D8AA6 /* Repositories */,
+				B1329C9E3019E101007D8AA6 /* UseCases */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		B1329C993019E0FB007D8AA6 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				B1329C9F3019E101007D8AA6 /* Mock */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		B1329C9A3019E0FB007D8AA6 /* Presentation */ = {
+			isa = PBXGroup;
+			children = (
+				B1329CA03019E102007D8AA6 /* ViewModels */,
+				B1329CA13019E103007D8AA6 /* Support */,
+				B1329CB4301A2612007D8AA6 /* Views */,
+				B1329CB5301A2613007D8AA6 /* Components */,
+			);
+			path = Presentation;
+			sourceTree = "<group>";
+		};
+		B1329C9B3019E0FE007D8AA6 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B1329CA23019E109007D8AA6 /* TripCoordinate.swift */,
+				B1329CA43019E10B007D8AA6 /* TripStatus.swift */,
+				B1329CA63019E10F007D8AA6 /* Trip.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		B1329C9C3019E0FF007D8AA6 /* Errors */ = {
+			isa = PBXGroup;
+			children = (
+				B1329CA83019E111007D8AA6 /* TripHistoryError.swift */,
+			);
+			path = Errors;
+			sourceTree = "<group>";
+		};
+		B1329C9D3019E100007D8AA6 /* Repositories */ = {
+			isa = PBXGroup;
+			children = (
+				B1329CAA3019E114007D8AA6 /* TripRepository.swift */,
+			);
+			path = Repositories;
+			sourceTree = "<group>";
+		};
+		B1329C9E3019E101007D8AA6 /* UseCases */ = {
+			isa = PBXGroup;
+			children = (
+				B1329CAC3019E117007D8AA6 /* GetTripHistoryUseCase.swift */,
+			);
+			path = UseCases;
+			sourceTree = "<group>";
+		};
+		B1329C9F3019E101007D8AA6 /* Mock */ = {
+			isa = PBXGroup;
+			children = (
+				B1329CAE3019E127007D8AA6 /* MockTripRepository.swift */,
+			);
+			path = Mock;
+			sourceTree = "<group>";
+		};
+		B1329CA03019E102007D8AA6 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				B1329CB23019E139007D8AA6 /* TripHistoryViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		B1329CA13019E103007D8AA6 /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				B1329CB03019E12A007D8AA6 /* TripHistoryErrorPresenter.swift */,
+				B1329CB6301A261A007D8AA6 /* TripHistoryDependencies.swift */,
+				B1329CB8301A2620007D8AA6 /* TripFormatter.swift */,
+			);
+			path = Support;
+			sourceTree = "<group>";
+		};
+		B1329CB4301A2612007D8AA6 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				B1329CBC301A263A007D8AA6 /* TripDetailsPlaceholderView.swift */,
+				B1329CBE301A2647007D8AA6 /* TripHistoryView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		B1329CB5301A2613007D8AA6 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				B1329CBA301A262C007D8AA6 /* TripCard.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1E4C38502C91E90C006AB83B /* Yalla Go */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1E4C385F2C91E90E006AB83B /* Build configuration list for PBXNativeTarget "Yalla Go" */;
+			buildPhases = (
+				1E4C384D2C91E90C006AB83B /* Sources */,
+				1E4C384E2C91E90C006AB83B /* Frameworks */,
+				1E4C384F2C91E90C006AB83B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Yalla Go";
+			productName = "Yalla Go";
+			productReference = 1E4C38512C91E90C006AB83B /* Yalla Go.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1E4C38492C91E90C006AB83B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1340;
+				LastUpgradeCheck = 1340;
+				TargetAttributes = {
+					1E4C38502C91E90C006AB83B = {
+						CreatedOnToolsVersion = 13.4;
+					};
+				};
+			};
+			buildConfigurationList = 1E4C384C2C91E90C006AB83B /* Build configuration list for PBXProject "Yalla Go" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 1E4C38482C91E90C006AB83B;
+			productRefGroup = 1E4C38522C91E90C006AB83B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1E4C38502C91E90C006AB83B /* Yalla Go */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1E4C384F2C91E90C006AB83B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1E4C385C2C91E90E006AB83B /* Preview Assets.xcassets in Resources */,
+				1E4C38592C91E90E006AB83B /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1E4C384D2C91E90C006AB83B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B1329CB33019E139007D8AA6 /* TripHistoryViewModel.swift in Sources */,
+				1E251A632D4D5A0400FE1206 /* LocationSearchViewModel.swift in Sources */,
+				B1329C3730197676007D8AA6 /* LocationUpdatePolicy.swift in Sources */,
+				B1329C7C301983B5007D8AA6 /* ProfileUpdate.swift in Sources */,
+				B1329C80301983BB007D8AA6 /* ProfileRepository.swift in Sources */,
+				1E251A5E2D4D111800FE1206 /* LocationSearchView.swift in Sources */,
+				B1329C4D30198030007D8AA6 /* LogoutUseCase.swift in Sources */,
+				B1329C65301982D8007D8AA6 /* AuthPrimaryButton.swift in Sources */,
+				B1329C61301982C7007D8AA6 /* AuthenticationDependencies.swift in Sources */,
+				B1329CA73019E10F007D8AA6 /* Trip.swift in Sources */,
+				1E4C386F2C93C37C006AB83B /* LocationManager.swift in Sources */,
+				B1329C88301983CE007D8AA6 /* ProfileErrorPresenter.swift in Sources */,
+				1EBCD6AA2D7D2078002D1B8D /* RideRequestView.swift in Sources */,
+				B1329CA33019E109007D8AA6 /* TripCoordinate.swift in Sources */,
+				B1329C6F3019830F007D8AA6 /* AuthenticationRootView.swift in Sources */,
+				B1329C8E3019DE94007D8AA6 /* ProfileDependencies.swift in Sources */,
+				B1329CB7301A261A007D8AA6 /* TripHistoryDependencies.swift in Sources */,
+				B1329CB13019E12A007D8AA6 /* TripHistoryErrorPresenter.swift in Sources */,
+				B1329C63301982D3007D8AA6 /* AuthTextField.swift in Sources */,
+				1E7D95012D93B897008D9FC9 /* Double.swift in Sources */,
+				B1329C69301982F8007D8AA6 /* LoginView.swift in Sources */,
+				1E9131902D733D5B004C386F /* MapViewState.swift in Sources */,
+				B1329C4130198018007D8AA6 /* User.swift in Sources */,
+				B1329C4F30198032007D8AA6 /* GetCurrentUserUseCase.swift in Sources */,
+				B1329C4B3019802D007D8AA6 /* RegisterUseCase.swift in Sources */,
+				B1329C923019DEBC007D8AA6 /* ProfileInfoRow.swift in Sources */,
+				B1329C513019804F007D8AA6 /* MockAuthenticationRepository.swift in Sources */,
+				1E4C38552C91E90C006AB83B /* Yalla_GoApp.swift in Sources */,
+				B1329CBF301A2647007D8AA6 /* TripHistoryView.swift in Sources */,
+				1EA2B90B2D4BFFFD00440D86 /* MapActionButton.swift in Sources */,
+				1E4C386B2C91EA79006AB83B /* HomeView.swift in Sources */,
+				B1329C59301981A7007D8AA6 /* AuthErrorPresenter.swift in Sources */,
+				B1329C943019DED4007D8AA6 /* ProfileView.swift in Sources */,
+				B1329CBD301A263A007D8AA6 /* TripDetailsPlaceholderView.swift in Sources */,
+				B1329CB9301A2620007D8AA6 /* TripFormatter.swift in Sources */,
+				B1329CAB3019E114007D8AA6 /* TripRepository.swift in Sources */,
+				B1329C4930198029007D8AA6 /* LoginUseCase.swift in Sources */,
+				B1329CA93019E111007D8AA6 /* TripHistoryError.swift in Sources */,
+				B1329C433019801A007D8AA6 /* RegistrationDetails.swift in Sources */,
+				B1329C453019801E007D8AA6 /* AuthenticationError.swift in Sources */,
+				B1329C4730198022007D8AA6 /* AuthenticationRepository.swift in Sources */,
+				B1329C5B301981B2007D8AA6 /* LoginViewModel.swift in Sources */,
+				B1329C84301983BF007D8AA6 /* UpdateProfileUseCase.swift in Sources */,
+				B1329C353019752B007D8AA6 /* RouteRepository.swift in Sources */,
+				1E4C386D2C926DB5006AB83B /* YallaMapViewRepresentable.swift in Sources */,
+				B1329C57301981A3007D8AA6 /* AuthInputValidator.swift in Sources */,
+				B1329CAD3019E117007D8AA6 /* GetTripHistoryUseCase.swift in Sources */,
+				B1329C86301983CB007D8AA6 /* MockProfileRepository.swift in Sources */,
+				1EBCF7DF2D4BC11F00BDFBE8 /* LocationSearchActivationView.swift in Sources */,
+				B1329C67301982DE007D8AA6 /* AuthMessageBanner.swift in Sources */,
+				B1329C82301983BD007D8AA6 /* GetProfileUseCase.swift in Sources */,
+				B1329C963019DEDE007D8AA6 /* EditProfileView.swift in Sources */,
+				B1329CBB301A262C007D8AA6 /* TripCard.swift in Sources */,
+				B1329CAF3019E127007D8AA6 /* MockTripRepository.swift in Sources */,
+				1EA6E3B02D9CAF6D00F8E47A /* YallaGoLocation .swift in Sources */,
+				B1329C7E301983B8007D8AA6 /* ProfileError.swift in Sources */,
+				B1329C8A301983DB007D8AA6 /* ProfileViewModel.swift in Sources */,
+				B1329C903019DEBB007D8AA6 /* ProfileAvatarView.swift in Sources */,
+				B1329C6B30198304007D8AA6 /* RegisterView.swift in Sources */,
+				B1329C5D301981BB007D8AA6 /* RegisterViewModel.swift in Sources */,
+				1E251A612D4D327400FE1206 /* LocationSearchResultCell.swift in Sources */,
+				B1329C6D3019830B007D8AA6 /* ForgotPasswordView.swift in Sources */,
+				B1329CA53019E10B007D8AA6 /* TripStatus.swift in Sources */,
+				1EBCD6AC2D85A137002D1B8D /* RideType.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1E4C385D2C91E90E006AB83B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		1E4C385E2C91E90E006AB83B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		1E4C38602C91E90E006AB83B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Yalla Go/Preview Content\"";
+				DEVELOPMENT_TEAM = 938TSPJ2JL;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Yalla-Go-Info.plist";
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Please allow us to access yor location to find you nearby drivers and rides .";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.Yalla-Go.Yalla-Go";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		1E4C38612C91E90E006AB83B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Yalla Go/Preview Content\"";
+				DEVELOPMENT_TEAM = 938TSPJ2JL;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Yalla-Go-Info.plist";
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Please allow us to access yor location to find you nearby drivers and rides .";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.Yalla-Go.Yalla-Go";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1E4C384C2C91E90C006AB83B /* Build configuration list for PBXProject "Yalla Go" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1E4C385D2C91E90E006AB83B /* Debug */,
+				1E4C385E2C91E90E006AB83B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1E4C385F2C91E90E006AB83B /* Build configuration list for PBXNativeTarget "Yalla Go" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1E4C38602C91E90E006AB83B /* Debug */,
+				1E4C38612C91E90E006AB83B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 1E4C38492C91E90C006AB83B /* Project object */;
+}
