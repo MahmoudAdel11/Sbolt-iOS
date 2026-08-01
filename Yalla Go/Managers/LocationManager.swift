@@ -10,7 +10,9 @@ import CoreLocation
 class LocationManager : NSObject ,ObservableObject{
     private let locationManager = CLLocationManager()
     static let shared = LocationManager()
-    @Published var userLocation : CLLocationCoordinate2D?
+    /// Latest accepted user location. Owned by this manager (only its delegate
+    /// writes it) and always published on the main actor.
+    @Published private(set) var userLocation : CLLocationCoordinate2D?
 
     private let updatePolicy = LocationUpdatePolicy()
     private var lastAcceptedLocation: CLLocation?
@@ -33,6 +35,13 @@ extension LocationManager :CLLocationManagerDelegate{
               updatePolicy.shouldAccept(location, over: lastAcceptedLocation) else { return }
 
         lastAcceptedLocation = location
-        self.userLocation = location.coordinate
+
+        // Core Location may deliver delegate callbacks off the main thread. The
+        // policy bookkeeping above stays on the delegate thread; only the
+        // UI-observed @Published write is guaranteed onto the main actor.
+        let coordinate = location.coordinate
+        Task { @MainActor in
+            self.userLocation = coordinate
+        }
     }
 }

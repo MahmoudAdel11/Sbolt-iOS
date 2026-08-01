@@ -9,12 +9,14 @@ import SwiftUI
 
 @main
 struct Yalla_GoApp: App {
-    @StateObject var  locationViewModel = LocationSearchViewModel()
+    @StateObject private var locationViewModel = LocationSearchViewModel()
+    @StateObject private var session = AppSessionStore()
 
     var body: some Scene {
         WindowGroup {
-            HomeView()
+            RootView()
                 .environmentObject(locationViewModel)
+                .environmentObject(session)
         }
     }
 }

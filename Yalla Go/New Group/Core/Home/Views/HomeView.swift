@@ -39,7 +39,7 @@ struct HomeView: View {
                     .transition(.move(edge: .bottom))
             }
         }
-        .edgesIgnoringSafeArea(.bottom)
+        
         .onReceive(LocationManager.shared.$userLocation) {
                 location in
             if let location = location {

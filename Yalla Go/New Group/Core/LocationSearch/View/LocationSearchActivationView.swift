@@ -9,26 +9,24 @@ import SwiftUI
 
 struct LocationSearchActivationView: View {
     var body: some View {
-        HStack{
+        HStack {
             Rectangle()
                 .fill(Color.black)
-                // .padding(.horizontal) why white  ??????????????????????????
-                .frame(width: 8 , height: 8)
-                .padding(.horizontal)
+                .frame(width: 8, height: 8)
+                .padding(.leading)
 
-            Text("To Where ?")
+            Text("To Where?")
                 .foregroundColor(Color(.darkGray))
-             Spacer()
+            Spacer()
         }
-        .frame(width: UIScreen.main.bounds.width - 65, height: 50 )
+        .frame(maxWidth: .infinity)
+        .frame(height: 50)
         .background(
-            Rectangle()
+            RoundedRectangle(cornerRadius: 8)
                 .fill(Color.white)
-                .shadow(color: .black, radius: 6)
-            
-        
+                .shadow(color: .black.opacity(0.15), radius: 8, x: 0, y: 2)
         )
-        
+        .padding(.horizontal, 16)
     }
 }
 

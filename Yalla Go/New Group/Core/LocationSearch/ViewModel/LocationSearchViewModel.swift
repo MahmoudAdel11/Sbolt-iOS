@@ -37,6 +37,12 @@ class LocationSearchViewModel : NSObject , ObservableObject {
          //.......queryFragment ...... for  search completer
          searchCompleter.queryFragment = queryFragment
     }
+
+    deinit {
+        // Stop any in-flight lookup/route work so it can't outlive the view model.
+        locationSelectionTask?.cancel()
+        routeTask?.cancel()
+    }
     func selecteLocation(_ localSearch:MKLocalSearchCompletion){
         // A newer selection makes any previous lookup obsolete.
         locationSelectionTask?.cancel()

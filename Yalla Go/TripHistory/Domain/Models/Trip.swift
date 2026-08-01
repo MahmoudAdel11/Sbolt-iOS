@@ -14,8 +14,8 @@ struct Trip: Identifiable, Equatable {
     let id: String
     let pickupLocationName: String
     let destinationLocationName: String
-    let pickupCoordinate: TripCoordinate
-    let destinationCoordinate: TripCoordinate
+    let pickupCoordinate: Coordinate
+    let destinationCoordinate: Coordinate
     let price: Double
     let tripType: RideType
     /// Travelled distance in meters.

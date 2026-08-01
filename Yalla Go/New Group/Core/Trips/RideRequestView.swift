@@ -10,8 +10,30 @@ import SwiftUI
 struct RideRequestView: View {
     @State private var selectedRideType: RideType =  .uberX
     @EnvironmentObject var locationViewModel:LocationSearchViewModel
+    @StateObject private var bookingViewModel = TripBookingDependencies().makeTripBookingViewModel()
 
     var body: some View {
+        Group {
+            if bookingViewModel.isIdle {
+                bookingForm
+            } else {
+                TripBookingStatusView(viewModel: bookingViewModel)
+                    .background(
+                        BottomSheetShape(radius: 20)
+                            .fill(Color.white)
+                    )
+                    .background(
+                        Color.white
+                            .ignoresSafeArea(.container, edges: .bottom)
+                    )
+                    .shadow(color: .black.opacity(0.12), radius: 12, x: 0, y: -4)
+            }
+        }
+        .animation(.spring(response: 0.4, dampingFraction: 0.85), value: bookingViewModel.isIdle)
+    }
+
+    // The original ride-request card. Shown while no booking is in progress.
+    private var bookingForm: some View {
         VStack{
             Capsule()
                 .foregroundColor(Color(.systemGray5))
@@ -58,7 +80,7 @@ struct RideRequestView: View {
             } .padding()
             Divider()
             // ride type
-            Text(" SUCCESTED RIDES")
+            Text("SUGGESTED RIDES")
                 .font(.subheadline)
                 .fontWeight(.semibold)
                 .padding()
@@ -67,7 +89,7 @@ struct RideRequestView: View {
                         
             
             
-            ScrollView(.horizontal){
+            ScrollView(.horizontal, showsIndicators: false){
                 HStack(spacing: 12){
                     ForEach(RideType.allCases ){ type in
                         VStack(alignment: .leading) {
@@ -128,28 +150,47 @@ struct RideRequestView: View {
             .padding(.horizontal)
         
                         // confirm trip
-            Button{
-                
-            }label: {
+            Button {
+                bookingViewModel.confirmTrip()
+            } label: {
                 Text("CONFIRM RIDE")
                     .fontWeight(.bold)
-                    .frame(width: UIScreen.main.bounds
-                        .width - 32, height: 50)
-                    .background(.blue)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 50)
+                    .background(Color.blue)
                     .cornerRadius(10)
                     .foregroundColor(.white)
             }
-            
+            .padding(.horizontal, 16)
+            .padding(.bottom, 16)
         }
-        .padding(.bottom,25)
-        .background(.white)
-        .cornerRadius( 16)
-         
+        .background(
+            BottomSheetShape(radius: 20)
+                .fill(Color.white)
+        )
+        .background(
+            Color.white
+                .ignoresSafeArea(.container, edges: .bottom)
+        )
+        .shadow(color: .black.opacity(0.12), radius: 12, x: 0, y: -4)
     }
 }
                     
              
 
+
+/// Rounds only the top-left and top-right corners so the sheet merges
+/// seamlessly with the Tab Bar below it.
+private struct BottomSheetShape: Shape {
+    let radius: CGFloat
+    func path(in rect: CGRect) -> Path {
+        Path(UIBezierPath(
+            roundedRect: rect,
+            byRoundingCorners: [.topLeft, .topRight],
+            cornerRadii: CGSize(width: radius, height: radius)
+        ).cgPath)
+    }
+}
 
 struct RideRequestView_Previews: PreviewProvider {
     static var previews: some View {

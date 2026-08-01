@@ -22,6 +22,17 @@ struct ProfileView: View {
         content
             .navigationTitle("Profile")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    NavigationLink {
+                        SettingsView()
+                    } label: {
+                        Image(systemName: "gearshape")
+                    }
+                    .accessibilityLabel("Settings")
+                    .accessibilityIdentifier("profile_settings_link")
+                }
+            }
             .task {
                 if viewModel.profile == nil { viewModel.loadProfile() }
             }
