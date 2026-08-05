@@ -30,7 +30,7 @@ final class URLSessionAPIClient: APIClient {
     init(
         baseURL: URL,
         session: URLSession = .shared,
-        decoder: JSONDecoder = JSONDecoder()
+        decoder: JSONDecoder = .backend
     ) {
         self.baseURL = baseURL
         self.session = session
@@ -51,12 +51,24 @@ final class URLSessionAPIClient: APIClient {
             request.setValue(value, forHTTPHeaderField: key)
         }
 
+        #if DEBUG
+        NetworkLogger.logRequest(request)
+        let startTime = Date()
+        #endif
+
         let data: Data
         let response: URLResponse
         do {
             (data, response) = try await session.data(for: request)
-        } catch let urlError as URLError where urlError.code == .cancelled {
-            throw NetworkError.requestCancelled
+        } catch let urlError as URLError {
+            switch urlError.code {
+            case .cancelled:                                          throw NetworkError.requestCancelled
+            case .timedOut:                                          throw NetworkError.timeout
+            case .notConnectedToInternet,
+                 .networkConnectionLost,
+                 .dataNotAllowed:                                    throw NetworkError.noInternet
+            default:                                                 throw NetworkError.unknown(urlError.localizedDescription)
+            }
         } catch {
             throw NetworkError.unknown(error.localizedDescription)
         }
@@ -65,13 +77,16 @@ final class URLSessionAPIClient: APIClient {
             throw NetworkError.unknown("Expected HTTPURLResponse, got \(type(of: response))")
         }
 
+        #if DEBUG
+        NetworkLogger.logResponse(http, data: data, duration: Date().timeIntervalSince(startTime))
+        #endif
+
         switch http.statusCode {
-        case 200...299:
-            break
-        case 401:
-            throw NetworkError.unauthorized
-        case 404:
-            throw NetworkError.notFound
+        case 200...299: break
+        case 401:       throw NetworkError.unauthorized
+        case 403:       throw NetworkError.forbidden
+        case 404:       throw NetworkError.notFound
+        case 409:       throw NetworkError.conflict
         default:
             let message = String(data: data, encoding: .utf8)
             throw NetworkError.serverError(statusCode: http.statusCode, message: message)
