@@ -141,6 +141,10 @@
 		B152BFBF301D5327004C677C /* FavoritePlaceDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = B152BFBE301D5327004C677C /* FavoritePlaceDTO.swift */; };
 		B152BFC2301D5331004C677C /* RepositoryFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B152BFC1301D5331004C677C /* RepositoryFactory.swift */; };
 		B152BFC4301D5336004C677C /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = B152BFC3301D5336004C677C /* AppEnvironment.swift */; };
+		B15639C330239F18001EB8C7 /* TokenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15639C230239F18001EB8C7 /* TokenProvider.swift */; };
+		B15639C530239F1E001EB8C7 /* NetworkLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15639C430239F1E001EB8C7 /* NetworkLogger.swift */; };
+		B15639C730239F25001EB8C7 /* AuthenticatedAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15639C630239F25001EB8C7 /* AuthenticatedAPIClient.swift */; };
+		B15639C93023C51F001EB8C7 /* JSONCoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15639C83023C51F001EB8C7 /* JSONCoding.swift */; };
 		B78FBF80915D2B1897ABEE93 /* TripBookingUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB73E3B475D744B8C85FEEE0 /* TripBookingUseCaseTests.swift */; };
 		BBAD554BB7C65DA9415E0E42 /* MockTripRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6254D022183AC43C7A97566A /* MockTripRepositoryTests.swift */; };
 		BBF002364E7FA5222ADC6492 /* EndpointTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91156FBE06D87749D2D50A27 /* EndpointTests.swift */; };
@@ -300,6 +304,10 @@
 		B152BFBE301D5327004C677C /* FavoritePlaceDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritePlaceDTO.swift; sourceTree = "<group>"; };
 		B152BFC1301D5331004C677C /* RepositoryFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryFactory.swift; sourceTree = "<group>"; };
 		B152BFC3301D5336004C677C /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
+		B15639C230239F18001EB8C7 /* TokenProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenProvider.swift; sourceTree = "<group>"; };
+		B15639C430239F1E001EB8C7 /* NetworkLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkLogger.swift; sourceTree = "<group>"; };
+		B15639C630239F25001EB8C7 /* AuthenticatedAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatedAPIClient.swift; sourceTree = "<group>"; };
+		B15639C83023C51F001EB8C7 /* JSONCoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONCoding.swift; sourceTree = "<group>"; };
 		B95D53B36D309387BE6924F5 /* MockSettingsRepositoryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MockSettingsRepositoryTests.swift; sourceTree = "<group>"; };
 		BC9AE464E82AC77322D4CAF3 /* FavoritePlaceUseCaseTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FavoritePlaceUseCaseTests.swift; sourceTree = "<group>"; };
 		BCAEE3D47DB2132D90F1CB09 /* NetworkErrorTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NetworkErrorTests.swift; sourceTree = "<group>"; };
@@ -338,7 +346,6 @@
 				BCAEE3D47DB2132D90F1CB09 /* NetworkErrorTests.swift */,
 				ABB3331C5D9BA5F09388CB3D /* APIClientTests.swift */,
 			);
-			name = Networking;
 			path = Networking;
 			sourceTree = "<group>";
 		};
@@ -1279,6 +1286,10 @@
 				B152BFA2301D52F2004C677C /* Endpoint.swift */,
 				B152BFA4301D52FC004C677C /* APIClient.swift */,
 				B152BFA6301D52FE004C677C /* APIConfiguration.swift */,
+				B15639C230239F18001EB8C7 /* TokenProvider.swift */,
+				B15639C430239F1E001EB8C7 /* NetworkLogger.swift */,
+				B15639C630239F25001EB8C7 /* AuthenticatedAPIClient.swift */,
+				B15639C83023C51F001EB8C7 /* JSONCoding.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -1527,6 +1538,8 @@
 				B1329CDE301A97FB007D8AA6 /* FavoritePlacesViewModel.swift in Sources */,
 				B1329C8E3019DE94007D8AA6 /* ProfileDependencies.swift in Sources */,
 				B1329CB7301A261A007D8AA6 /* TripHistoryDependencies.swift in Sources */,
+				B15639C330239F18001EB8C7 /* TokenProvider.swift in Sources */,
+				B15639C730239F25001EB8C7 /* AuthenticatedAPIClient.swift in Sources */,
 				B1329CF6301A99BB007D8AA6 /* AppInfo.swift in Sources */,
 				B1329CB13019E12A007D8AA6 /* TripHistoryErrorPresenter.swift in Sources */,
 				B1329C63301982D3007D8AA6 /* AuthTextField.swift in Sources */,
@@ -1549,6 +1562,7 @@
 				1E4C38552C91E90C006AB83B /* Yalla_GoApp.swift in Sources */,
 				B1329D30301AA892007D8AA6 /* DriverCard.swift in Sources */,
 				B152BFA5301D52FC004C677C /* APIClient.swift in Sources */,
+				B15639C530239F1E001EB8C7 /* NetworkLogger.swift in Sources */,
 				B1329D05301AA53B007D8AA6 /* MainTabView.swift in Sources */,
 				B1329D22301AA7FE007D8AA6 /* CompleteTripUseCase.swift in Sources */,
 				B1329CD8301A97D6007D8AA6 /* RemoveFavoritePlaceUseCase.swift in Sources */,
@@ -1606,6 +1620,7 @@
 				B1329C7E301983B8007D8AA6 /* ProfileError.swift in Sources */,
 				B1329D03301AA537007D8AA6 /* AppSessionStore.swift in Sources */,
 				B152BFAD301D5314004C677C /* RemoteTripRepository.swift in Sources */,
+				B15639C93023C51F001EB8C7 /* JSONCoding.swift in Sources */,
 				B1329CF8301A99BF007D8AA6 /* SettingsDependencies.swift in Sources */,
 				B1329C8A301983DB007D8AA6 /* ProfileViewModel.swift in Sources */,
 				B1329C903019DEBB007D8AA6 /* ProfileAvatarView.swift in Sources */,

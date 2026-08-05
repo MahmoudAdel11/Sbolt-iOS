@@ -35,17 +35,18 @@ struct MockRepositoryFactory: RepositoryFactory {
 
 // MARK: - Remote factory  (production)
 
-/// Wires every feature to its remote repository backed by `URLSessionAPIClient`.
+/// Wires every feature to its remote repository backed by `AuthenticatedAPIClient`.
 ///
-/// Each remote repository stubs its methods as "Not yet connected" until the
-/// backend endpoints are live and the DTO mapping is completed.
+/// Pass a concrete `TokenProvider` once the login flow is live; the default
+/// `NilTokenProvider` leaves all requests unauthenticated (Sprint 1 default).
 /// Settings are device-local and never have a remote implementation.
 struct RemoteRepositoryFactory: RepositoryFactory {
 
     let client: any APIClient
 
-    init(client: any APIClient = URLSessionAPIClient(baseURL: APIConfiguration.baseURL)) {
-        self.client = client
+    init(tokenProvider: any TokenProvider = NilTokenProvider()) {
+        let base = URLSessionAPIClient(baseURL: APIConfiguration.baseURL)
+        self.client = AuthenticatedAPIClient(client: base, tokenProvider: tokenProvider)
     }
 
     func makeAuthenticationRepository() -> any AuthenticationRepository { RemoteAuthenticationRepository(client: client) }
