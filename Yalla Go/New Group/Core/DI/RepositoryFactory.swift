@@ -48,10 +48,12 @@ struct RemoteRepositoryFactory: RepositoryFactory {
     let client: any APIClient
     private let tokenStorage: any TokenStorage
 
-    init(tokenStorage: any TokenStorage = KeychainTokenStorage()) {
+    init(tokenStorage: any TokenStorage = KeychainTokenStorage(),
+         reachability: any NetworkReachabilityMonitoring = NWPathMonitorReachability()) {
         let provider = KeychainTokenProvider(storage: tokenStorage)
         let base = URLSessionAPIClient(baseURL: APIConfiguration.baseURL)
-        self.client = AuthenticatedAPIClient(client: base, tokenProvider: provider)
+        let authenticated = AuthenticatedAPIClient(client: base, tokenProvider: provider)
+        self.client = RetryingAPIClient(inner: authenticated, reachability: reachability)
         self.tokenStorage = tokenStorage
     }
 

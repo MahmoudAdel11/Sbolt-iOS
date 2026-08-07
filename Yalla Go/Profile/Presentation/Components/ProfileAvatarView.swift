@@ -16,10 +16,17 @@ struct ProfileAvatarView: View {
     var body: some View {
         Group {
             if let url {
-                AsyncImage(url: url) { image in
-                    image.resizable().scaledToFill()
-                } placeholder: {
-                    placeholder
+                AsyncImage(url: url) { phase in
+                    switch phase {
+                    case .success(let image):
+                        image.resizable().scaledToFill()
+                    case .failure:
+                        failurePlaceholder
+                    case .empty:
+                        placeholder
+                    @unknown default:
+                        placeholder
+                    }
                 }
             } else {
                 placeholder
@@ -33,6 +40,15 @@ struct ProfileAvatarView: View {
 
     private var placeholder: some View {
         Image(systemName: "person.crop.circle.fill")
+            .resizable()
+            .scaledToFit()
+            .foregroundStyle(.secondary)
+    }
+
+    /// Shown when the remote image fails to load — distinct from the
+    /// loading placeholder so it doesn't look like a stuck spinner forever.
+    private var failurePlaceholder: some View {
+        Image(systemName: "person.crop.circle.badge.exclamationmark")
             .resizable()
             .scaledToFit()
             .foregroundStyle(.secondary)
