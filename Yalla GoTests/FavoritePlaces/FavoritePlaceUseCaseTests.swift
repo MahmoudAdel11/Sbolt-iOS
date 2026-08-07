@@ -2,8 +2,6 @@
 //  FavoritePlaceUseCaseTests.swift
 //  Yalla GoTests
 //
-//  Created by Mahmoud on 29/07/2026.
-//
 
 import Testing
 import Foundation
@@ -11,12 +9,11 @@ import Foundation
 
 struct FavoritePlaceUseCaseTests {
 
-    private func makePlace(id: String = "fav-new") -> FavoritePlace {
+    private func makePlace(id: String = "fav-new", title: String = "University") -> FavoritePlace {
         FavoritePlace(id: id,
-                      title: "University",
+                      title: title,
                       address: "GUC, New Cairo",
                       coordinate: Coordinate(latitude: 29.9866, longitude: 31.4426),
-                      icon: "graduationcap.fill",
                       createdAt: Date(timeIntervalSince1970: 1_719_300_000))
     }
 
@@ -39,11 +36,11 @@ struct FavoritePlaceUseCaseTests {
 
     // MARK: - Add
 
-    @Test func addReturnsUpdatedList() async throws {
+    @Test func addReturnsCreatedPlace() async throws {
         let repository = MockFavoritePlaceRepository(artificialDelay: 0)
         let sut = AddFavoritePlaceUseCase(repository: repository)
-        let places = try await sut.execute(makePlace())
-        #expect(places.contains { $0.id == "fav-new" })
+        let place = try await sut.execute(makePlace())
+        #expect(place.id == "fav-new")
     }
 
     @Test func addPropagatesFailure() async {
@@ -54,20 +51,39 @@ struct FavoritePlaceUseCaseTests {
         }
     }
 
+    // MARK: - Update
+
+    @Test func updateReturnsUpdatedPlace() async throws {
+        let repository = MockFavoritePlaceRepository(artificialDelay: 0)
+        let sut = UpdateFavoritePlaceUseCase(repository: repository)
+        let place = try await sut.execute(id: "fav-home", makePlace(id: "fav-home", title: "New Home"))
+        #expect(place.title == "New Home")
+    }
+
+    @Test func updatePropagatesFailure() async {
+        let repository = MockFavoritePlaceRepository(behavior: .failure, artificialDelay: 0)
+        let sut = UpdateFavoritePlaceUseCase(repository: repository)
+        await #expect(throws: FavoritePlaceError.updateFailed) {
+            _ = try await sut.execute(id: "fav-home", makePlace())
+        }
+    }
+
     // MARK: - Remove
 
-    @Test func removeReturnsUpdatedList() async throws {
+    @Test func removeCompletesOnSuccess() async throws {
         let repository = MockFavoritePlaceRepository(artificialDelay: 0)
         let sut = RemoveFavoritePlaceUseCase(repository: repository)
-        let places = try await sut.execute(id: "fav-home")
-        #expect(!places.contains { $0.id == "fav-home" })
+        try await sut.execute(id: "fav-home")
+
+        let remaining = try await repository.getFavoritePlaces()
+        #expect(!remaining.contains { $0.id == "fav-home" })
     }
 
     @Test func removePropagatesFailure() async {
         let repository = MockFavoritePlaceRepository(behavior: .failure, artificialDelay: 0)
         let sut = RemoveFavoritePlaceUseCase(repository: repository)
         await #expect(throws: FavoritePlaceError.removeFailed) {
-            _ = try await sut.execute(id: "fav-home")
+            try await sut.execute(id: "fav-home")
         }
     }
 }

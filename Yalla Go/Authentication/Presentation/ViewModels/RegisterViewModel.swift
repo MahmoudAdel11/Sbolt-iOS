@@ -24,6 +24,7 @@ final class RegisterViewModel: ObservableObject {
     @Published private(set) var isLoading = false
     @Published private(set) var errorMessage: String?
     @Published private(set) var registrationSucceeded = false
+    @Published private(set) var authenticatedUser: User?
 
     private let registerUseCase: RegisterUseCase
     private let validator: AuthInputValidator
@@ -78,8 +79,9 @@ final class RegisterViewModel: ObservableObject {
                                           phoneNumber: phoneNumber,
                                           password: password)
         do {
-            _ = try await registerUseCase.execute(details)
+            let user = try await registerUseCase.execute(details)
             guard !Task.isCancelled else { return }
+            authenticatedUser = user
             registrationSucceeded = true
         } catch is CancellationError {
             // Superseded/cancelled: leave state untouched.

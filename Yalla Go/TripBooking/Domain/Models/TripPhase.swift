@@ -2,30 +2,28 @@
 //  TripPhase.swift
 //  Yalla Go
 //
-//  Created by Mahmoud on 30/07/2026.
-//
 
 import Foundation
 
 /// Single source of truth for the booking flow. Enum-based (not booleans) so
-/// only one valid state exists at a time and associated data travels with it.
+/// only one valid state exists at a time and the associated ride travels
+/// with it once one exists.
 enum TripPhase: Equatable {
     case idle
-    case searching
-    case driverFound(Driver)
-    case driverArriving(Driver)
-    case tripStarted(Driver)
-    case tripCompleted
+    /// POST /rides is in flight — no ride exists yet, so nothing to cancel.
+    case requesting
+    /// A ride exists and is being polled; `Trip.status` drives the sub-state
+    /// shown (requested/accepted/ongoing) and whether a driver is assigned.
+    case active(Trip)
+    case completed(Trip)
     case cancelled
     case failed(message: String)
 
-    /// The matched driver, when the current phase has one.
-    var driver: Driver? {
+    /// The current ride, when the phase has one.
+    var trip: Trip? {
         switch self {
-        case let .driverFound(driver),
-             let .driverArriving(driver),
-             let .tripStarted(driver):
-            return driver
+        case let .active(trip), let .completed(trip):
+            return trip
         default:
             return nil
         }
@@ -37,13 +35,10 @@ enum TripPhase: Equatable {
         return false
     }
 
-    /// Cancellation is only allowed while searching or while the driver is arriving.
+    /// Cancellation is only possible once a ride exists and hasn't reached a
+    /// terminal status.
     var isCancellable: Bool {
-        switch self {
-        case .searching, .driverArriving:
-            return true
-        default:
-            return false
-        }
+        if case let .active(trip) = self { return !trip.status.isTerminal }
+        return false
     }
 }

@@ -2,20 +2,18 @@
 //  TripHistoryDependencies.swift
 //  Yalla Go
 //
-//  Created by Mahmoud on 29/07/2026.
-//
 
 import Foundation
 
-/// Composition root for the trip-history feature. Wires the mock repository into
-/// the use case and vends the view model, so views never build the use case or
-/// touch the repository directly.
+/// Composition root for the trip-history feature. Wires the environment's
+/// repository into the use case and vends the view model, so views never
+/// build the use case or touch the repository directly.
 struct TripHistoryDependencies {
 
-    private let repository: TripRepository
+    private let repository: any TripRepository
 
-    init(repository: TripRepository = MockTripRepository()) {
-        self.repository = repository
+    init(repository: (any TripRepository)? = nil) {
+        self.repository = repository ?? AppEnvironment.current.repositoryFactory.makeTripRepository()
     }
 
     @MainActor

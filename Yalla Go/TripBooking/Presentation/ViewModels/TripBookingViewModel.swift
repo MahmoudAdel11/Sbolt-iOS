@@ -2,46 +2,47 @@
 //  TripBookingViewModel.swift
 //  Yalla Go
 //
-//  Created by Mahmoud on 30/07/2026.
-//
 
 import Foundation
 import Combine
 
-/// Owns the ride-booking state machine. Runs the whole flow inside a single
-/// owned `Task`, sets `phase` on the main actor, and checks cancellation after
-/// every suspension so a cancelled/superseded step can never overwrite newer
-/// state. Views only read `phase` and send intents.
+/// Owns the ride-booking state machine. Requests a ride, then polls its
+/// status (via `PollRideStatusUseCase`, no polling logic lives here) until a
+/// terminal state or cancellation. Views only read `phase` and send intents.
 @MainActor
 final class TripBookingViewModel: ObservableObject {
 
     @Published private(set) var phase: TripPhase = .idle
+    /// Client-side fare estimate for the current/last request. Never sent to
+    /// the backend — display only, and always presented as an estimate.
+    @Published private(set) var estimatedFare: Double?
+    /// `true` once a `.sessionExpired` error is caught. The view observes
+    /// this and signs the session out — the ViewModel itself has no access
+    /// to `AppSessionStore` (kept environment-agnostic, testable in isolation).
+    @Published private(set) var isSessionExpired = false
 
-    private let findDriverUseCase: FindDriverUseCase
-    private let startTripUseCase: StartTripUseCase
-    private let completeTripUseCase: CompleteTripUseCase
-    private let cancelTripUseCase: CancelTripUseCase
+    private let requestRideUseCase: RequestRideUseCase
+    private let cancelRideUseCase: CancelRideUseCase
+    private let pollRideStatusUseCase: PollRideStatusUseCase
     private let timings: TripFlowTimings
     private let errorPresenter: TripBookingErrorPresenter
 
     /// The single owner of the booking flow. Exposed read-only for awaiting in tests.
     private(set) var bookingTask: Task<Void, Never>?
-    /// Best-effort cleanup after a cancellation. Exposed read-only for tests.
+    /// Best-effort cleanup after cancel/completion. Exposed read-only for tests.
     private(set) var cleanupTask: Task<Void, Never>?
 
     var isIdle: Bool { phase.isIdle }
     var isCancellable: Bool { phase.isCancellable }
 
-    init(findDriverUseCase: FindDriverUseCase,
-         startTripUseCase: StartTripUseCase,
-         completeTripUseCase: CompleteTripUseCase,
-         cancelTripUseCase: CancelTripUseCase,
+    init(requestRideUseCase: RequestRideUseCase,
+         cancelRideUseCase: CancelRideUseCase,
+         pollRideStatusUseCase: PollRideStatusUseCase,
          timings: TripFlowTimings = TripFlowTimings(),
          errorPresenter: TripBookingErrorPresenter = TripBookingErrorPresenter()) {
-        self.findDriverUseCase = findDriverUseCase
-        self.startTripUseCase = startTripUseCase
-        self.completeTripUseCase = completeTripUseCase
-        self.cancelTripUseCase = cancelTripUseCase
+        self.requestRideUseCase = requestRideUseCase
+        self.cancelRideUseCase = cancelRideUseCase
+        self.pollRideStatusUseCase = pollRideStatusUseCase
         self.timings = timings
         self.errorPresenter = errorPresenter
     }
@@ -53,12 +54,13 @@ final class TripBookingViewModel: ObservableObject {
 
     /// Starts the booking flow. Ignored unless the flow is idle, so there is
     /// never more than one concurrent booking task.
-    func confirmTrip() {
+    func confirmTrip(pickup: Coordinate, dropoff: Coordinate, estimatedFare: Double) {
         guard phase.isIdle else { return }
         bookingTask?.cancel()
-        phase = .searching // set synchronously so the UI/cancel reflect it immediately
+        self.estimatedFare = estimatedFare
+        phase = .requesting // set synchronously so the UI reflects it immediately
         bookingTask = Task { [weak self] in
-            await self?.runBooking()
+            await self?.runBooking(pickup: pickup, dropoff: dropoff)
         }
     }
 
@@ -66,49 +68,65 @@ final class TripBookingViewModel: ObservableObject {
     func retry() {
         guard case .failed = phase else { return }
         phase = .idle
-        confirmTrip()
+        estimatedFare = nil
     }
 
-    /// Cancels while searching or while the driver is arriving: stops the
-    /// booking task, resets state, and returns to idle after a short beat.
+    /// Cancels the active ride. Only valid once a ride exists and hasn't
+    /// reached a terminal status.
     func cancelTrip() {
-        guard phase.isCancellable else { return }
+        guard case let .active(trip) = phase, isCancellable else { return }
         bookingTask?.cancel()
-        phase = .cancelled
         cleanupTask = Task { [weak self] in
             guard let self else { return }
-            try? await self.cancelTripUseCase.execute()
-            try? await self.sleep(self.timings.resetAfterCancel)
-            if self.phase == .cancelled { self.phase = .idle }
+            do {
+                _ = try await self.cancelRideUseCase.execute(rideID: trip.id)
+            } catch {
+                // Best-effort: the poll loop already stopped with this task's
+                // cancellation, so there is nothing further to reconcile here —
+                // except a dead session, which still needs to be surfaced.
+                if case RideError.sessionExpired = error { self.isSessionExpired = true }
+            }
+            self.phase = .cancelled
+            try? await self.sleep(self.timings.resetAfterTerminal)
+            if self.phase == .cancelled { self.reset() }
         }
     }
 
-    private func runBooking() async {
+    private func runBooking(pickup: Coordinate, dropoff: Coordinate) async {
         do {
-            let driver = try await findDriverUseCase.execute()
+            let trip = try await requestRideUseCase.execute(pickup: pickup, dropoff: dropoff)
             try Task.checkCancellation()
-            phase = .driverFound(driver)
+            phase = .active(trip)
 
-            try await sleep(timings.driverFoundDisplay)
-            try Task.checkCancellation()
-            phase = .driverArriving(driver)
-
-            try await startTripUseCase.execute()
-            try Task.checkCancellation()
-            phase = .tripStarted(driver)
-
-            try await completeTripUseCase.execute()
-            try Task.checkCancellation()
-            phase = .tripCompleted
-
-            try await sleep(timings.tripCompletedDisplay)
-            try Task.checkCancellation()
-            phase = .idle
+            for try await updated in pollRideStatusUseCase.execute(rideID: trip.id) {
+                try Task.checkCancellation()
+                if updated.status == .completed {
+                    phase = .completed(updated)
+                    try await sleep(timings.resetAfterTerminal)
+                    try Task.checkCancellation()
+                    reset()
+                    return
+                } else if updated.status == .cancelled {
+                    phase = .cancelled
+                    try await sleep(timings.resetAfterTerminal)
+                    try Task.checkCancellation()
+                    reset()
+                    return
+                } else {
+                    phase = .active(updated)
+                }
+            }
         } catch is CancellationError {
             // Cancellation is owned by `cancelTrip`, which already set the phase.
         } catch {
             phase = .failed(message: errorPresenter.message(for: error))
+            if case RideError.sessionExpired = error { isSessionExpired = true }
         }
+    }
+
+    private func reset() {
+        phase = .idle
+        estimatedFare = nil
     }
 
     private func sleep(_ seconds: TimeInterval) async throws {

@@ -24,12 +24,13 @@ struct AuthErrorPresenter {
 
     private func message(for error: AuthenticationError) -> String {
         switch error {
-        case .invalidCredentials: return "Incorrect email or password."
-        case .emailAlreadyExists: return "An account with this email already exists."
-        case .userNotFound: return "We couldn't find an account for these details."
-        case .invalidInput: return "Please check your details and try again."
-        case .networkUnavailable: return "No internet connection. Please try again."
-        case .unknown: return "Something went wrong. Please try again."
+        case .invalidCredentials:              return "Incorrect email or password."
+        case .emailAlreadyExists:              return "An account with this email already exists."
+        case .userNotFound:                    return "We couldn't find an account for these details."
+        case .invalidInput:                    return "Please check your details and try again."
+        case .validationFailed(let detail):   return detail
+        case .networkUnavailable:              return "No internet connection. Please try again."
+        case .unknown:                         return "Something went wrong. Please try again."
         }
     }
 }

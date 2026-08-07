@@ -10,6 +10,7 @@ import SwiftUI
 /// Sign-in screen. Binds to `LoginViewModel`; contains no business logic.
 struct LoginView: View {
     @StateObject private var viewModel: LoginViewModel
+    @EnvironmentObject private var session: AppSessionStore
     private let dependencies: AuthenticationDependencies
 
     init(dependencies: AuthenticationDependencies) {
@@ -35,6 +36,10 @@ struct LoginView: View {
         .background(Color(.systemBackground))
         .navigationTitle("Sign In")
         .navigationBarTitleDisplayMode(.inline)
+        .onChange(of: viewModel.authenticatedUser) { user in
+            guard let user else { return }
+            session.signIn(user: user)
+        }
     }
 
     // MARK: - Sections

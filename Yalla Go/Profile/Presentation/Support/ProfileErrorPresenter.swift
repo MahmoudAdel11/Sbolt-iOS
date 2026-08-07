@@ -24,6 +24,7 @@ struct ProfileErrorPresenter {
         switch error {
         case .profileUnavailable: return "We couldn't load your profile. Please try again."
         case .updateFailed: return "We couldn't save your changes. Please try again."
+        case .sessionExpired: return "Your session has expired. Please log in again."
         case .networkUnavailable: return "No internet connection. Please try again."
         case .unknown: return "Something went wrong. Please try again."
         }
