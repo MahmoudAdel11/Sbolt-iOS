@@ -10,6 +10,7 @@ import SwiftUI
 /// Registration screen. Binds to `RegisterViewModel`; contains no business logic.
 struct RegisterView: View {
     @StateObject private var viewModel: RegisterViewModel
+    @EnvironmentObject private var session: AppSessionStore
     @Environment(\.dismiss) private var dismiss
 
     init(dependencies: AuthenticationDependencies) {
@@ -34,6 +35,10 @@ struct RegisterView: View {
         .background(Color(.systemBackground))
         .navigationTitle("Create Account")
         .navigationBarTitleDisplayMode(.inline)
+        .onChange(of: viewModel.authenticatedUser) { user in
+            guard let user else { return }
+            session.signIn(user: user)
+        }
     }
 
     // MARK: - Sections

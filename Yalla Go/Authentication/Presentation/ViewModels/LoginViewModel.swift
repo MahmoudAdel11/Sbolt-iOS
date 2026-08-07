@@ -22,6 +22,7 @@ final class LoginViewModel: ObservableObject {
     @Published private(set) var isLoading = false
     @Published private(set) var errorMessage: String?
     @Published private(set) var loginSucceeded = false
+    @Published private(set) var authenticatedUser: User?
 
     private let loginUseCase: LoginUseCase
     private let validator: AuthInputValidator
@@ -68,8 +69,9 @@ final class LoginViewModel: ObservableObject {
         }
 
         do {
-            _ = try await loginUseCase.execute(email: email, password: password)
+            let user = try await loginUseCase.execute(email: email, password: password)
             guard !Task.isCancelled else { return }
+            authenticatedUser = user
             loginSucceeded = true
         } catch is CancellationError {
             // Superseded/cancelled: leave state untouched.

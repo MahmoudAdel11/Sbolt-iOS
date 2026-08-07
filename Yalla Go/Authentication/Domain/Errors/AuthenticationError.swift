@@ -18,7 +18,9 @@ enum AuthenticationError: Error, Equatable {
     case userNotFound
     /// Client-side validation failed before reaching the backend.
     case invalidInput
-    /// Reserved for the future networking layer.
+    /// Backend returned 422 — field-level validation failed.
+    case validationFailed(String)
+    /// No internet connection or request timed out.
     case networkUnavailable
     /// Any unclassified failure.
     case unknown

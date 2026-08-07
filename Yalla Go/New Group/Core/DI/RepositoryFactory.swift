@@ -17,6 +17,7 @@ protocol RepositoryFactory {
     func makeAuthenticationRepository() -> any AuthenticationRepository
     func makeProfileRepository() -> any ProfileRepository
     func makeTripRepository() -> any TripRepository
+    func makeTripBookingRepository() -> any TripBookingRepository
     func makeFavoritePlaceRepository() -> any FavoritePlaceRepository
     func makeSettingsRepository() -> any SettingsRepository
 }
@@ -29,6 +30,7 @@ struct MockRepositoryFactory: RepositoryFactory {
     func makeAuthenticationRepository() -> any AuthenticationRepository { MockAuthenticationRepository() }
     func makeProfileRepository()        -> any ProfileRepository        { MockProfileRepository() }
     func makeTripRepository()           -> any TripRepository           { MockTripRepository() }
+    func makeTripBookingRepository()    -> any TripBookingRepository    { MockTripBookingRepository() }
     func makeFavoritePlaceRepository()  -> any FavoritePlaceRepository  { MockFavoritePlaceRepository() }
     func makeSettingsRepository()       -> any SettingsRepository       { MockSettingsRepository() }
 }
@@ -37,21 +39,28 @@ struct MockRepositoryFactory: RepositoryFactory {
 
 /// Wires every feature to its remote repository backed by `AuthenticatedAPIClient`.
 ///
-/// Pass a concrete `TokenProvider` once the login flow is live; the default
-/// `NilTokenProvider` leaves all requests unauthenticated (Sprint 1 default).
-/// Settings are device-local and never have a remote implementation.
+/// `KeychainTokenStorage` is created once; it supplies both the token provider
+/// (for automatic Bearer-header injection) and the auth repository (for
+/// token persistence on login/logout). All other repositories receive the
+/// authenticated client so their requests carry the token automatically.
 struct RemoteRepositoryFactory: RepositoryFactory {
 
     let client: any APIClient
+    private let tokenStorage: any TokenStorage
 
-    init(tokenProvider: any TokenProvider = NilTokenProvider()) {
+    init(tokenStorage: any TokenStorage = KeychainTokenStorage()) {
+        let provider = KeychainTokenProvider(storage: tokenStorage)
         let base = URLSessionAPIClient(baseURL: APIConfiguration.baseURL)
-        self.client = AuthenticatedAPIClient(client: base, tokenProvider: tokenProvider)
+        self.client = AuthenticatedAPIClient(client: base, tokenProvider: provider)
+        self.tokenStorage = tokenStorage
     }
 
-    func makeAuthenticationRepository() -> any AuthenticationRepository { RemoteAuthenticationRepository(client: client) }
+    func makeAuthenticationRepository() -> any AuthenticationRepository {
+        RemoteAuthenticationRepository(client: client, tokenStorage: tokenStorage)
+    }
     func makeProfileRepository()        -> any ProfileRepository        { RemoteProfileRepository(client: client) }
     func makeTripRepository()           -> any TripRepository           { RemoteTripRepository(client: client) }
+    func makeTripBookingRepository()    -> any TripBookingRepository    { RemoteTripBookingRepository(client: client) }
     func makeFavoritePlaceRepository()  -> any FavoritePlaceRepository  { RemoteFavoritePlaceRepository(client: client) }
     func makeSettingsRepository()       -> any SettingsRepository       { MockSettingsRepository() }
 }
