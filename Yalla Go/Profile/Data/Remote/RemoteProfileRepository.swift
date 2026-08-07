@@ -7,9 +7,6 @@
 import Foundation
 
 /// `ProfileRepository` backed by the Yalla Go REST API.
-///
-/// Stubs out as `NetworkError.serverError(statusCode: 501, ...)` until
-/// the endpoint is wired and the DTO → domain mapping is filled in.
 final class RemoteProfileRepository: ProfileRepository {
 
     private let client: any APIClient
@@ -19,14 +16,45 @@ final class RemoteProfileRepository: ProfileRepository {
     }
 
     func getProfile() async throws -> User {
-        // TODO: let dto: ProfileDTO.ProfileResponse = try await client.send(.getProfile)
-        // TODO: return dto.toDomain()
-        throw NetworkError.serverError(statusCode: 501, message: "Remote profile not yet connected")
+        do {
+            let dto: ProfileDTO.ProfileResponse = try await client.send(
+                Endpoint(path: "/auth/me", method: .get)
+            )
+            return dto.toDomain()
+        } catch {
+            throw mapped(error)
+        }
     }
 
     func updateProfile(_ update: ProfileUpdate) async throws -> User {
-        // TODO: encode ProfileUpdate → body, let dto: ProfileDTO.ProfileResponse = try await client.send(.updateProfile(body))
-        // TODO: return dto.toDomain()
-        throw NetworkError.serverError(statusCode: 501, message: "Remote profile not yet connected")
+        do {
+            let body = try JSONEncoder.backend.encode(ProfileDTO.ProfileUpdateRequest(update))
+            let dto: ProfileDTO.ProfileResponse = try await client.send(
+                Endpoint(path: "/users/me", method: .patch, body: body)
+            )
+            return dto.toDomain()
+        } catch {
+            throw mapped(error)
+        }
+    }
+
+    // MARK: - Error mapping
+
+    private func mapped(_ error: Error) -> ProfileError {
+        if let profileError = error as? ProfileError { return profileError }
+        switch error {
+        case NetworkError.unauthorized:
+            return .sessionExpired
+        case NetworkError.forbidden, NetworkError.notFound:
+            return .profileUnavailable
+        case NetworkError.noInternet, NetworkError.timeout:
+            return .networkUnavailable
+        case NetworkError.conflict:
+            return .updateFailed
+        case let NetworkError.serverError(statusCode, _) where (400...499).contains(statusCode):
+            return .updateFailed
+        default:
+            return .unknown
+        }
     }
 }

@@ -17,6 +17,10 @@ final class ProfileViewModel: ObservableObject {
     @Published private(set) var isLoading = false
     @Published private(set) var errorMessage: String?
     @Published private(set) var updateSucceeded = false
+    /// `true` once a `.sessionExpired` error is caught. The view observes
+    /// this and signs the session out — the ViewModel itself has no access
+    /// to `AppSessionStore` (kept environment-agnostic, testable in isolation).
+    @Published private(set) var isSessionExpired = false
 
     private let getProfileUseCase: GetProfileUseCase
     private let updateProfileUseCase: UpdateProfileUseCase
@@ -73,6 +77,7 @@ final class ProfileViewModel: ObservableObject {
         } catch {
             guard !Task.isCancelled else { return }
             errorMessage = errorPresenter.message(for: error)
+            if case ProfileError.sessionExpired = error { isSessionExpired = true }
         }
     }
 
@@ -88,6 +93,7 @@ final class ProfileViewModel: ObservableObject {
         } catch {
             guard !Task.isCancelled else { return }
             errorMessage = errorPresenter.message(for: error)
+            if case ProfileError.sessionExpired = error { isSessionExpired = true }
         }
     }
 }

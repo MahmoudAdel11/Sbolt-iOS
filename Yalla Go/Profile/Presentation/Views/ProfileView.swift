@@ -11,6 +11,7 @@ import SwiftUI
 /// Renders loading / loaded / error / empty states and hosts the edit sheet.
 struct ProfileView: View {
     @StateObject private var viewModel: ProfileViewModel
+    @EnvironmentObject private var session: AppSessionStore
     @State private var isEditing = false
     @State private var showUpdateConfirmation = false
 
@@ -43,6 +44,9 @@ struct ProfileView: View {
             }
             .onChange(of: viewModel.updateSucceeded) { succeeded in
                 if succeeded { flashUpdateConfirmation() }
+            }
+            .onChange(of: viewModel.isSessionExpired) { expired in
+                if expired { session.signOut() }
             }
             .overlay(alignment: .top) {
                 if showUpdateConfirmation { successBanner }
@@ -181,6 +185,7 @@ struct ProfileView_Previews: PreviewProvider {
             ProfileView()
         }
         .navigationViewStyle(.stack)
+        .environmentObject(AppSessionStore())
     }
 }
 #endif
