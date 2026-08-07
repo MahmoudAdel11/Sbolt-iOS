@@ -2,21 +2,24 @@
 //  Driver.swift
 //  Yalla Go
 //
-//  Created by Mahmoud on 30/07/2026.
-//
 
 import Foundation
 
-/// A matched driver for a trip. Mock values only — no networking.
+/// The driver assigned to a ride. The backend only ever exposes a bare
+/// `driver_id` — no name, rating, vehicle, or plate data exists server-side
+/// (confirmed: a driver is just a `User` with `role == "driver"`, nothing more).
+/// All rich fields are therefore optional and `nil` when populated from the
+/// remote repository; the UI must degrade gracefully rather than assume they
+/// exist. Richer driver profiles are a deferred backend feature.
 struct Driver: Identifiable, Equatable {
     let id: String
-    let name: String
-    let rating: Double
-    let vehicleName: String
-    let vehicleColor: String
-    let plateNumber: String
-    /// SF Symbol name used as the mock profile image.
-    let profileImage: String
+    var name: String?
+    var rating: Double?
+    var vehicleName: String?
+    var vehicleColor: String?
+    var plateNumber: String?
+    /// SF Symbol name used as the profile image placeholder.
+    var profileImage: String?
     /// Estimated arrival to the pickup point, in minutes.
-    let estimatedArrivalMinutes: Int
+    var estimatedArrivalMinutes: Int?
 }

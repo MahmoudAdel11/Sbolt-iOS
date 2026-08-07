@@ -2,8 +2,6 @@
 //  TripBookingStatusView.swift
 //  Yalla Go
 //
-//  Created by Mahmoud on 30/07/2026.
-//
 
 import SwiftUI
 
@@ -36,38 +34,27 @@ struct TripBookingStatusView: View {
         case .idle:
             EmptyView()
 
-        case .searching:
+        case .requesting:
             VStack(spacing: 12) {
                 ProgressView()
-                Text("Searching for nearby drivers…")
+                Text("Requesting your ride…")
                     .font(.headline)
                     .multilineTextAlignment(.center)
             }
-            .accessibilityIdentifier("trip_searching")
+            .accessibilityIdentifier("trip_requesting")
 
-        case let .driverFound(driver):
+        case let .active(trip):
             VStack(spacing: 10) {
-                statusHeader("Driver found", systemImage: "checkmark.circle.fill", tint: .green)
-                DriverCard(driver: driver)
+                statusHeader(activeStatusTitle(for: trip), systemImage: activeStatusIcon(for: trip), tint: .blue)
+                if let driverID = trip.driverID {
+                    DriverCard(driver: Driver(id: driverID), statusText: trip.status.displayName)
+                } else {
+                    ProgressView()
+                }
             }
-            .accessibilityIdentifier("trip_driver_found")
+            .accessibilityIdentifier("trip_active_\(trip.status.rawValue)")
 
-        case let .driverArriving(driver):
-            VStack(spacing: 10) {
-                statusHeader("Your driver is on the way", systemImage: "car.fill", tint: .blue)
-                DriverCard(driver: driver,
-                           statusText: "Arriving in \(driver.estimatedArrivalMinutes) min")
-            }
-            .accessibilityIdentifier("trip_driver_arriving")
-
-        case let .tripStarted(driver):
-            VStack(spacing: 10) {
-                statusHeader("Your trip has started", systemImage: "location.fill", tint: .blue)
-                DriverCard(driver: driver)
-            }
-            .accessibilityIdentifier("trip_started")
-
-        case .tripCompleted:
+        case .completed:
             statusHeader("Trip completed successfully", systemImage: "flag.checkered", tint: .green)
                 .accessibilityIdentifier("trip_completed")
 
@@ -84,6 +71,25 @@ struct TripBookingStatusView: View {
                     .multilineTextAlignment(.center)
             }
             .accessibilityIdentifier("trip_failed")
+        }
+    }
+
+    private func activeStatusTitle(for trip: Trip) -> String {
+        switch trip.status {
+        case .requested: return "Looking for a nearby driver…"
+        case .accepted:  return "Your driver is on the way"
+        case .ongoing:   return "Your trip has started"
+        case .completed, .cancelled: return trip.status.displayName
+        }
+    }
+
+    private func activeStatusIcon(for trip: Trip) -> String {
+        switch trip.status {
+        case .requested: return "magnifyingglass"
+        case .accepted:  return "car.fill"
+        case .ongoing:   return "location.fill"
+        case .completed: return "flag.checkered"
+        case .cancelled: return "xmark.circle.fill"
         }
     }
 
