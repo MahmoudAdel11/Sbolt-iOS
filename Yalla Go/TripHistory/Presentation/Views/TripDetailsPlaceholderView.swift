@@ -2,8 +2,6 @@
 //  TripDetailsPlaceholderView.swift
 //  Yalla Go
 //
-//  Created by Mahmoud on 29/07/2026.
-//
 
 import SwiftUI
 
@@ -16,15 +14,25 @@ struct TripDetailsPlaceholderView: View {
     var body: some View {
         List {
             Section("Route") {
-                detailRow("Pickup", trip.pickupLocationName, systemImage: "circle.fill")
-                detailRow("Destination", trip.destinationLocationName, systemImage: "mappin.circle.fill")
+                detailRow("Pickup", formatter.coordinate(trip.pickupCoordinate), systemImage: "circle.fill")
+                detailRow("Destination", formatter.coordinate(trip.destinationCoordinate), systemImage: "mappin.circle.fill")
             }
-            Section("Details") {
-                detailRow("Price", formatter.price(trip.price), systemImage: "creditcard")
-                detailRow("Distance", formatter.distance(meters: trip.distance), systemImage: "ruler")
-                detailRow("Duration", formatter.duration(seconds: trip.duration), systemImage: "clock")
-                detailRow("Date", "\(formatter.date(trip.completedAt)) · \(formatter.time(trip.completedAt))",
+            Section("Status") {
+                detailRow("Status", trip.status.displayName, systemImage: "info.circle")
+                detailRow("Requested", "\(formatter.date(trip.requestedAt)) · \(formatter.time(trip.requestedAt))",
                           systemImage: "calendar")
+                if let acceptedAt = trip.acceptedAt {
+                    detailRow("Accepted", "\(formatter.date(acceptedAt)) · \(formatter.time(acceptedAt))",
+                              systemImage: "checkmark.circle")
+                }
+                if let completedAt = trip.completedAt {
+                    detailRow("Completed", "\(formatter.date(completedAt)) · \(formatter.time(completedAt))",
+                              systemImage: "flag.checkered")
+                }
+                if let cancelledAt = trip.cancelledAt {
+                    detailRow("Cancelled", "\(formatter.date(cancelledAt)) · \(formatter.time(cancelledAt))",
+                              systemImage: "xmark.circle")
+                }
             }
         }
         .listStyle(.insetGrouped)

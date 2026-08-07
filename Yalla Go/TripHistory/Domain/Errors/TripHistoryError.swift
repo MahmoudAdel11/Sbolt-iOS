@@ -14,6 +14,8 @@ enum TripHistoryError: Error, Equatable {
     case historyUnavailable
     /// A refresh of the history failed.
     case refreshFailed
+    /// The session token is missing, expired, or was rejected by the backend.
+    case sessionExpired
     /// Reserved for the future networking layer.
     case networkUnavailable
     /// Any unclassified failure.
