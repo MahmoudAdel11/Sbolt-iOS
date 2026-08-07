@@ -65,6 +65,17 @@ class LocationSearchViewModel : NSObject , ObservableObject {
         locationSelectionTask?.cancel()
         selectedYallaGoLocation = nil
     }
+    /// Selects a destination directly from a known title/coordinate — used
+    /// when the user picks a saved favourite place instead of searching.
+    /// Takes primitive values rather than `FavoritePlace` itself so this
+    /// shared location view model doesn't depend on the FavoritePlaces feature.
+    func selectDestination(title: String, coordinate: Coordinate) {
+        locationSelectionTask?.cancel()
+        selectedYallaGoLocation = YallaGoLocation(
+            titel: title,
+            coordinate: CLLocationCoordinate2D(latitude: coordinate.latitude, longitude: coordinate.longitude)
+        )
+    }
     func computeRidePrice(forType type:RideType)-> Double{
         guard let destCoordinate = selectedYallaGoLocation?.coordinate else { return 0.0}
         guard let userCoordinate = self.userLocation else { return 0.0 }

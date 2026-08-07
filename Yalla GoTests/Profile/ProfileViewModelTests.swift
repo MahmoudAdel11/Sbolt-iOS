@@ -9,6 +9,14 @@ import Testing
 import Foundation
 @testable import Yalla_Go
 
+/// Throws a fixed error regardless of call — used to test how the ViewModel
+/// reacts to a specific typed error without widening `MockProfileRepository`.
+private struct FailingProfileRepository: ProfileRepository {
+    let error: Error
+    func getProfile() async throws -> User { throw error }
+    func updateProfile(_ update: ProfileUpdate) async throws -> User { throw error }
+}
+
 @MainActor
 struct ProfileViewModelTests {
 
@@ -81,5 +89,37 @@ struct ProfileViewModelTests {
 
         #expect(sut.updateSucceeded == false)
         #expect(sut.errorMessage == "We couldn't save your changes. Please try again.")
+    }
+
+    @Test func sessionExpiredOnLoadSetsFlagAndClearMessage() async {
+        let repository = FailingProfileRepository(error: ProfileError.sessionExpired)
+        let sut = ProfileViewModel(getProfileUseCase: GetProfileUseCase(repository: repository),
+                                   updateProfileUseCase: UpdateProfileUseCase(repository: repository))
+
+        sut.loadProfile()
+        await sut.activeTask?.value
+
+        #expect(sut.isSessionExpired == true)
+        #expect(sut.errorMessage == "Your session has expired. Please log in again.")
+    }
+
+    @Test func sessionExpiredOnUpdateSetsFlag() async {
+        let repository = FailingProfileRepository(error: ProfileError.sessionExpired)
+        let sut = ProfileViewModel(getProfileUseCase: GetProfileUseCase(repository: repository),
+                                   updateProfileUseCase: UpdateProfileUseCase(repository: repository))
+
+        sut.updateProfile(update)
+        await sut.activeTask?.value
+
+        #expect(sut.isSessionExpired == true)
+    }
+
+    @Test func otherErrorsDoNotSetSessionExpiredFlag() async {
+        let sut = makeSUT(behavior: .failure)
+
+        sut.loadProfile()
+        await sut.activeTask?.value
+
+        #expect(sut.isSessionExpired == false)
     }
 }

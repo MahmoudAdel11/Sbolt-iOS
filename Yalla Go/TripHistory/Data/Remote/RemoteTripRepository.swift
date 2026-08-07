@@ -7,9 +7,6 @@
 import Foundation
 
 /// `TripRepository` backed by the Yalla Go REST API.
-///
-/// Stubs out as `NetworkError.serverError(statusCode: 501, ...)` until
-/// the endpoint is wired and the DTO → domain mapping is filled in.
 final class RemoteTripRepository: TripRepository {
 
     private let client: any APIClient
@@ -18,13 +15,43 @@ final class RemoteTripRepository: TripRepository {
         self.client = client
     }
 
-    func fetchTripHistory() async throws -> [Trip] {
-        // TODO: let dtos: [TripDTO.TripResponse] = try await client.send(.tripHistory)
-        // TODO: return dtos.map { $0.toDomain() }
-        throw NetworkError.serverError(statusCode: 501, message: "Remote trip history not yet connected")
+    func fetchTripHistory(offset: Int, limit: Int) async throws -> TripHistoryPage {
+        try await loadPage(offset: offset, limit: limit)
     }
 
-    func refreshTripHistory() async throws -> [Trip] {
-        try await fetchTripHistory()
+    func refreshTripHistory(limit: Int) async throws -> TripHistoryPage {
+        try await loadPage(offset: 0, limit: limit)
+    }
+
+    private func loadPage(offset: Int, limit: Int) async throws -> TripHistoryPage {
+        do {
+            let dto: RideDTO.RideHistoryResponse = try await client.send(
+                Endpoint(
+                    path: "/rides/history",
+                    method: .get,
+                    queryItems: [
+                        URLQueryItem(name: "limit", value: String(limit)),
+                        URLQueryItem(name: "offset", value: String(offset))
+                    ]
+                )
+            )
+            return TripHistoryPage(trips: dto.items.map { $0.toDomain() }, hasMore: dto.hasMore)
+        } catch {
+            throw mapped(error)
+        }
+    }
+
+    // MARK: - Error mapping
+
+    private func mapped(_ error: Error) -> TripHistoryError {
+        if let historyError = error as? TripHistoryError { return historyError }
+        switch error {
+        case NetworkError.unauthorized:
+            return .sessionExpired
+        case NetworkError.noInternet, NetworkError.timeout:
+            return .networkUnavailable
+        default:
+            return .historyUnavailable
+        }
     }
 }

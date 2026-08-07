@@ -24,6 +24,7 @@ struct TripHistoryErrorPresenter {
         switch error {
         case .historyUnavailable: return "We couldn't load your trips. Please try again."
         case .refreshFailed: return "We couldn't refresh your trips. Please try again."
+        case .sessionExpired: return "Your session has expired. Please log in again."
         case .networkUnavailable: return "No internet connection. Please try again."
         case .unknown: return "Something went wrong. Please try again."
         }

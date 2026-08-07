@@ -14,6 +14,8 @@ enum ProfileError: Error, Equatable {
     case profileUnavailable
     /// The profile update was rejected or could not be saved.
     case updateFailed
+    /// The session token is missing, expired, or was rejected by the backend.
+    case sessionExpired
     /// Reserved for the future networking layer.
     case networkUnavailable
     /// Any unclassified failure.

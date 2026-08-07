@@ -2,26 +2,22 @@
 //  Trip.swift
 //  Yalla Go
 //
-//  Created by Mahmoud on 29/07/2026.
-//
 
 import Foundation
 
-/// A finished ride as shown in Trip History. Reuses the existing `RideType`
-/// rather than duplicating a ride-tier enum. Contains only what the history
-/// feature needs — no speculative backend fields.
+/// A ride in any lifecycle state, as returned by the backend. Mirrors
+/// `RideResponse` field-for-field — the backend has no fare, distance,
+/// duration, or location-name fields, so this model does not invent any.
+/// Location display formatting (if any) belongs in the Presentation layer.
 struct Trip: Identifiable, Equatable {
     let id: String
-    let pickupLocationName: String
-    let destinationLocationName: String
+    let riderID: String
+    let driverID: String?
+    let status: TripStatus
     let pickupCoordinate: Coordinate
     let destinationCoordinate: Coordinate
-    let price: Double
-    let tripType: RideType
-    /// Travelled distance in meters.
-    let distance: Double
-    /// Trip duration in seconds.
-    let duration: TimeInterval
-    let completedAt: Date
-    let status: TripStatus
+    let requestedAt: Date
+    let acceptedAt: Date?
+    let completedAt: Date?
+    let cancelledAt: Date?
 }

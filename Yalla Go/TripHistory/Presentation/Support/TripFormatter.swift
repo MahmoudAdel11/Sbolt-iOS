@@ -2,13 +2,13 @@
 //  TripFormatter.swift
 //  Yalla Go
 //
-//  Created by Mahmoud on 29/07/2026.
-//
 
 import Foundation
 
 /// Formats trip values for display. Kept in one place so the card and the
-/// details screen present distance, duration, and dates identically.
+/// details screen present dates and coordinates identically. Distance,
+/// duration, price, and location-name formatting were removed — the backend
+/// supplies none of those fields.
 struct TripFormatter {
 
     private let dateFormatter: DateFormatter
@@ -32,18 +32,9 @@ struct TripFormatter {
         timeFormatter.string(from: value)
     }
 
-    /// Distance in kilometres, e.g. "14.2 km".
-    func distance(meters: Double) -> String {
-        String(format: "%.1f km", meters / 1000)
-    }
-
-    /// Duration in whole minutes, e.g. "24 min".
-    func duration(seconds: TimeInterval) -> String {
-        let minutes = Int((seconds / 60).rounded())
-        return "\(minutes) min"
-    }
-
-    func price(_ value: Double) -> String {
-        value.toCurrency()
+    /// e.g. "30.0444, 31.2357" — the backend has no address/location-name
+    /// field, only coordinates.
+    func coordinate(_ value: Coordinate) -> String {
+        String(format: "%.4f, %.4f", value.latitude, value.longitude)
     }
 }

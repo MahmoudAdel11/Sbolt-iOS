@@ -13,10 +13,10 @@ import Foundation
 /// update is visible to a subsequent reload.
 struct ProfileDependencies {
 
-    private let repository: ProfileRepository
+    private let repository: any ProfileRepository
 
-    init(repository: ProfileRepository = MockProfileRepository()) {
-        self.repository = repository
+    init(repository: (any ProfileRepository)? = nil) {
+        self.repository = repository ?? AppEnvironment.current.repositoryFactory.makeProfileRepository()
     }
 
     @MainActor

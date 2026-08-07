@@ -2,12 +2,13 @@
 //  DriverCard.swift
 //  Yalla Go
 //
-//  Created by Mahmoud on 30/07/2026.
-//
 
 import SwiftUI
 
-/// Reusable card showing the matched driver's details.
+/// Reusable card showing whatever driver details are actually available.
+/// The backend only ever exposes a bare `driver_id` — every rich field is
+/// optional, so this renders a graceful fallback ("Driver assigned") instead
+/// of leaving gaps where a name/rating/vehicle would go.
 struct DriverCard: View {
     let driver: Driver
     /// Optional status line (e.g. "Arriving in 4 min").
@@ -15,7 +16,7 @@ struct DriverCard: View {
 
     var body: some View {
         HStack(spacing: 14) {
-            Image(systemName: driver.profileImage)
+            Image(systemName: driver.profileImage ?? "person.crop.circle.fill")
                 .resizable()
                 .scaledToFit()
                 .frame(width: 52, height: 52)
@@ -24,22 +25,28 @@ struct DriverCard: View {
 
             VStack(alignment: .leading, spacing: 4) {
                 HStack {
-                    Text(driver.name).font(.headline)
+                    Text(driver.name ?? "Driver assigned").font(.headline)
                     Spacer()
-                    Label(String(format: "%.1f", driver.rating), systemImage: "star.fill")
-                        .font(.subheadline)
-                        .foregroundStyle(.orange)
+                    if let rating = driver.rating {
+                        Label(String(format: "%.1f", rating), systemImage: "star.fill")
+                            .font(.subheadline)
+                            .foregroundStyle(.orange)
+                    }
                 }
-                Text("\(driver.vehicleColor) \(driver.vehicleName)")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                if let vehicleName = driver.vehicleName {
+                    Text([driver.vehicleColor, vehicleName].compactMap { $0 }.joined(separator: " "))
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
                 HStack {
-                    Text(driver.plateNumber)
-                        .font(.caption.weight(.semibold))
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
-                        .background(Color(.secondarySystemBackground),
-                                    in: RoundedRectangle(cornerRadius: 6, style: .continuous))
+                    if let plateNumber = driver.plateNumber {
+                        Text(plateNumber)
+                            .font(.caption.weight(.semibold))
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
+                            .background(Color(.secondarySystemBackground),
+                                        in: RoundedRectangle(cornerRadius: 6, style: .continuous))
+                    }
                     Spacer()
                     if let statusText {
                         Text(statusText)
@@ -59,8 +66,7 @@ struct DriverCard: View {
 #if DEBUG
 struct DriverCard_Previews: PreviewProvider {
     static var previews: some View {
-        DriverCard(driver: MockTripBookingRepository.sampleDriver(),
-                   statusText: "Arriving in 4 min")
+        DriverCard(driver: Driver(id: "driver-1"), statusText: "Driver on the way")
             .padding()
             .previewLayout(.sizeThatFits)
     }

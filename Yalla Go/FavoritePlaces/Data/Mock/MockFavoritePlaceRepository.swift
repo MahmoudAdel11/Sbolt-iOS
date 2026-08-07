@@ -2,8 +2,6 @@
 //  MockFavoritePlaceRepository.swift
 //  Yalla Go
 //
-//  Created by Mahmoud on 29/07/2026.
-//
 
 import Foundation
 
@@ -35,20 +33,28 @@ actor MockFavoritePlaceRepository: FavoritePlaceRepository {
         return places
     }
 
-    func addFavoritePlace(_ place: FavoritePlace) async throws -> [FavoritePlace] {
+    func addFavoritePlace(_ place: FavoritePlace) async throws -> FavoritePlace {
         await simulateNetworkDelay()
         guard behavior == .success else { throw FavoritePlaceError.addFailed }
-        // Replace an existing entry with the same id, otherwise append.
         places.removeAll { $0.id == place.id }
         places.append(place)
-        return places
+        return place
     }
 
-    func removeFavoritePlace(id: String) async throws -> [FavoritePlace] {
+    func updateFavoritePlace(id: String, _ place: FavoritePlace) async throws -> FavoritePlace {
+        await simulateNetworkDelay()
+        guard behavior == .success else { throw FavoritePlaceError.updateFailed }
+        guard let index = places.firstIndex(where: { $0.id == id }) else {
+            throw FavoritePlaceError.updateFailed
+        }
+        places[index] = place
+        return place
+    }
+
+    func removeFavoritePlace(id: String) async throws {
         await simulateNetworkDelay()
         guard behavior == .success else { throw FavoritePlaceError.removeFailed }
         places.removeAll { $0.id == id }
-        return places
     }
 
     // MARK: - Helpers
@@ -65,19 +71,16 @@ actor MockFavoritePlaceRepository: FavoritePlaceRepository {
                           title: "Home",
                           address: "12 El Nasr St, New Cairo",
                           coordinate: Coordinate(latitude: 30.0080, longitude: 31.4913),
-                          icon: "house.fill",
                           createdAt: Date(timeIntervalSince1970: 1_719_000_000)),
             FavoritePlace(id: "fav-work",
                           title: "Work",
                           address: "Smart Village, Giza",
                           coordinate: Coordinate(latitude: 30.0713, longitude: 31.0170),
-                          icon: "briefcase.fill",
                           createdAt: Date(timeIntervalSince1970: 1_719_100_000)),
             FavoritePlace(id: "fav-gym",
                           title: "Gym",
                           address: "Maadi, Cairo",
                           coordinate: Coordinate(latitude: 29.9603, longitude: 31.2569),
-                          icon: "dumbbell.fill",
                           createdAt: Date(timeIntervalSince1970: 1_719_200_000))
         ]
     }

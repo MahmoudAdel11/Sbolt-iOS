@@ -2,82 +2,105 @@
 //  MockTripBookingRepository.swift
 //  Yalla Go
 //
-//  Created by Mahmoud on 30/07/2026.
-//
 
 import Foundation
 
-/// In-memory `TripBookingRepository` that simulates the ride backend while the
-/// app has none. An `actor` guarantees safe access. Each step waits a
-/// configurable, cancellation-aware delay; `behavior` makes success and the two
-/// failure modes deterministic for tests.
+/// In-memory `TripBookingRepository` that simulates the ride backend's real
+/// lifecycle: `requestRide` creates a ride in `.requested`, and each
+/// subsequent `getRideDetails` call advances it one step through
+/// `statusProgression` until it reaches a terminal state — so polling
+/// against this mock behaves like polling the real API.
 actor MockTripBookingRepository: TripBookingRepository {
 
     enum Behavior {
         case success
-        case driverNotFound
+        case activeRideAlreadyExists
         case networkFailure
     }
 
     private let behavior: Behavior
-    private let driver: Driver
-    private let searchingDelay: TimeInterval
-    private let arrivingDelay: TimeInterval
-    private let tripDelay: TimeInterval
-    private let cancelDelay: TimeInterval
+    private let driverID: String
+    /// Statuses returned on the 1st, 2nd, 3rd... `getRideDetails` call after
+    /// request. The last entry should be terminal.
+    private let statusProgression: [TripStatus]
+
+    private var ride: Trip?
+    private var detailCallCount = 0
 
     init(behavior: Behavior = .success,
-         driver: Driver = MockTripBookingRepository.sampleDriver(),
-         searchingDelay: TimeInterval = 3,
-         arrivingDelay: TimeInterval = 3,
-         tripDelay: TimeInterval = 3,
-         cancelDelay: TimeInterval = 0.3) {
+         driverID: String = "driver-1",
+         statusProgression: [TripStatus] = [.requested, .accepted, .ongoing, .completed]) {
         self.behavior = behavior
-        self.driver = driver
-        self.searchingDelay = searchingDelay
-        self.arrivingDelay = arrivingDelay
-        self.tripDelay = tripDelay
-        self.cancelDelay = cancelDelay
+        self.driverID = driverID
+        self.statusProgression = statusProgression
     }
 
-    func findDriver() async throws -> Driver {
-        try await sleep(searchingDelay)
+    func requestRide(pickup: Coordinate, dropoff: Coordinate) async throws -> Trip {
         switch behavior {
-        case .success: return driver
-        case .driverNotFound: throw TripBookingError.noDriverFound
-        case .networkFailure: throw TripBookingError.networkUnavailable
+        case .activeRideAlreadyExists:
+            throw RideError.activeRideAlreadyExists
+        case .networkFailure:
+            throw RideError.networkUnavailable
+        case .success:
+            break
         }
+
+        let trip = Trip(id: "ride-1",
+                        riderID: "rider-1",
+                        driverID: nil,
+                        status: .requested,
+                        pickupCoordinate: pickup,
+                        destinationCoordinate: dropoff,
+                        requestedAt: Date(),
+                        acceptedAt: nil,
+                        completedAt: nil,
+                        cancelledAt: nil)
+        ride = trip
+        detailCallCount = 0
+        return trip
     }
 
-    func startTrip() async throws {
-        try await sleep(arrivingDelay)
+    func cancelRide(id: String) async throws -> Trip {
+        guard var current = ride, current.id == id else {
+            throw RideError.rideNotFound
+        }
+        guard !current.status.isTerminal else {
+            throw RideError.cancellationFailed
+        }
+        current = Trip(id: current.id, riderID: current.riderID, driverID: current.driverID,
+                       status: .cancelled, pickupCoordinate: current.pickupCoordinate,
+                       destinationCoordinate: current.destinationCoordinate,
+                       requestedAt: current.requestedAt, acceptedAt: current.acceptedAt,
+                       completedAt: nil, cancelledAt: Date())
+        ride = current
+        return current
     }
 
-    func completeTrip() async throws {
-        try await sleep(tripDelay)
-    }
+    func getRideDetails(id: String) async throws -> Trip {
+        guard let current = ride, current.id == id else {
+            throw RideError.rideNotFound
+        }
+        guard !current.status.isTerminal else {
+            return current
+        }
 
-    func cancelRequest() async throws {
-        try await sleep(cancelDelay)
-    }
+        let index = min(detailCallCount, statusProgression.count - 1)
+        let nextStatus = statusProgression[index]
+        detailCallCount += 1
 
-    // MARK: - Helpers
-
-    /// Cancellation-aware delay. Throws `CancellationError` if the surrounding
-    /// task is cancelled while waiting.
-    private func sleep(_ seconds: TimeInterval) async throws {
-        guard seconds > 0 else { return }
-        try await Task.sleep(nanoseconds: UInt64(seconds * 1_000_000_000))
-    }
-
-    static func sampleDriver() -> Driver {
-        Driver(id: "driver-1",
-               name: "Ahmed Hassan",
-               rating: 4.9,
-               vehicleName: "Toyota Corolla",
-               vehicleColor: "White",
-               plateNumber: "ص م ن 1234",
-               profileImage: "person.crop.circle.fill",
-               estimatedArrivalMinutes: 4)
+        let updated = Trip(
+            id: current.id,
+            riderID: current.riderID,
+            driverID: nextStatus == .requested ? nil : driverID,
+            status: nextStatus,
+            pickupCoordinate: current.pickupCoordinate,
+            destinationCoordinate: current.destinationCoordinate,
+            requestedAt: current.requestedAt,
+            acceptedAt: nextStatus == .accepted || nextStatus == .ongoing || nextStatus == .completed ? Date() : nil,
+            completedAt: nextStatus == .completed ? Date() : nil,
+            cancelledAt: nil
+        )
+        ride = updated
+        return updated
     }
 }

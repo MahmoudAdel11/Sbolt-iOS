@@ -2,12 +2,12 @@
 //  TripCard.swift
 //  Yalla Go
 //
-//  Created by Mahmoud on 29/07/2026.
-//
 
 import SwiftUI
 
-/// Reusable card summarising a single completed trip.
+/// Reusable card summarising a single ride in any lifecycle state. The
+/// backend has no fare/distance/duration/location-name fields, so this shows
+/// coordinates and status only.
 struct TripCard: View {
     let trip: Trip
     var formatter = TripFormatter()
@@ -30,7 +30,7 @@ struct TripCard: View {
 
     private var topRow: some View {
         HStack {
-            Label(trip.tripType.description, systemImage: "car.fill")
+            Label("Ride", systemImage: "car.fill")
                 .font(.subheadline.weight(.semibold))
             Spacer()
             statusBadge
@@ -38,7 +38,7 @@ struct TripCard: View {
     }
 
     private var statusBadge: some View {
-        Text(trip.status.rawValue.capitalized)
+        Text(trip.status.displayName)
             .font(.caption.weight(.semibold))
             .padding(.horizontal, 8)
             .padding(.vertical, 4)
@@ -57,41 +57,33 @@ struct TripCard: View {
             .padding(.top, 2)
 
             VStack(alignment: .leading, spacing: 10) {
-                Text(trip.pickupLocationName).font(.subheadline)
-                Text(trip.destinationLocationName).font(.subheadline)
+                Text(formatter.coordinate(trip.pickupCoordinate)).font(.subheadline)
+                Text(formatter.coordinate(trip.destinationCoordinate)).font(.subheadline)
             }
             Spacer(minLength: 0)
         }
     }
 
     private var bottomRow: some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 2) {
-                Text("\(formatter.date(trip.completedAt)) · \(formatter.time(trip.completedAt))")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                Text(formatter.distance(meters: trip.distance))
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-            Spacer()
-            Text(formatter.price(trip.price))
-                .font(.headline)
-        }
+        Text("\(formatter.date(trip.requestedAt)) · \(formatter.time(trip.requestedAt))")
+            .font(.caption)
+            .foregroundStyle(.secondary)
     }
 
     private var statusColor: Color {
         switch trip.status {
         case .completed: return .green
         case .cancelled: return .red
+        case .ongoing:   return .blue
+        case .accepted:  return .orange
+        case .requested: return .secondary
         }
     }
 
     private var accessibilitySummary: String {
-        "\(trip.tripType.description) trip from \(trip.pickupLocationName) to "
-            + "\(trip.destinationLocationName), \(formatter.price(trip.price)), "
-            + "\(formatter.distance(meters: trip.distance)), "
-            + "\(formatter.date(trip.completedAt)), \(trip.status.rawValue)"
+        "Ride from \(formatter.coordinate(trip.pickupCoordinate)) to "
+            + "\(formatter.coordinate(trip.destinationCoordinate)), "
+            + "\(formatter.date(trip.requestedAt)), \(trip.status.displayName)"
     }
 }
 
