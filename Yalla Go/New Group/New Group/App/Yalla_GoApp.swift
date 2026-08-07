@@ -11,12 +11,14 @@ import SwiftUI
 struct Yalla_GoApp: App {
     @StateObject private var locationViewModel = LocationSearchViewModel()
     @StateObject private var session = AppSessionStore()
+    @StateObject private var connectivity = ConnectivityStore()
 
     var body: some Scene {
         WindowGroup {
             RootView()
                 .environmentObject(locationViewModel)
                 .environmentObject(session)
+                .environmentObject(connectivity)
                 .task { await session.bootstrap() }
         }
     }

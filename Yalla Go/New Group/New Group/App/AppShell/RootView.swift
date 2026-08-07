@@ -15,11 +15,14 @@ struct RootView: View {
     @EnvironmentObject private var session: AppSessionStore
 
     var body: some View {
-        if session.isAuthenticated {
-            MainTabView()
-        } else {
-            AuthenticationRootView()
+        Group {
+            if session.isAuthenticated {
+                MainTabView()
+            } else {
+                AuthenticationRootView()
+            }
         }
+        .offlineBanner()
     }
 }
 
@@ -29,6 +32,7 @@ struct RootView_Previews: PreviewProvider {
         RootView()
             .environmentObject(AppSessionStore())
             .environmentObject(LocationSearchViewModel())
+            .environmentObject(ConnectivityStore())
     }
 }
 #endif
