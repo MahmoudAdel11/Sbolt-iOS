@@ -2,31 +2,34 @@
 //  TripBookingDependencies.swift
 //  Yalla Go
 //
-//  Created by Mahmoud on 30/07/2026.
-//
 
 import Foundation
 
-/// Composition root for the trip-booking flow. Wires the mock repository into
-/// the use cases and vends the view model, so views never build use cases or
-/// touch the repository directly.
+/// Composition root for the trip-booking flow. Wires the environment's
+/// repository into the use cases (including the polling use case) and vends
+/// the view model, so views never build use cases or touch the repository
+/// directly.
 struct TripBookingDependencies {
 
-    private let repository: TripBookingRepository
+    private let repository: any TripBookingRepository
     private let timings: TripFlowTimings
+    private let pollInterval: TimeInterval
 
-    init(repository: TripBookingRepository = MockTripBookingRepository(),
-         timings: TripFlowTimings = TripFlowTimings()) {
-        self.repository = repository
+    init(repository: (any TripBookingRepository)? = nil,
+         timings: TripFlowTimings = TripFlowTimings(),
+         pollInterval: TimeInterval = RidePollingService.defaultInterval) {
+        self.repository = repository ?? AppEnvironment.current.repositoryFactory.makeTripBookingRepository()
         self.timings = timings
+        self.pollInterval = pollInterval
     }
 
     @MainActor
     func makeTripBookingViewModel() -> TripBookingViewModel {
-        TripBookingViewModel(findDriverUseCase: FindDriverUseCase(repository: repository),
-                             startTripUseCase: StartTripUseCase(repository: repository),
-                             completeTripUseCase: CompleteTripUseCase(repository: repository),
-                             cancelTripUseCase: CancelTripUseCase(repository: repository),
-                             timings: timings)
+        TripBookingViewModel(
+            requestRideUseCase: RequestRideUseCase(repository: repository),
+            cancelRideUseCase: CancelRideUseCase(repository: repository),
+            pollRideStatusUseCase: PollRideStatusUseCase(repository: repository, interval: pollInterval),
+            timings: timings
+        )
     }
 }

@@ -2,22 +2,21 @@
 //  TripBookingRepository.swift
 //  Yalla Go
 //
-//  Created by Mahmoud on 30/07/2026.
-//
 
 import Foundation
 
 /// Boundary for the ride-booking backend (mock today, a real API later).
-/// Each async call simulates the wait for that step and honours task
-/// cancellation. Consolidates the driver-matching responsibilities
-/// (find/cancel) and the trip lifecycle (start/complete) behind one seam.
+///
+/// Shaped around the backend's actual REST lifecycle: a rider requests a
+/// ride, then polls for its current state until a driver accepts and the
+/// ride completes (or is cancelled) — there is no "find driver" call, no
+/// "start trip" call, and no push/websocket mechanism, so status changes are
+/// only observable by re-fetching ride details.
 protocol TripBookingRepository {
-    /// Searches for and returns a matched driver, or throws if none is found.
-    func findDriver() async throws -> Driver
-    /// Waits until the matched driver reaches the pickup and the trip begins.
-    func startTrip() async throws
-    /// Waits until the in-progress trip reaches its destination.
-    func completeTrip() async throws
-    /// Cancels the current request (best-effort).
-    func cancelRequest() async throws
+    /// Requests a new ride for the given pickup/dropoff coordinates.
+    func requestRide(pickup: Coordinate, dropoff: Coordinate) async throws -> Trip
+    /// Cancels an in-progress ride. Valid from any non-terminal status.
+    func cancelRide(id: String) async throws -> Trip
+    /// Fetches the current state of a ride — the polling target.
+    func getRideDetails(id: String) async throws -> Trip
 }

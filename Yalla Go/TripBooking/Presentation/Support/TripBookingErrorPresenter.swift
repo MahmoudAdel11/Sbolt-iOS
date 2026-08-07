@@ -2,8 +2,6 @@
 //  TripBookingErrorPresenter.swift
 //  Yalla Go
 //
-//  Created by Mahmoud on 30/07/2026.
-//
 
 import Foundation
 
@@ -13,12 +11,22 @@ struct TripBookingErrorPresenter {
 
     func message(for error: Error) -> String {
         switch error {
-        case TripBookingError.noDriverFound:
-            return "No drivers available right now. Please try again."
-        case TripBookingError.networkUnavailable:
-            return "No internet connection. Please try again."
+        case let rideError as RideError:
+            return message(for: rideError)
         default:
             return "Something went wrong. Please try again."
+        }
+    }
+
+    private func message(for error: RideError) -> String {
+        switch error {
+        case .activeRideAlreadyExists: return "You already have an active ride."
+        case .rideNotFound:            return "This ride could not be found."
+        case .notPartOfRide:           return "You don't have access to this ride."
+        case .cancellationFailed:      return "This ride can no longer be cancelled."
+        case .sessionExpired:          return "Your session has expired. Please log in again."
+        case .networkUnavailable:      return "No internet connection. Please try again."
+        case .unknown:                 return "Something went wrong. Please try again."
         }
     }
 }

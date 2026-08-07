@@ -2,8 +2,6 @@
 //  TripBookingUseCaseTests.swift
 //  Yalla GoTests
 //
-//  Created by Mahmoud on 30/07/2026.
-//
 
 import Testing
 import Foundation
@@ -11,40 +9,41 @@ import Foundation
 
 struct TripBookingUseCaseTests {
 
-    private func makeRepository(behavior: MockTripBookingRepository.Behavior = .success)
-    -> MockTripBookingRepository {
-        MockTripBookingRepository(behavior: behavior,
-                                  searchingDelay: 0,
-                                  arrivingDelay: 0,
-                                  tripDelay: 0,
-                                  cancelDelay: 0)
+    private let pickup = Coordinate(latitude: 30.05, longitude: 31.23)
+    private let dropoff = Coordinate(latitude: 30.06, longitude: 31.24)
+
+    @Test func requestRideReturnsTrip() async throws {
+        let sut = RequestRideUseCase(repository: MockTripBookingRepository())
+        let trip = try await sut.execute(pickup: pickup, dropoff: dropoff)
+        #expect(trip.status == .requested)
     }
 
-    @Test func findDriverReturnsDriver() async throws {
-        let sut = FindDriverUseCase(repository: makeRepository())
-        let driver = try await sut.execute()
-        #expect(driver.name == "Ahmed Hassan")
-    }
-
-    @Test func findDriverPropagatesFailure() async {
-        let sut = FindDriverUseCase(repository: makeRepository(behavior: .driverNotFound))
-        await #expect(throws: TripBookingError.noDriverFound) {
-            _ = try await sut.execute()
+    @Test func requestRidePropagatesFailure() async {
+        let sut = RequestRideUseCase(repository: MockTripBookingRepository(behavior: .activeRideAlreadyExists))
+        await #expect(throws: RideError.activeRideAlreadyExists) {
+            _ = try await sut.execute(pickup: pickup, dropoff: dropoff)
         }
     }
 
-    @Test func startTripCompletes() async throws {
-        let sut = StartTripUseCase(repository: makeRepository())
-        try await sut.execute()
+    @Test func cancelRideReturnsCancelledTrip() async throws {
+        let repository = MockTripBookingRepository()
+        let requested = try await repository.requestRide(pickup: pickup, dropoff: dropoff)
+        let sut = CancelRideUseCase(repository: repository)
+
+        let cancelled = try await sut.execute(rideID: requested.id)
+        #expect(cancelled.status == .cancelled)
     }
 
-    @Test func completeTripCompletes() async throws {
-        let sut = CompleteTripUseCase(repository: makeRepository())
-        try await sut.execute()
-    }
+    @Test func pollRideStatusYieldsUntilTerminal() async throws {
+        let repository = MockTripBookingRepository(statusProgression: [.requested, .accepted, .completed])
+        let requested = try await repository.requestRide(pickup: pickup, dropoff: dropoff)
+        let sut = PollRideStatusUseCase(repository: repository, interval: 0)
 
-    @Test func cancelTripCompletes() async throws {
-        let sut = CancelTripUseCase(repository: makeRepository())
-        try await sut.execute()
+        var statuses: [TripStatus] = []
+        for try await trip in sut.execute(rideID: requested.id) {
+            statuses.append(trip.status)
+        }
+
+        #expect(statuses == [.requested, .accepted, .completed])
     }
 }
