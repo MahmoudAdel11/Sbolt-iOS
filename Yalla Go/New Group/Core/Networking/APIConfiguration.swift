@@ -16,9 +16,12 @@ enum APIEnvironment {
 
     var baseURLString: String {
         switch self {
-        case .development: return "https://dev-api.yallago.com/v1"
-        case .staging:     return "https://staging-api.yallago.com/v1"
-        case .production:  return "https://api.yallago.com/v1"
+        // Plain HTTP, local backend — the Debug-only ATS exception in
+        // Yalla-Go-Info-Debug.plist exists specifically for this host.
+        // Never used in Release builds (see that plist's build-setting wiring).
+        case .development: return "http://localhost:8000/api/v1"
+        case .staging:     return "https://staging-api.yallago.com/api/v1"
+        case .production:  return "https://api.yallago.com/api/v1"
         }
     }
 }
