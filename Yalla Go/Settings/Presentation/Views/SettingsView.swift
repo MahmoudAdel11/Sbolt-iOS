@@ -12,6 +12,7 @@ import SwiftUI
 /// through the view model.
 struct SettingsView: View {
     @StateObject private var viewModel: SettingsViewModel
+    @EnvironmentObject private var session: AppSessionStore
     @State private var showLogoutConfirmation = false
 
     init(dependencies: SettingsDependencies = SettingsDependencies()) {
@@ -38,15 +39,16 @@ struct SettingsView: View {
             Button("Log Out", role: .destructive) { viewModel.logout() }
             Button("Cancel", role: .cancel) {}
         }
-        .alert("Signed Out", isPresented: logoutAlertBinding) {
-            Button("OK", role: .cancel) {}
-        } message: {
-            Text("You've been signed out (mock). Navigation will be added later.")
-        }
         .alert("Something went wrong", isPresented: errorAlertBinding) {
             Button("OK", role: .cancel) {}
         } message: {
             Text(viewModel.errorMessage ?? "")
+        }
+        .onChange(of: viewModel.didLogout) { loggedOut in
+            if loggedOut {
+                session.signOut()
+                viewModel.acknowledgeLogout()
+            }
         }
     }
 
@@ -160,11 +162,6 @@ struct SettingsView: View {
                 set: { viewModel.setPushNotifications($0) })
     }
 
-    private var logoutAlertBinding: Binding<Bool> {
-        Binding(get: { viewModel.didLogout },
-                set: { if !$0 { viewModel.acknowledgeLogout() } })
-    }
-
     private var errorAlertBinding: Binding<Bool> {
         Binding(get: { viewModel.errorMessage != nil },
                 set: { if !$0 { viewModel.clearError() } })
@@ -178,6 +175,7 @@ struct SettingsView_Previews: PreviewProvider {
             SettingsView()
         }
         .navigationViewStyle(.stack)
+        .environmentObject(AppSessionStore())
     }
 }
 #endif
