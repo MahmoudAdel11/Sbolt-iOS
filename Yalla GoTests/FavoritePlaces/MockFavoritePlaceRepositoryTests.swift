@@ -2,8 +2,6 @@
 //  MockFavoritePlaceRepositoryTests.swift
 //  Yalla GoTests
 //
-//  Created by Mahmoud on 29/07/2026.
-//
 
 import Testing
 import Foundation
@@ -11,12 +9,11 @@ import Foundation
 
 struct MockFavoritePlaceRepositoryTests {
 
-    private func makePlace(id: String = "fav-new") -> FavoritePlace {
+    private func makePlace(id: String = "fav-new", title: String = "University") -> FavoritePlace {
         FavoritePlace(id: id,
-                      title: "University",
+                      title: title,
                       address: "GUC, New Cairo",
                       coordinate: Coordinate(latitude: 29.9866, longitude: 31.4426),
-                      icon: "graduationcap.fill",
                       createdAt: Date(timeIntervalSince1970: 1_719_300_000))
     }
 
@@ -40,11 +37,13 @@ struct MockFavoritePlaceRepositoryTests {
         }
     }
 
-    @Test func addAppendsAndReturnsUpdatedList() async throws {
+    @Test func addReturnsCreatedPlaceAndAppendsToStore() async throws {
         let sut = MockFavoritePlaceRepository(artificialDelay: 0)
-        let updated = try await sut.addFavoritePlace(makePlace())
-        #expect(updated.count == 4)
-        #expect(updated.contains { $0.id == "fav-new" })
+        let created = try await sut.addFavoritePlace(makePlace())
+        #expect(created.id == "fav-new")
+
+        let all = try await sut.getFavoritePlaces()
+        #expect(all.count == 4)
     }
 
     @Test func addFails() async {
@@ -54,17 +53,43 @@ struct MockFavoritePlaceRepositoryTests {
         }
     }
 
-    @Test func removeDeletesAndReturnsUpdatedList() async throws {
+    @Test func updateReturnsUpdatedPlaceAndReplacesInStore() async throws {
         let sut = MockFavoritePlaceRepository(artificialDelay: 0)
-        let updated = try await sut.removeFavoritePlace(id: "fav-home")
-        #expect(updated.count == 2)
-        #expect(!updated.contains { $0.id == "fav-home" })
+        let updated = try await sut.updateFavoritePlace(id: "fav-home", makePlace(id: "fav-home", title: "New Home"))
+        #expect(updated.title == "New Home")
+
+        let all = try await sut.getFavoritePlaces()
+        #expect(all.count == 3) // replaced, not appended
+        #expect(all.first { $0.id == "fav-home" }?.title == "New Home")
+    }
+
+    @Test func updateFailsForUnknownId() async {
+        let sut = MockFavoritePlaceRepository(artificialDelay: 0)
+        await #expect(throws: FavoritePlaceError.updateFailed) {
+            _ = try await sut.updateFavoritePlace(id: "missing", makePlace())
+        }
+    }
+
+    @Test func updateFails() async {
+        let sut = MockFavoritePlaceRepository(behavior: .failure, artificialDelay: 0)
+        await #expect(throws: FavoritePlaceError.updateFailed) {
+            _ = try await sut.updateFavoritePlace(id: "fav-home", makePlace())
+        }
+    }
+
+    @Test func removeDeletesFromStore() async throws {
+        let sut = MockFavoritePlaceRepository(artificialDelay: 0)
+        try await sut.removeFavoritePlace(id: "fav-home")
+
+        let all = try await sut.getFavoritePlaces()
+        #expect(all.count == 2)
+        #expect(!all.contains { $0.id == "fav-home" })
     }
 
     @Test func removeFails() async {
         let sut = MockFavoritePlaceRepository(behavior: .failure, artificialDelay: 0)
         await #expect(throws: FavoritePlaceError.removeFailed) {
-            _ = try await sut.removeFavoritePlace(id: "fav-home")
+            try await sut.removeFavoritePlace(id: "fav-home")
         }
     }
 }

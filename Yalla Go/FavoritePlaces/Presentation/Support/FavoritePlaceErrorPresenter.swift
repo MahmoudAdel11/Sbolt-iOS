@@ -24,7 +24,10 @@ struct FavoritePlaceErrorPresenter {
         switch error {
         case .loadFailed: return "We couldn't load your favourite places. Please try again."
         case .addFailed: return "We couldn't save this place. Please try again."
+        case .updateFailed: return "We couldn't update this place. Please try again."
         case .removeFailed: return "We couldn't remove this place. Please try again."
+        case .duplicateLabel: return "You already have a favourite place with this name."
+        case .sessionExpired: return "Your session has expired. Please log in again."
         case .networkUnavailable: return "No internet connection. Please try again."
         case .unknown: return "Something went wrong. Please try again."
         }
