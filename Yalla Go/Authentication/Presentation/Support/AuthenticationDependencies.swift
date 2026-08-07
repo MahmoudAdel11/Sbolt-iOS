@@ -7,17 +7,17 @@
 
 import Foundation
 
-/// Composition root for the authentication feature. Wires the mock repository
-/// into use cases and vends view models, so views never construct use cases
-/// or touch the repository directly. Swap the injected repository here to move
-/// off the mock later.
+/// Composition root for the authentication feature.
+/// Resolves the active repository from `AppEnvironment.current` by default,
+/// so switching environment (mock ↔ remote) requires no changes here or in views.
 @MainActor
 struct AuthenticationDependencies {
 
-    private let repository: AuthenticationRepository
+    private let repository: any AuthenticationRepository
 
-    init(repository: AuthenticationRepository = MockAuthenticationRepository()) {
+    init(repository: (any AuthenticationRepository)? = nil) {
         self.repository = repository
+            ?? AppEnvironment.current.repositoryFactory.makeAuthenticationRepository()
     }
 
     func makeLoginViewModel() -> LoginViewModel {

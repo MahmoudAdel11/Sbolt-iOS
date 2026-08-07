@@ -17,6 +17,7 @@ struct Yalla_GoApp: App {
             RootView()
                 .environmentObject(locationViewModel)
                 .environmentObject(session)
+                .task { await session.bootstrap() }
         }
     }
 }
