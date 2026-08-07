@@ -2,22 +2,25 @@
 //  GetTripHistoryUseCase.swift
 //  Yalla Go
 //
-//  Created by Mahmoud on 29/07/2026.
-//
 
 import Foundation
 
-/// Retrieves the user's trip history, optionally forcing a refresh.
+/// Retrieves one page of the user's trip history, optionally forcing a
+/// refresh of the first page.
 struct GetTripHistoryUseCase {
-    private let repository: TripRepository
+    static let defaultPageSize = 20
 
-    init(repository: TripRepository) {
+    private let repository: TripRepository
+    private let pageSize: Int
+
+    init(repository: TripRepository, pageSize: Int = GetTripHistoryUseCase.defaultPageSize) {
         self.repository = repository
+        self.pageSize = pageSize
     }
 
-    func execute(refresh: Bool = false) async throws -> [Trip] {
+    func execute(offset: Int = 0, refresh: Bool = false) async throws -> TripHistoryPage {
         refresh
-            ? try await repository.refreshTripHistory()
-            : try await repository.fetchTripHistory()
+            ? try await repository.refreshTripHistory(limit: pageSize)
+            : try await repository.fetchTripHistory(offset: offset, limit: pageSize)
     }
 }

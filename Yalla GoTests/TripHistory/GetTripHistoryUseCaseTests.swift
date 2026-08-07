@@ -2,8 +2,6 @@
 //  GetTripHistoryUseCaseTests.swift
 //  Yalla GoTests
 //
-//  Created by Mahmoud on 29/07/2026.
-//
 
 import Testing
 import Foundation
@@ -11,22 +9,41 @@ import Foundation
 
 struct GetTripHistoryUseCaseTests {
 
-    @Test func returnsTripsOnSuccess() async throws {
+    @Test func returnsFirstPageOnSuccess() async throws {
         let repository = MockTripRepository(artificialDelay: 0)
         let sut = GetTripHistoryUseCase(repository: repository)
 
-        let trips = try await sut.execute()
+        let page = try await sut.execute()
 
-        #expect(trips.count == 3)
+        #expect(page.trips.count == 4)
+        #expect(page.hasMore == false)
     }
 
     @Test func returnsEmptyWhenNoTrips() async throws {
         let repository = MockTripRepository(trips: [], artificialDelay: 0)
         let sut = GetTripHistoryUseCase(repository: repository)
 
-        let trips = try await sut.execute()
+        let page = try await sut.execute()
 
-        #expect(trips.isEmpty)
+        #expect(page.trips.isEmpty)
+        #expect(page.hasMore == false)
+    }
+
+    @Test func respectsCustomPageSizeAndOffset() async throws {
+        let repository = MockTripRepository(trips: MockTripRepository.manyTrips(count: 25), artificialDelay: 0)
+        let sut = GetTripHistoryUseCase(repository: repository, pageSize: 10)
+
+        let firstPage = try await sut.execute(offset: 0)
+        #expect(firstPage.trips.count == 10)
+        #expect(firstPage.hasMore == true)
+
+        let secondPage = try await sut.execute(offset: 10)
+        #expect(secondPage.trips.count == 10)
+        #expect(secondPage.hasMore == true)
+
+        let thirdPage = try await sut.execute(offset: 20)
+        #expect(thirdPage.trips.count == 5)
+        #expect(thirdPage.hasMore == false)
     }
 
     @Test func propagatesFailure() async {

@@ -12,6 +12,7 @@ import SwiftUI
 /// pull-to-refresh and navigation to a trip-details placeholder.
 struct TripHistoryView: View {
     @StateObject private var viewModel: TripHistoryViewModel
+    @EnvironmentObject private var session: AppSessionStore
 
     init(dependencies: TripHistoryDependencies = TripHistoryDependencies()) {
         _viewModel = StateObject(wrappedValue: dependencies.makeTripHistoryViewModel())
@@ -23,6 +24,9 @@ struct TripHistoryView: View {
             .navigationBarTitleDisplayMode(.inline)
             .task {
                 if viewModel.trips.isEmpty { viewModel.loadTripHistory() }
+            }
+            .onChange(of: viewModel.isSessionExpired) { expired in
+                if expired { session.signOut() }
             }
     }
 
@@ -48,27 +52,48 @@ struct TripHistoryView: View {
     }
 
     private var tripList: some View {
-        List(viewModel.trips) { trip in
-            ZStack {
-                TripCard(trip: trip)
-                NavigationLink {
-                    TripDetailsPlaceholderView(trip: trip)
-                } label: {
-                    EmptyView()
+        List {
+            ForEach(viewModel.trips) { trip in
+                ZStack {
+                    TripCard(trip: trip)
+                    NavigationLink {
+                        TripDetailsPlaceholderView(trip: trip)
+                    } label: {
+                        EmptyView()
+                    }
+                    .opacity(0)
                 }
-                .opacity(0)
+                .listRowSeparator(.hidden)
+                .listRowInsets(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
+                .listRowBackground(Color.clear)
+                .accessibilityIdentifier("trip_row_\(trip.id)")
+                .accessibilityHint("Shows trip details")
             }
-            .listRowSeparator(.hidden)
-            .listRowInsets(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
-            .listRowBackground(Color.clear)
-            .accessibilityIdentifier("trip_row_\(trip.id)")
-            .accessibilityHint("Shows trip details")
+
+            if viewModel.hasMore {
+                loadMoreRow
+            }
         }
         .listStyle(.plain)
         .refreshable {
             viewModel.refresh()
             await viewModel.activeTask?.value
         }
+    }
+
+    private var loadMoreRow: some View {
+        HStack {
+            Spacer()
+            if viewModel.isLoadingMore {
+                ProgressView()
+            } else {
+                Button("Load More") { viewModel.loadMore() }
+                    .accessibilityIdentifier("trip_history_load_more_button")
+            }
+            Spacer()
+        }
+        .listRowSeparator(.hidden)
+        .listRowBackground(Color.clear)
     }
 
     private func errorState(_ message: String) -> some View {
@@ -117,6 +142,7 @@ struct TripHistoryView_Previews: PreviewProvider {
             TripHistoryView()
         }
         .navigationViewStyle(.stack)
+        .environmentObject(AppSessionStore())
     }
 }
 #endif
