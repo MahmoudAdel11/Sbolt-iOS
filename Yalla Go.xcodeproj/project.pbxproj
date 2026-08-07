@@ -11,6 +11,7 @@
 		090191E27233B33A00B0BD32 /* SettingsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B8EBBDEEAF2404772B443F /* SettingsViewModelTests.swift */; };
 		13B09C4FCB8D219CA9EEEAD9 /* MockSettingsRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B95D53B36D309387BE6924F5 /* MockSettingsRepositoryTests.swift */; };
 		1656907CF7AD6CD8FF228D12 /* ProfileViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 904F8A1D5B54A11FBACFF5F7 /* ProfileViewModelTests.swift */; };
+		1C790C9B13B7FC7ED0FEB573 /* PollRideStatusUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECDDC8C9982B98415AE76814 /* PollRideStatusUseCase.swift */; };
 		1E251A5E2D4D111800FE1206 /* LocationSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E251A5D2D4D111800FE1206 /* LocationSearchView.swift */; };
 		1E251A612D4D327400FE1206 /* LocationSearchResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E251A602D4D327400FE1206 /* LocationSearchResultCell.swift */; };
 		1E251A632D4D5A0400FE1206 /* LocationSearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E251A622D4D5A0400FE1206 /* LocationSearchViewModel.swift */; };
@@ -27,14 +28,26 @@
 		1EBCD6AA2D7D2078002D1B8D /* RideRequestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBCD6A92D7D2078002D1B8D /* RideRequestView.swift */; };
 		1EBCD6AC2D85A137002D1B8D /* RideType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBCD6AB2D85A137002D1B8D /* RideType.swift */; };
 		1EBCF7DF2D4BC11F00BDFBE8 /* LocationSearchActivationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBCF7DE2D4BC11F00BDFBE8 /* LocationSearchActivationView.swift */; };
+		28321E954696A32967429B65 /* RideDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA43F8338FAA3A20C8354E37 /* RideDTO.swift */; };
 		300E99BE287D4AD00EE0FB2B /* MockTripBookingRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE72EB5483367351B4A938ED /* MockTripBookingRepositoryTests.swift */; };
+		321B843AACE48E33D419DEBC /* RidePollingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B02631181B3A4990A41ADD0 /* RidePollingService.swift */; };
+		3567A6CAED86C27F75AE47C7 /* RemoteTripBookingRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99B18C9AF4D80C3D6BF5A476 /* RemoteTripBookingRepository.swift */; };
+		3B27F9B48F3EFA310C0F59F7 /* CancelRideUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC0000B0511ACBE9B0CCAE4 /* CancelRideUseCase.swift */; };
+		3DA86A276C77D2F27068FEE2 /* RemoteTripBookingRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C2CF5944595FF7C51801A94 /* RemoteTripBookingRepositoryTests.swift */; };
+		4020D89812AC50CA22B0A428 /* RequestRideUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037E7A8FBBEE405C1868A017 /* RequestRideUseCase.swift */; };
 		4D76DF70805C8A03E5F97C50 /* MockURLProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25DEBE68354FB9EAE0505F9A /* MockURLProtocol.swift */; };
 		4F688965A3C91AA19E75B1CE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D49101571FAFE30C837E6EE /* Foundation.framework */; };
 		577B43492F4BBF7DCA953786 /* MockProfileRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93EE224A474F66908A5F4FA /* MockProfileRepositoryTests.swift */; };
+		630441F3D19AB069D76F05BF /* RemoteFavoritePlaceRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C47711104C046D1AEFFB293F /* RemoteFavoritePlaceRepositoryTests.swift */; };
 		677566F94F2403050AD702B9 /* MockAuthenticationRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7376718315D9A099C77C7939 /* MockAuthenticationRepositoryTests.swift */; };
+		6A246116BCFE50A06FDF2C16 /* TripHistoryPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FC0E496C38D5F38B78D7E7B /* TripHistoryPage.swift */; };
 		7A72D86A98FDC55A4FDF4B09 /* AuthenticationRepositorySpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EE37A0940BAE1875B3F3B89 /* AuthenticationRepositorySpy.swift */; };
 		7BE0610DB10023ED7599655E /* TripBookingViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D7B007985E7AEDBFF9A325F /* TripBookingViewModelTests.swift */; };
 		87351DB5B2459F82C78171F2 /* RegisterViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE032FF5FAD11F888C5D3B1 /* RegisterViewModelTests.swift */; };
+		906A04AD3E569CA0320FD1D0 /* RemoteProfileRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52DF9E1B593F95EC45370B1 /* RemoteProfileRepositoryTests.swift */; };
+		908F95537C92A9ED9693A25F /* FavoritePlaceIconTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25630CE1D59968E97EE31D5E /* FavoritePlaceIconTests.swift */; };
+		977D252D4EE9B9BF33361E98 /* UpdateFavoritePlaceUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47F361E41E030BC45A5C323D /* UpdateFavoritePlaceUseCase.swift */; };
+		9999311A63804877C126798E /* RideError.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6549A6CA9D91E6F842B42A /* RideError.swift */; };
 		A8D18370FB20762904B97ECD /* ProfileUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A5E83495DD5EF4E3306E779 /* ProfileUseCaseTests.swift */; };
 		AB5106DD3D82906D0045C1B1 /* MockFavoritePlaceRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16D747E146BF7DDB0C0FB3F /* MockFavoritePlaceRepositoryTests.swift */; };
 		B06A4A90A4E4AC43688BC0DD /* APIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABB3331C5D9BA5F09388CB3D /* APIClientTests.swift */; };
@@ -112,12 +125,7 @@
 		B1329D07301AA540007D8AA6 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329D06301AA540007D8AA6 /* RootView.swift */; };
 		B1329D16301AA7EB007D8AA6 /* Driver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329D15301AA7EB007D8AA6 /* Driver.swift */; };
 		B1329D18301AA7F0007D8AA6 /* TripPhase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329D17301AA7F0007D8AA6 /* TripPhase.swift */; };
-		B1329D1A301AA7F3007D8AA6 /* TripBookingError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329D19301AA7F3007D8AA6 /* TripBookingError.swift */; };
 		B1329D1C301AA7F6007D8AA6 /* TripBookingRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329D1B301AA7F6007D8AA6 /* TripBookingRepository.swift */; };
-		B1329D1E301AA7F9007D8AA6 /* FindDriverUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329D1D301AA7F9007D8AA6 /* FindDriverUseCase.swift */; };
-		B1329D20301AA7FB007D8AA6 /* StartTripUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329D1F301AA7FB007D8AA6 /* StartTripUseCase.swift */; };
-		B1329D22301AA7FE007D8AA6 /* CompleteTripUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329D21301AA7FE007D8AA6 /* CompleteTripUseCase.swift */; };
-		B1329D24301AA7FF007D8AA6 /* CancelTripUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329D23301AA7FF007D8AA6 /* CancelTripUseCase.swift */; };
 		B1329D26301AA866007D8AA6 /* MockTripBookingRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329D25301AA866007D8AA6 /* MockTripBookingRepository.swift */; };
 		B1329D28301AA86A007D8AA6 /* TripFlowTimings.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329D27301AA86A007D8AA6 /* TripFlowTimings.swift */; };
 		B1329D2A301AA86D007D8AA6 /* TripBookingErrorPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329D29301AA86D007D8AA6 /* TripBookingErrorPresenter.swift */; };
@@ -136,7 +144,6 @@
 		B152BFB0301D5319004C677C /* RemoteProfileRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B152BFAF301D5319004C677C /* RemoteProfileRepository.swift */; };
 		B152BFB3301D531F004C677C /* RemoteFavoritePlaceRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B152BFB2301D531F004C677C /* RemoteFavoritePlaceRepository.swift */; };
 		B152BFB6301D5321004C677C /* AuthDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = B152BFB5301D5321004C677C /* AuthDTO.swift */; };
-		B152BFB9301D5323004C677C /* TripDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = B152BFB8301D5323004C677C /* TripDTO.swift */; };
 		B152BFBC301D5324004C677C /* ProfileDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = B152BFBB301D5324004C677C /* ProfileDTO.swift */; };
 		B152BFBF301D5327004C677C /* FavoritePlaceDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = B152BFBE301D5327004C677C /* FavoritePlaceDTO.swift */; };
 		B152BFC2301D5331004C677C /* RepositoryFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B152BFC1301D5331004C677C /* RepositoryFactory.swift */; };
@@ -145,15 +152,22 @@
 		B15639C530239F1E001EB8C7 /* NetworkLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15639C430239F1E001EB8C7 /* NetworkLogger.swift */; };
 		B15639C730239F25001EB8C7 /* AuthenticatedAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15639C630239F25001EB8C7 /* AuthenticatedAPIClient.swift */; };
 		B15639C93023C51F001EB8C7 /* JSONCoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15639C83023C51F001EB8C7 /* JSONCoding.swift */; };
+		B15639CC3023DA7F001EB8C7 /* TokenStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15639CB3023DA7F001EB8C7 /* TokenStorage.swift */; };
+		B15639CE3023DA81001EB8C7 /* KeychainTokenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15639CD3023DA81001EB8C7 /* KeychainTokenProvider.swift */; };
+		B15639D03023DA85001EB8C7 /* SessionBootstrapUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15639CF3023DA85001EB8C7 /* SessionBootstrapUseCase.swift */; };
+		B15639D23023DA87001EB8C7 /* EmptyResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15639D13023DA87001EB8C7 /* EmptyResponse.swift */; };
 		B78FBF80915D2B1897ABEE93 /* TripBookingUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB73E3B475D744B8C85FEEE0 /* TripBookingUseCaseTests.swift */; };
 		BBAD554BB7C65DA9415E0E42 /* MockTripRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6254D022183AC43C7A97566A /* MockTripRepositoryTests.swift */; };
 		BBF002364E7FA5222ADC6492 /* EndpointTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91156FBE06D87749D2D50A27 /* EndpointTests.swift */; };
 		C4495B206E57A302BDD9688A /* FavoritePlaceUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC9AE464E82AC77322D4CAF3 /* FavoritePlaceUseCaseTests.swift */; };
 		C9FE50548DF1E5648EBC2E49 /* LoginViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10107C778C671DC6FE789AEE /* LoginViewModelTests.swift */; };
+		D57D6D579C9A50E3C7F07210 /* SavedPlacePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3CF9A61EF87939A97937C2 /* SavedPlacePickerView.swift */; };
 		D67A3FC5AB3C32B6BFF20388 /* TripHistoryViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD629B922669225BCAA9775 /* TripHistoryViewModelTests.swift */; };
 		D6A220D825281DBA9B577F53 /* FavoritePlacesViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFD5C8F4448F23111B8098EA /* FavoritePlacesViewModelTests.swift */; };
+		DB840C9BD520EF09DC231C8D /* FavoritePlacesDependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB899E9AB5C50F4BB0BD5FB4 /* FavoritePlacesDependencies.swift */; };
 		EE19143E1065E9950BD94B00 /* AuthenticationUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF6A51A4309665F722F6FA50 /* AuthenticationUseCaseTests.swift */; };
 		F4FC3BFF274CB2021059D958 /* GetTripHistoryUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 350D39ADE19B72101B2049B6 /* GetTripHistoryUseCaseTests.swift */; };
+		FF8E0DA7ACA857300684B6DA /* RemoteTripRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21AE469295E5C761A0B96431 /* RemoteTripRepositoryTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -167,6 +181,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		037E7A8FBBEE405C1868A017 /* RequestRideUseCase.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RequestRideUseCase.swift; sourceTree = "<group>"; };
 		0D49101571FAFE30C837E6EE /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		10107C778C671DC6FE789AEE /* LoginViewModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LoginViewModelTests.swift; sourceTree = "<group>"; };
 		1E251A5D2D4D111800FE1206 /* LocationSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchView.swift; sourceTree = "<group>"; };
@@ -187,11 +202,18 @@
 		1EBCD6AB2D85A137002D1B8D /* RideType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RideType.swift; sourceTree = "<group>"; };
 		1EBCD6AD2D85C30D002D1B8D /* Yalla-Go-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Yalla-Go-Info.plist"; sourceTree = SOURCE_ROOT; };
 		1EBCF7DE2D4BC11F00BDFBE8 /* LocationSearchActivationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchActivationView.swift; sourceTree = "<group>"; };
+		21AE469295E5C761A0B96431 /* RemoteTripRepositoryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RemoteTripRepositoryTests.swift; sourceTree = "<group>"; };
+		25630CE1D59968E97EE31D5E /* FavoritePlaceIconTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FavoritePlaceIconTests.swift; sourceTree = "<group>"; };
 		25DEBE68354FB9EAE0505F9A /* MockURLProtocol.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MockURLProtocol.swift; sourceTree = "<group>"; };
 		350D39ADE19B72101B2049B6 /* GetTripHistoryUseCaseTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GetTripHistoryUseCaseTests.swift; sourceTree = "<group>"; };
+		3B02631181B3A4990A41ADD0 /* RidePollingService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RidePollingService.swift; path = Support/RidePollingService.swift; sourceTree = "<group>"; };
+		47F361E41E030BC45A5C323D /* UpdateFavoritePlaceUseCase.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UpdateFavoritePlaceUseCase.swift; sourceTree = "<group>"; };
 		4A5E83495DD5EF4E3306E779 /* ProfileUseCaseTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ProfileUseCaseTests.swift; sourceTree = "<group>"; };
 		4A6E4CEBA6A1B32164A5AB16 /* Yalla GoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Yalla GoTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4C2CF5944595FF7C51801A94 /* RemoteTripBookingRepositoryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RemoteTripBookingRepositoryTests.swift; sourceTree = "<group>"; };
 		4DD629B922669225BCAA9775 /* TripHistoryViewModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TripHistoryViewModelTests.swift; sourceTree = "<group>"; };
+		4E3CF9A61EF87939A97937C2 /* SavedPlacePickerView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SavedPlacePickerView.swift; path = Views/SavedPlacePickerView.swift; sourceTree = "<group>"; };
+		4FC0E496C38D5F38B78D7E7B /* TripHistoryPage.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TripHistoryPage.swift; sourceTree = "<group>"; };
 		5EE37A0940BAE1875B3F3B89 /* AuthenticationRepositorySpy.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AuthenticationRepositorySpy.swift; sourceTree = "<group>"; };
 		6254D022183AC43C7A97566A /* MockTripRepositoryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MockTripRepositoryTests.swift; sourceTree = "<group>"; };
 		7376718315D9A099C77C7939 /* MockAuthenticationRepositoryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MockAuthenticationRepositoryTests.swift; sourceTree = "<group>"; };
@@ -199,6 +221,8 @@
 		8D7B007985E7AEDBFF9A325F /* TripBookingViewModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TripBookingViewModelTests.swift; sourceTree = "<group>"; };
 		904F8A1D5B54A11FBACFF5F7 /* ProfileViewModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ProfileViewModelTests.swift; sourceTree = "<group>"; };
 		91156FBE06D87749D2D50A27 /* EndpointTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EndpointTests.swift; sourceTree = "<group>"; };
+		99B18C9AF4D80C3D6BF5A476 /* RemoteTripBookingRepository.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RemoteTripBookingRepository.swift; path = Remote/RemoteTripBookingRepository.swift; sourceTree = "<group>"; };
+		AB899E9AB5C50F4BB0BD5FB4 /* FavoritePlacesDependencies.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FavoritePlacesDependencies.swift; sourceTree = "<group>"; };
 		ABB3331C5D9BA5F09388CB3D /* APIClientTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = APIClientTests.swift; sourceTree = "<group>"; };
 		AF6A51A4309665F722F6FA50 /* AuthenticationUseCaseTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AuthenticationUseCaseTests.swift; sourceTree = "<group>"; };
 		B1329C343019752B007D8AA6 /* RouteRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteRepository.swift; sourceTree = "<group>"; };
@@ -275,12 +299,7 @@
 		B1329D06301AA540007D8AA6 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		B1329D15301AA7EB007D8AA6 /* Driver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Driver.swift; sourceTree = "<group>"; };
 		B1329D17301AA7F0007D8AA6 /* TripPhase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripPhase.swift; sourceTree = "<group>"; };
-		B1329D19301AA7F3007D8AA6 /* TripBookingError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripBookingError.swift; sourceTree = "<group>"; };
 		B1329D1B301AA7F6007D8AA6 /* TripBookingRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripBookingRepository.swift; sourceTree = "<group>"; };
-		B1329D1D301AA7F9007D8AA6 /* FindDriverUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindDriverUseCase.swift; sourceTree = "<group>"; };
-		B1329D1F301AA7FB007D8AA6 /* StartTripUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartTripUseCase.swift; sourceTree = "<group>"; };
-		B1329D21301AA7FE007D8AA6 /* CompleteTripUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompleteTripUseCase.swift; sourceTree = "<group>"; };
-		B1329D23301AA7FF007D8AA6 /* CancelTripUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelTripUseCase.swift; sourceTree = "<group>"; };
 		B1329D25301AA866007D8AA6 /* MockTripBookingRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockTripBookingRepository.swift; sourceTree = "<group>"; };
 		B1329D27301AA86A007D8AA6 /* TripFlowTimings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripFlowTimings.swift; sourceTree = "<group>"; };
 		B1329D29301AA86D007D8AA6 /* TripBookingErrorPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripBookingErrorPresenter.swift; sourceTree = "<group>"; };
@@ -299,7 +318,6 @@
 		B152BFAF301D5319004C677C /* RemoteProfileRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteProfileRepository.swift; sourceTree = "<group>"; };
 		B152BFB2301D531F004C677C /* RemoteFavoritePlaceRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteFavoritePlaceRepository.swift; sourceTree = "<group>"; };
 		B152BFB5301D5321004C677C /* AuthDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthDTO.swift; sourceTree = "<group>"; };
-		B152BFB8301D5323004C677C /* TripDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripDTO.swift; sourceTree = "<group>"; };
 		B152BFBB301D5324004C677C /* ProfileDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDTO.swift; sourceTree = "<group>"; };
 		B152BFBE301D5327004C677C /* FavoritePlaceDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritePlaceDTO.swift; sourceTree = "<group>"; };
 		B152BFC1301D5331004C677C /* RepositoryFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryFactory.swift; sourceTree = "<group>"; };
@@ -308,13 +326,24 @@
 		B15639C430239F1E001EB8C7 /* NetworkLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkLogger.swift; sourceTree = "<group>"; };
 		B15639C630239F25001EB8C7 /* AuthenticatedAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatedAPIClient.swift; sourceTree = "<group>"; };
 		B15639C83023C51F001EB8C7 /* JSONCoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONCoding.swift; sourceTree = "<group>"; };
+		B15639CB3023DA7F001EB8C7 /* TokenStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenStorage.swift; sourceTree = "<group>"; };
+		B15639CD3023DA81001EB8C7 /* KeychainTokenProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainTokenProvider.swift; sourceTree = "<group>"; };
+		B15639CF3023DA85001EB8C7 /* SessionBootstrapUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionBootstrapUseCase.swift; sourceTree = "<group>"; };
+		B15639D13023DA87001EB8C7 /* EmptyResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyResponse.swift; sourceTree = "<group>"; };
 		B95D53B36D309387BE6924F5 /* MockSettingsRepositoryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MockSettingsRepositoryTests.swift; sourceTree = "<group>"; };
 		BC9AE464E82AC77322D4CAF3 /* FavoritePlaceUseCaseTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FavoritePlaceUseCaseTests.swift; sourceTree = "<group>"; };
 		BCAEE3D47DB2132D90F1CB09 /* NetworkErrorTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NetworkErrorTests.swift; sourceTree = "<group>"; };
 		C16D747E146BF7DDB0C0FB3F /* MockFavoritePlaceRepositoryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MockFavoritePlaceRepositoryTests.swift; sourceTree = "<group>"; };
+		C47711104C046D1AEFFB293F /* RemoteFavoritePlaceRepositoryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RemoteFavoritePlaceRepositoryTests.swift; sourceTree = "<group>"; };
 		C93EE224A474F66908A5F4FA /* MockProfileRepositoryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MockProfileRepositoryTests.swift; sourceTree = "<group>"; };
+		DA43F8338FAA3A20C8354E37 /* RideDTO.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RideDTO.swift; path = DTO/RideDTO.swift; sourceTree = "<group>"; };
 		DB73E3B475D744B8C85FEEE0 /* TripBookingUseCaseTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TripBookingUseCaseTests.swift; sourceTree = "<group>"; };
+		DC6549A6CA9D91E6F842B42A /* RideError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RideError.swift; sourceTree = "<group>"; };
 		DE72EB5483367351B4A938ED /* MockTripBookingRepositoryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MockTripBookingRepositoryTests.swift; sourceTree = "<group>"; };
+		E085DF83B8961F3FEFA74AC8 /* Yalla-Go-Info-Debug.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Yalla-Go-Info-Debug.plist"; sourceTree = "<group>"; };
+		E52DF9E1B593F95EC45370B1 /* RemoteProfileRepositoryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RemoteProfileRepositoryTests.swift; sourceTree = "<group>"; };
+		ECDDC8C9982B98415AE76814 /* PollRideStatusUseCase.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PollRideStatusUseCase.swift; sourceTree = "<group>"; };
+		EDC0000B0511ACBE9B0CCAE4 /* CancelRideUseCase.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CancelRideUseCase.swift; sourceTree = "<group>"; };
 		EEE032FF5FAD11F888C5D3B1 /* RegisterViewModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RegisterViewModelTests.swift; sourceTree = "<group>"; };
 		EFD5C8F4448F23111B8098EA /* FavoritePlacesViewModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FavoritePlacesViewModelTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -356,6 +385,7 @@
 				1E4C38522C91E90C006AB83B /* Products */,
 				85D10A5DF412B68D33F4D615 /* Frameworks */,
 				AC2138E499F9CFC1821BE129 /* Yalla GoTests */,
+				E085DF83B8961F3FEFA74AC8 /* Yalla-Go-Info-Debug.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -517,6 +547,14 @@
 			path = Doubles;
 			sourceTree = "<group>";
 		};
+		6BB0F2FE72DC532091887B14 /* Remote */ = {
+			isa = PBXGroup;
+			children = (
+				99B18C9AF4D80C3D6BF5A476 /* RemoteTripBookingRepository.swift */,
+			);
+			name = Remote;
+			sourceTree = "<group>";
+		};
 		786043C666078AA45CACF321 /* iOS */ = {
 			isa = PBXGroup;
 			children = (
@@ -531,6 +569,14 @@
 				786043C666078AA45CACF321 /* iOS */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		937D3DBF63971D3E38B389D6 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				4E3CF9A61EF87939A97937C2 /* SavedPlacePickerView.swift */,
+			);
+			name = Views;
 			sourceTree = "<group>";
 		};
 		AC2138E499F9CFC1821BE129 /* Yalla GoTests */ = {
@@ -594,6 +640,7 @@
 				B1329C3F3019800E007D8AA6 /* Mock */,
 				B152BFA8301D5313004C677C /* Remote */,
 				B152BFB4301D5320004C677C /* DTO */,
+				B15639CA3023DA7F001EB8C7 /* Keychain */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -630,6 +677,7 @@
 				B1329C4A3019802D007D8AA6 /* RegisterUseCase.swift */,
 				B1329C4C30198030007D8AA6 /* LogoutUseCase.swift */,
 				B1329C4E30198032007D8AA6 /* GetCurrentUserUseCase.swift */,
+				B15639CF3023DA85001EB8C7 /* SessionBootstrapUseCase.swift */,
 			);
 			path = UseCases;
 			sourceTree = "<group>";
@@ -866,6 +914,7 @@
 			children = (
 				B1329CA43019E10B007D8AA6 /* TripStatus.swift */,
 				B1329CA63019E10F007D8AA6 /* Trip.swift */,
+				4FC0E496C38D5F38B78D7E7B /* TripHistoryPage.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -973,6 +1022,7 @@
 			children = (
 				B1329CC9301A97C0007D8AA6 /* ViewModels */,
 				B1329CCA301A97C0007D8AA6 /* Support */,
+				937D3DBF63971D3E38B389D6 /* Views */,
 			);
 			path = Presentation;
 			sourceTree = "<group>";
@@ -1007,6 +1057,7 @@
 				B1329CD3301A97D1007D8AA6 /* GetFavoritePlacesUseCase.swift */,
 				B1329CD5301A97D4007D8AA6 /* AddFavoritePlaceUseCase.swift */,
 				B1329CD7301A97D6007D8AA6 /* RemoveFavoritePlaceUseCase.swift */,
+				47F361E41E030BC45A5C323D /* UpdateFavoritePlaceUseCase.swift */,
 			);
 			path = UseCases;
 			sourceTree = "<group>";
@@ -1031,6 +1082,7 @@
 			isa = PBXGroup;
 			children = (
 				B1329CDB301A97EA007D8AA6 /* FavoritePlaceErrorPresenter.swift */,
+				AB899E9AB5C50F4BB0BD5FB4 /* FavoritePlacesDependencies.swift */,
 			);
 			path = Support;
 			sourceTree = "<group>";
@@ -1168,6 +1220,7 @@
 				B1329D0D301AA7DD007D8AA6 /* Errors */,
 				B1329D0E301AA7DE007D8AA6 /* Repositories */,
 				B1329D0F301AA7DF007D8AA6 /* UseCases */,
+				BBF8F8820B22893DADA8F460 /* Support */,
 			);
 			path = Domain;
 			sourceTree = "<group>";
@@ -1176,6 +1229,8 @@
 			isa = PBXGroup;
 			children = (
 				B1329D10301AA7E0007D8AA6 /* Mock */,
+				C60A17B79EC7F326B647768C /* DTO */,
+				6BB0F2FE72DC532091887B14 /* Remote */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -1203,7 +1258,7 @@
 		B1329D0D301AA7DD007D8AA6 /* Errors */ = {
 			isa = PBXGroup;
 			children = (
-				B1329D19301AA7F3007D8AA6 /* TripBookingError.swift */,
+				DC6549A6CA9D91E6F842B42A /* RideError.swift */,
 			);
 			path = Errors;
 			sourceTree = "<group>";
@@ -1219,10 +1274,9 @@
 		B1329D0F301AA7DF007D8AA6 /* UseCases */ = {
 			isa = PBXGroup;
 			children = (
-				B1329D1D301AA7F9007D8AA6 /* FindDriverUseCase.swift */,
-				B1329D1F301AA7FB007D8AA6 /* StartTripUseCase.swift */,
-				B1329D21301AA7FE007D8AA6 /* CompleteTripUseCase.swift */,
-				B1329D23301AA7FF007D8AA6 /* CancelTripUseCase.swift */,
+				037E7A8FBBEE405C1868A017 /* RequestRideUseCase.swift */,
+				EDC0000B0511ACBE9B0CCAE4 /* CancelRideUseCase.swift */,
+				ECDDC8C9982B98415AE76814 /* PollRideStatusUseCase.swift */,
 			);
 			path = UseCases;
 			sourceTree = "<group>";
@@ -1290,6 +1344,7 @@
 				B15639C430239F1E001EB8C7 /* NetworkLogger.swift */,
 				B15639C630239F25001EB8C7 /* AuthenticatedAPIClient.swift */,
 				B15639C83023C51F001EB8C7 /* JSONCoding.swift */,
+				B15639D13023DA87001EB8C7 /* EmptyResponse.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -1337,7 +1392,6 @@
 		B152BFB7301D5323004C677C /* DTO */ = {
 			isa = PBXGroup;
 			children = (
-				B152BFB8301D5323004C677C /* TripDTO.swift */,
 			);
 			path = DTO;
 			sourceTree = "<group>";
@@ -1367,6 +1421,15 @@
 			path = DI;
 			sourceTree = "<group>";
 		};
+		B15639CA3023DA7F001EB8C7 /* Keychain */ = {
+			isa = PBXGroup;
+			children = (
+				B15639CB3023DA7F001EB8C7 /* TokenStorage.swift */,
+				B15639CD3023DA81001EB8C7 /* KeychainTokenProvider.swift */,
+			);
+			path = Keychain;
+			sourceTree = "<group>";
+		};
 		BBB529781C3AD046A3DC54AE /* Settings */ = {
 			isa = PBXGroup;
 			children = (
@@ -1376,14 +1439,31 @@
 			path = Settings;
 			sourceTree = "<group>";
 		};
+		BBF8F8820B22893DADA8F460 /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				3B02631181B3A4990A41ADD0 /* RidePollingService.swift */,
+			);
+			name = Support;
+			sourceTree = "<group>";
+		};
 		BEBDE2E75E63006903DED17F /* TripHistory */ = {
 			isa = PBXGroup;
 			children = (
 				350D39ADE19B72101B2049B6 /* GetTripHistoryUseCaseTests.swift */,
 				6254D022183AC43C7A97566A /* MockTripRepositoryTests.swift */,
 				4DD629B922669225BCAA9775 /* TripHistoryViewModelTests.swift */,
+				21AE469295E5C761A0B96431 /* RemoteTripRepositoryTests.swift */,
 			);
 			path = TripHistory;
+			sourceTree = "<group>";
+		};
+		C60A17B79EC7F326B647768C /* DTO */ = {
+			isa = PBXGroup;
+			children = (
+				DA43F8338FAA3A20C8354E37 /* RideDTO.swift */,
+			);
+			name = DTO;
 			sourceTree = "<group>";
 		};
 		E4433F24F3DC21CA4EEBE018 /* TripBooking */ = {
@@ -1392,6 +1472,7 @@
 				DE72EB5483367351B4A938ED /* MockTripBookingRepositoryTests.swift */,
 				DB73E3B475D744B8C85FEEE0 /* TripBookingUseCaseTests.swift */,
 				8D7B007985E7AEDBFF9A325F /* TripBookingViewModelTests.swift */,
+				4C2CF5944595FF7C51801A94 /* RemoteTripBookingRepositoryTests.swift */,
 			);
 			path = TripBooking;
 			sourceTree = "<group>";
@@ -1402,6 +1483,7 @@
 				C93EE224A474F66908A5F4FA /* MockProfileRepositoryTests.swift */,
 				4A5E83495DD5EF4E3306E779 /* ProfileUseCaseTests.swift */,
 				904F8A1D5B54A11FBACFF5F7 /* ProfileViewModelTests.swift */,
+				E52DF9E1B593F95EC45370B1 /* RemoteProfileRepositoryTests.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -1412,6 +1494,8 @@
 				BC9AE464E82AC77322D4CAF3 /* FavoritePlaceUseCaseTests.swift */,
 				EFD5C8F4448F23111B8098EA /* FavoritePlacesViewModelTests.swift */,
 				C16D747E146BF7DDB0C0FB3F /* MockFavoritePlaceRepositoryTests.swift */,
+				C47711104C046D1AEFFB293F /* RemoteFavoritePlaceRepositoryTests.swift */,
+				25630CE1D59968E97EE31D5E /* FavoritePlaceIconTests.swift */,
 			);
 			path = FavoritePlaces;
 			sourceTree = "<group>";
@@ -1544,15 +1628,16 @@
 				B1329CB13019E12A007D8AA6 /* TripHistoryErrorPresenter.swift in Sources */,
 				B1329C63301982D3007D8AA6 /* AuthTextField.swift in Sources */,
 				B1329CEC301A99A7007D8AA6 /* AppSettings.swift in Sources */,
-				B152BFB9301D5323004C677C /* TripDTO.swift in Sources */,
 				1E7D95012D93B897008D9FC9 /* Double.swift in Sources */,
 				B1329C69301982F8007D8AA6 /* LoginView.swift in Sources */,
+				B15639CC3023DA7F001EB8C7 /* TokenStorage.swift in Sources */,
 				1E9131902D733D5B004C386F /* MapViewState.swift in Sources */,
 				B1329C4130198018007D8AA6 /* User.swift in Sources */,
 				B152BFAA301D5313004C677C /* RemoteAuthenticationRepository.swift in Sources */,
+				B15639D03023DA85001EB8C7 /* SessionBootstrapUseCase.swift in Sources */,
 				B1329D1C301AA7F6007D8AA6 /* TripBookingRepository.swift in Sources */,
 				B1329C4F30198032007D8AA6 /* GetCurrentUserUseCase.swift in Sources */,
-				B1329D24301AA7FF007D8AA6 /* CancelTripUseCase.swift in Sources */,
+				B15639CE3023DA81001EB8C7 /* KeychainTokenProvider.swift in Sources */,
 				B1329C4B3019802D007D8AA6 /* RegisterUseCase.swift in Sources */,
 				B14C116D301C4BAE002C0A0A /* Coordinate.swift in Sources */,
 				B1329D07301AA540007D8AA6 /* RootView.swift in Sources */,
@@ -1564,7 +1649,6 @@
 				B152BFA5301D52FC004C677C /* APIClient.swift in Sources */,
 				B15639C530239F1E001EB8C7 /* NetworkLogger.swift in Sources */,
 				B1329D05301AA53B007D8AA6 /* MainTabView.swift in Sources */,
-				B1329D22301AA7FE007D8AA6 /* CompleteTripUseCase.swift in Sources */,
 				B1329CD8301A97D6007D8AA6 /* RemoveFavoritePlaceUseCase.swift in Sources */,
 				B1329CBF301A2647007D8AA6 /* TripHistoryView.swift in Sources */,
 				B152BFB6301D5321004C677C /* AuthDTO.swift in Sources */,
@@ -1580,7 +1664,6 @@
 				B1329D16301AA7EB007D8AA6 /* Driver.swift in Sources */,
 				B1329CAB3019E114007D8AA6 /* TripRepository.swift in Sources */,
 				B1329C4930198029007D8AA6 /* LoginUseCase.swift in Sources */,
-				B1329D1A301AA7F3007D8AA6 /* TripBookingError.swift in Sources */,
 				B1329CA93019E111007D8AA6 /* TripHistoryError.swift in Sources */,
 				B152BF9F301D52E9004C677C /* HTTPMethod.swift in Sources */,
 				B1329CDC301A97EA007D8AA6 /* FavoritePlaceErrorPresenter.swift in Sources */,
@@ -1597,12 +1680,11 @@
 				B1329CD0301A97CC007D8AA6 /* FavoritePlaceError.swift in Sources */,
 				B1329CEE301A99AA007D8AA6 /* SettingsError.swift in Sources */,
 				B1329C353019752B007D8AA6 /* RouteRepository.swift in Sources */,
+				B15639D23023DA87001EB8C7 /* EmptyResponse.swift in Sources */,
 				B1329D18301AA7F0007D8AA6 /* TripPhase.swift in Sources */,
 				1E4C386D2C926DB5006AB83B /* YallaMapViewRepresentable.swift in Sources */,
-				B1329D1E301AA7F9007D8AA6 /* FindDriverUseCase.swift in Sources */,
 				B1329C57301981A3007D8AA6 /* AuthInputValidator.swift in Sources */,
 				B1329CAD3019E117007D8AA6 /* GetTripHistoryUseCase.swift in Sources */,
-				B1329D20301AA7FB007D8AA6 /* StartTripUseCase.swift in Sources */,
 				B1329C86301983CB007D8AA6 /* MockProfileRepository.swift in Sources */,
 				1EBCF7DF2D4BC11F00BDFBE8 /* LocationSearchActivationView.swift in Sources */,
 				B1329C67301982DE007D8AA6 /* AuthMessageBanner.swift in Sources */,
@@ -1633,6 +1715,17 @@
 				B1329CF2301A99B1007D8AA6 /* MockSettingsRepository.swift in Sources */,
 				1EBCD6AC2D85A137002D1B8D /* RideType.swift in Sources */,
 				B1329D2C301AA871007D8AA6 /* TripBookingDependencies.swift in Sources */,
+				28321E954696A32967429B65 /* RideDTO.swift in Sources */,
+				3567A6CAED86C27F75AE47C7 /* RemoteTripBookingRepository.swift in Sources */,
+				9999311A63804877C126798E /* RideError.swift in Sources */,
+				4020D89812AC50CA22B0A428 /* RequestRideUseCase.swift in Sources */,
+				3B27F9B48F3EFA310C0F59F7 /* CancelRideUseCase.swift in Sources */,
+				1C790C9B13B7FC7ED0FEB573 /* PollRideStatusUseCase.swift in Sources */,
+				321B843AACE48E33D419DEBC /* RidePollingService.swift in Sources */,
+				6A246116BCFE50A06FDF2C16 /* TripHistoryPage.swift in Sources */,
+				977D252D4EE9B9BF33361E98 /* UpdateFavoritePlaceUseCase.swift in Sources */,
+				DB840C9BD520EF09DC231C8D /* FavoritePlacesDependencies.swift in Sources */,
+				D57D6D579C9A50E3C7F07210 /* SavedPlacePickerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1663,6 +1756,11 @@
 				BBF002364E7FA5222ADC6492 /* EndpointTests.swift in Sources */,
 				041F0FD156A73D9187E53575 /* NetworkErrorTests.swift in Sources */,
 				B06A4A90A4E4AC43688BC0DD /* APIClientTests.swift in Sources */,
+				3DA86A276C77D2F27068FEE2 /* RemoteTripBookingRepositoryTests.swift in Sources */,
+				FF8E0DA7ACA857300684B6DA /* RemoteTripRepositoryTests.swift in Sources */,
+				906A04AD3E569CA0320FD1D0 /* RemoteProfileRepositoryTests.swift in Sources */,
+				630441F3D19AB069D76F05BF /* RemoteFavoritePlaceRepositoryTests.swift in Sources */,
+				908F95537C92A9ED9693A25F /* FavoritePlaceIconTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1804,7 +1902,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_TESTABILITY = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Yalla-Go-Info.plist";
+				INFOPLIST_FILE = "Yalla-Go-Info-Debug.plist";
 				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Please allow us to access yor location to find you nearby drivers and rides .";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

@@ -8,9 +8,13 @@
 import SwiftUI
 
 struct RideRequestView: View {
-    @State private var selectedRideType: RideType =  .uberX
+    /// Ride tiers are deferred (the backend has no tier concept yet); this
+    /// implicit default is only used to compute the client-side fare estimate.
+    private let defaultRideType: RideType = .uberX
     @EnvironmentObject var locationViewModel:LocationSearchViewModel
+    @EnvironmentObject private var session: AppSessionStore
     @StateObject private var bookingViewModel = TripBookingDependencies().makeTripBookingViewModel()
+    @State private var isChoosingSavedPlace = false
 
     var body: some View {
         Group {
@@ -30,6 +34,15 @@ struct RideRequestView: View {
             }
         }
         .animation(.spring(response: 0.4, dampingFraction: 0.85), value: bookingViewModel.isIdle)
+        .onChange(of: bookingViewModel.isSessionExpired) { expired in
+            if expired { session.signOut() }
+        }
+        .sheet(isPresented: $isChoosingSavedPlace) {
+            SavedPlacePickerView { place in
+                locationViewModel.selectDestination(title: place.title, coordinate: place.coordinate)
+                isChoosingSavedPlace = false
+            }
+        }
     }
 
     // The original ride-request card. Shown while no booking is in progress.
@@ -78,53 +91,35 @@ struct RideRequestView: View {
                 .padding(.leading,8)
                                             
             } .padding()
+
+            Button {
+                isChoosingSavedPlace = true
+            } label: {
+                Label("Choose from Saved Places", systemImage: "star.fill")
+                    .font(.system(size: 14, weight: .semibold))
+            }
+            .padding(.horizontal)
+            .padding(.bottom, 8)
+
             Divider()
-            // ride type
-            Text("SUGGESTED RIDES")
-                .font(.subheadline)
-                .fontWeight(.semibold)
-                .padding()
-                .foregroundColor(.gray)
-                .frame(maxWidth:.infinity , alignment: .leading)
-                        
-            
-            
-            ScrollView(.horizontal, showsIndicators: false){
-                HStack(spacing: 12){
-                    ForEach(RideType.allCases ){ type in
-                        VStack(alignment: .leading) {
-                            Image(type.imageName)
-                                .resizable()
-                                .scaledToFit()
-                            VStack( alignment : .leading, spacing: 4){
-                                Text(type.description)
-                                    .font(.system(size: 14, weight: .semibold))
-                                Text(locationViewModel.computeRidePrice(forType: type).toCurrency())
-                                    .font(.system(size: 14, weight: .semibold))
-                            }.padding()
-                        }
-                        .frame(width: 120, height: 140)
-                        .foregroundColor(type ==
-                                         selectedRideType ? .white : .black)
-                        .background(Color(
-                            type == selectedRideType ?
-                                .systemBlue :
-                                .systemGroupedBackground))
-                        .scaleEffect(type == selectedRideType ? 1.2 : 1.0)
-                    .cornerRadius(10)
-                    .onTapGesture {
-                        withAnimation(.spring()){
-                            selectedRideType = type
-                        }
-                    }
-                    }
-                    
+            // Estimated fare — client-side only, never sent to the backend.
+            // Ride-tier selection is deferred (no backend concept yet), so
+            // this uses a single implicit default tier for the estimate.
+            VStack(alignment: .leading, spacing: 4) {
+                HStack {
+                    Text("Estimated fare")
+                        .font(.system(size: 16, weight: .semibold))
+                    Spacer()
+                    Text(estimatedFare.toCurrency())
+                        .font(.system(size: 16, weight: .bold))
                 }
-            }.padding(.horizontal)
-            
-            
-            
-            
+                Text("Estimate only — final fare may vary.")
+                    .font(.caption)
+                    .foregroundColor(.gray)
+            }
+            .padding(.horizontal)
+            .padding(.vertical, 8)
+
             Divider()
                 .padding(.vertical, 8)
             
@@ -151,7 +146,7 @@ struct RideRequestView: View {
         
                         // confirm trip
             Button {
-                bookingViewModel.confirmTrip()
+                confirmRide()
             } label: {
                 Text("CONFIRM RIDE")
                     .fontWeight(.bold)
@@ -161,6 +156,7 @@ struct RideRequestView: View {
                     .cornerRadius(10)
                     .foregroundColor(.white)
             }
+            .disabled(locationViewModel.userLocation == nil || locationViewModel.selectedYallaGoLocation == nil)
             .padding(.horizontal, 16)
             .padding(.bottom, 16)
         }
@@ -174,9 +170,21 @@ struct RideRequestView: View {
         )
         .shadow(color: .black.opacity(0.12), radius: 12, x: 0, y: -4)
     }
+
+    private var estimatedFare: Double {
+        locationViewModel.computeRidePrice(forType: defaultRideType)
+    }
+
+    private func confirmRide() {
+        guard let userCoordinate = locationViewModel.userLocation,
+              let destination = locationViewModel.selectedYallaGoLocation?.coordinate else { return }
+        let pickup = Coordinate(latitude: userCoordinate.latitude, longitude: userCoordinate.longitude)
+        let dropoff = Coordinate(latitude: destination.latitude, longitude: destination.longitude)
+        bookingViewModel.confirmTrip(pickup: pickup, dropoff: dropoff, estimatedFare: estimatedFare)
+    }
 }
-                    
-             
+
+
 
 
 /// Rounds only the top-left and top-right corners so the sheet merges

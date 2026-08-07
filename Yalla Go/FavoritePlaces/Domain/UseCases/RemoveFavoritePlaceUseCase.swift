@@ -2,12 +2,10 @@
 //  RemoveFavoritePlaceUseCase.swift
 //  Yalla Go
 //
-//  Created by Mahmoud on 29/07/2026.
-//
 
 import Foundation
 
-/// Removes a place from the user's favourites and returns the updated list.
+/// Removes a place from the user's favourites.
 struct RemoveFavoritePlaceUseCase {
     private let repository: FavoritePlaceRepository
 
@@ -15,7 +13,7 @@ struct RemoveFavoritePlaceUseCase {
         self.repository = repository
     }
 
-    func execute(id: String) async throws -> [FavoritePlace] {
+    func execute(id: String) async throws {
         try await repository.removeFavoritePlace(id: id)
     }
 }
