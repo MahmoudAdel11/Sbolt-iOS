@@ -55,7 +55,8 @@ final class RemoteAuthenticationRepository: AuthenticationRepository {
                     fullName: details.username,
                     email: details.email,
                     phoneNumber: details.phoneNumber,
-                    password: details.password
+                    password: details.password,
+                    registerAsDriver: details.registerAsDriver
                 )
             )
             let _: AuthDTO.UserResponse = try await client.send(

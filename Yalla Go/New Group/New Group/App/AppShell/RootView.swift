@@ -17,7 +17,12 @@ struct RootView: View {
     var body: some View {
         Group {
             if session.isAuthenticated {
-                MainTabView()
+                switch session.currentMode {
+                case .customer:
+                    MainTabView()
+                case .driver:
+                    DriverModeTabView()
+                }
             } else {
                 AuthenticationRootView()
             }
