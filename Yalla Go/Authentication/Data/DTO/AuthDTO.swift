@@ -32,6 +32,7 @@ enum AuthDTO {
         let email: String
         let phoneNumber: String   // → phone_number via convertToSnakeCase
         let password: String
+        let registerAsDriver: Bool // → register_as_driver via convertToSnakeCase
     }
 
     // MARK: - Response bodies
@@ -43,6 +44,12 @@ enum AuthDTO {
         let tokenType: String
     }
 
+    /// Nested on UserResponse — presence (non-nil) means the user has driver
+    /// capability. Matches backend's DriverProfileResponse { is_online }.
+    struct DriverProfileResponse: Decodable {
+        let isOnline: Bool
+    }
+
     /// Response for GET /auth/me and POST /auth/register — user fields only,
     /// no token. Backend has no profile-image field yet, so profileImageURL
     /// is always nil here.
@@ -52,6 +59,7 @@ enum AuthDTO {
         let email: String
         let phoneNumber: String
         let createdAt: Date
+        let driverProfile: DriverProfileResponse?
 
         func toDomain() -> User {
             User(
@@ -60,7 +68,8 @@ enum AuthDTO {
                 email: email,
                 phoneNumber: phoneNumber,
                 profileImageURL: nil,
-                createdAt: createdAt
+                createdAt: createdAt,
+                driverProfile: driverProfile.map { DriverProfile(isOnline: $0.isOnline) }
             )
         }
     }

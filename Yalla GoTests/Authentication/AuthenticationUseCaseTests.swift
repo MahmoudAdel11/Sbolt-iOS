@@ -52,7 +52,8 @@ struct AuthenticationUseCaseTests {
         let details = RegistrationDetails(username: " Sam ",
                                           email: " sam@x.com ",
                                           phoneNumber: " +2011 ",
-                                          password: "secret")
+                                          password: "secret",
+                                          registerAsDriver: false)
 
         _ = try await sut.execute(details)
 
@@ -60,6 +61,21 @@ struct AuthenticationUseCaseTests {
         #expect(await spy.lastRegistration?.username == "Sam")
         #expect(await spy.lastRegistration?.email == "sam@x.com")
         #expect(await spy.lastRegistration?.phoneNumber == "+2011")
+        #expect(await spy.lastRegistration?.registerAsDriver == false)
+    }
+
+    @Test func registerForwardsRegisterAsDriverFlagWhenTrue() async throws {
+        let spy = AuthenticationRepositorySpy(registerResult: .success(.stub))
+        let sut = RegisterUseCase(repository: spy)
+        let details = RegistrationDetails(username: "Sam",
+                                          email: "sam@x.com",
+                                          phoneNumber: "+2011",
+                                          password: "secret",
+                                          registerAsDriver: true)
+
+        _ = try await sut.execute(details)
+
+        #expect(await spy.lastRegistration?.registerAsDriver == true)
     }
 
     @Test func registerRejectsInvalidInput() async {
@@ -68,7 +84,8 @@ struct AuthenticationUseCaseTests {
         let details = RegistrationDetails(username: "",
                                           email: "not-an-email",
                                           phoneNumber: "",
-                                          password: "123")
+                                          password: "123",
+                                          registerAsDriver: false)
 
         await #expect(throws: AuthenticationError.invalidInput) {
             _ = try await sut.execute(details)
@@ -82,7 +99,8 @@ struct AuthenticationUseCaseTests {
         let details = RegistrationDetails(username: "Sam",
                                           email: "sam@x.com",
                                           phoneNumber: "+2011",
-                                          password: "secret")
+                                          password: "secret",
+                                          registerAsDriver: false)
 
         await #expect(throws: AuthenticationError.emailAlreadyExists) {
             _ = try await sut.execute(details)

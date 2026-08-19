@@ -59,7 +59,8 @@ actor MockAuthenticationRepository: AuthenticationRepository {
         registeredEmails.insert(details.email)
         let user = Self.makeUser(username: details.username,
                                  email: details.email,
-                                 phoneNumber: details.phoneNumber)
+                                 phoneNumber: details.phoneNumber,
+                                 driverProfile: details.registerAsDriver ? DriverProfile(isOnline: false) : nil)
         signedInUser = user
         return user
     }
@@ -86,12 +87,14 @@ actor MockAuthenticationRepository: AuthenticationRepository {
 
     private static func makeUser(username: String,
                                  email: String,
-                                 phoneNumber: String) -> User {
+                                 phoneNumber: String,
+                                 driverProfile: DriverProfile? = nil) -> User {
         User(id: UUID().uuidString,
              username: username,
              email: email,
              phoneNumber: phoneNumber,
              profileImageURL: nil,
-             createdAt: Date())
+             createdAt: Date(),
+             driverProfile: driverProfile)
     }
 }

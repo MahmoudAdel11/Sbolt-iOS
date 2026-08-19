@@ -43,7 +43,8 @@ struct MockAuthenticationRepositoryTests {
         let details = RegistrationDetails(username: "Sara",
                                           email: "sara@yallago.com",
                                           phoneNumber: "+201111111111",
-                                          password: "secret123")
+                                          password: "secret123",
+                                          registerAsDriver: false)
         let user = try await sut.register(details)
         #expect(user.email == "sara@yallago.com")
         #expect(user.username == "Sara")
@@ -55,7 +56,8 @@ struct MockAuthenticationRepositoryTests {
         let details = RegistrationDetails(username: "Test",
                                           email: "test@yallago.com", // seeded
                                           phoneNumber: "+201000000000",
-                                          password: "password123")
+                                          password: "password123",
+                                          registerAsDriver: false)
         await #expect(throws: AuthenticationError.emailAlreadyExists) {
             _ = try await sut.register(details)
         }

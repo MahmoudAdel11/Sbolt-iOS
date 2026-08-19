@@ -27,12 +27,16 @@ struct SettingsView: View {
             legalSection
             supportSection
             aboutSection
+            driverModeSection
             logoutSection
         }
         .listStyle(.insetGrouped)
         .navigationTitle("Settings")
         .navigationBarTitleDisplayMode(.inline)
-        .task { viewModel.loadSettings() }
+        .task {
+            viewModel.configure(session: session)
+            viewModel.loadSettings()
+        }
         .confirmationDialog("Log out of \(AppInfo.name)?",
                             isPresented: $showLogoutConfirmation,
                             titleVisibility: .visible) {
@@ -134,6 +138,30 @@ struct SettingsView: View {
         }
     }
 
+    private var driverModeSection: some View {
+        Section("Driver") {
+            if viewModel.driverProfile != nil {
+                Picker("Mode", selection: modeBinding) {
+                    Text("Customer").tag(AppMode.customer)
+                    Text("Driver").tag(AppMode.driver)
+                }
+                .pickerStyle(.segmented)
+                .accessibilityIdentifier("settings_mode_picker")
+            } else {
+                NavigationLink {
+                    SettingsPlaceholderView(
+                        title: "Become a Driver",
+                        systemImage: "car.fill",
+                        message: "Driver sign-up isn't available yet."
+                    )
+                } label: {
+                    SettingsRow(systemImage: "car.fill", title: "Become a Driver", tint: .blue)
+                }
+                .accessibilityIdentifier("settings_become_driver_row")
+            }
+        }
+    }
+
     private var logoutSection: some View {
         Section {
             Button(role: .destructive) {
@@ -160,6 +188,11 @@ struct SettingsView: View {
     private var notificationsBinding: Binding<Bool> {
         Binding(get: { viewModel.settings.isPushNotificationsEnabled },
                 set: { viewModel.setPushNotifications($0) })
+    }
+
+    private var modeBinding: Binding<AppMode> {
+        Binding(get: { viewModel.currentMode },
+                set: { viewModel.switchMode(to: $0) })
     }
 
     private var errorAlertBinding: Binding<Bool> {

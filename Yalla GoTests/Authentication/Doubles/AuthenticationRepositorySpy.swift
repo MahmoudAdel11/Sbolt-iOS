@@ -65,6 +65,7 @@ extension User {
              email: "stub@yallago.com",
              phoneNumber: "+200000000000",
              profileImageURL: nil,
-             createdAt: Date(timeIntervalSince1970: 0))
+             createdAt: Date(timeIntervalSince1970: 0),
+             driverProfile: nil)
     }
 }

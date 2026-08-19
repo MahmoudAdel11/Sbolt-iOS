@@ -14,4 +14,5 @@ struct RegistrationDetails: Equatable {
     let email: String
     let phoneNumber: String
     let password: String
+    let registerAsDriver: Bool
 }
