@@ -45,7 +45,8 @@ actor MockProfileRepository: ProfileRepository {
                              email: storedProfile.email,
                              phoneNumber: update.phoneNumber,
                              profileImageURL: update.profileImageURL,
-                             createdAt: storedProfile.createdAt)
+                             createdAt: storedProfile.createdAt,
+                             driverProfile: storedProfile.driverProfile)
         return storedProfile
     }
 
@@ -62,6 +63,7 @@ actor MockProfileRepository: ProfileRepository {
              email: "test@yallago.com",
              phoneNumber: "+201000000000",
              profileImageURL: nil,
-             createdAt: Date(timeIntervalSince1970: 0))
+             createdAt: Date(timeIntervalSince1970: 0),
+             driverProfile: nil)
     }
 }

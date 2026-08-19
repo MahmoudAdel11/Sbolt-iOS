@@ -2,8 +2,6 @@
 //  User.swift
 //  Yalla Go
 //
-//  Created by Mahmoud on 29/07/2026.
-//
 
 import Foundation
 
@@ -16,4 +14,15 @@ struct User: Identifiable, Equatable {
     let phoneNumber: String
     let profileImageURL: URL?
     let createdAt: Date
+    /// `nil` when the user has no driver capability — the sole source of
+    /// truth for "is this user a driver". A user can be a rider and a driver
+    /// simultaneously; this is additive, never mutually exclusive with being
+    /// a rider.
+    let driverProfile: DriverProfile?
+}
+
+/// A user's driver-specific state. Presence alone (a non-nil `User.driverProfile`)
+/// means the user has driver capability — there is no separate role flag.
+struct DriverProfile: Equatable {
+    let isOnline: Bool
 }

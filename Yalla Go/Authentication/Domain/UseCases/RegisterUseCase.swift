@@ -31,7 +31,8 @@ struct RegisterUseCase {
         let sanitized = RegistrationDetails(username: username,
                                             email: email,
                                             phoneNumber: phoneNumber,
-                                            password: details.password)
+                                            password: details.password,
+                                            registerAsDriver: details.registerAsDriver)
         return try await repository.register(sanitized)
     }
 }
