@@ -84,6 +84,9 @@ struct RegisterView: View {
                           isSecure: true,
                           textContentType: .newPassword,
                           accessibilityIdentifier: "register_confirm_password_field")
+
+            Toggle("Also register as a driver", isOn: $viewModel.registerAsDriver)
+                .accessibilityIdentifier("register_as_driver_toggle")
         }
     }
 

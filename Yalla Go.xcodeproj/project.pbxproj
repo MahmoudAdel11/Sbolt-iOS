@@ -41,6 +41,7 @@
 		4020D89812AC50CA22B0A428 /* RequestRideUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037E7A8FBBEE405C1868A017 /* RequestRideUseCase.swift */; };
 		4D76DF70805C8A03E5F97C50 /* MockURLProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25DEBE68354FB9EAE0505F9A /* MockURLProtocol.swift */; };
 		4F688965A3C91AA19E75B1CE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D49101571FAFE30C837E6EE /* Foundation.framework */; };
+		53CEB33C456760E1687ED92B /* AuthDTOTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15DAF617A63899E37DEFEBA6 /* AuthDTOTests.swift */; };
 		577B43492F4BBF7DCA953786 /* MockProfileRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93EE224A474F66908A5F4FA /* MockProfileRepositoryTests.swift */; };
 		630441F3D19AB069D76F05BF /* RemoteFavoritePlaceRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C47711104C046D1AEFFB293F /* RemoteFavoritePlaceRepositoryTests.swift */; };
 		677566F94F2403050AD702B9 /* MockAuthenticationRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7376718315D9A099C77C7939 /* MockAuthenticationRepositoryTests.swift */; };
@@ -54,9 +55,11 @@
 		908F95537C92A9ED9693A25F /* FavoritePlaceIconTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25630CE1D59968E97EE31D5E /* FavoritePlaceIconTests.swift */; };
 		977D252D4EE9B9BF33361E98 /* UpdateFavoritePlaceUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47F361E41E030BC45A5C323D /* UpdateFavoritePlaceUseCase.swift */; };
 		9999311A63804877C126798E /* RideError.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6549A6CA9D91E6F842B42A /* RideError.swift */; };
+		99F9ECE10B6109392DB6790C /* AppSessionStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D48BD6C0312A7226CE20A7 /* AppSessionStoreTests.swift */; };
 		A39ED13102EE8A2DE1A52C29 /* RemoteAuthenticationRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A0D1C554CECEDB835CAD2BD /* RemoteAuthenticationRepositoryTests.swift */; };
 		A8D18370FB20762904B97ECD /* ProfileUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A5E83495DD5EF4E3306E779 /* ProfileUseCaseTests.swift */; };
 		AB5106DD3D82906D0045C1B1 /* MockFavoritePlaceRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16D747E146BF7DDB0C0FB3F /* MockFavoritePlaceRepositoryTests.swift */; };
+		AE254823BF6736EE03032649 /* DriverModeTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0947084BC016A7C3ABA5CE20 /* DriverModeTabView.swift */; };
 		B06A4A90A4E4AC43688BC0DD /* APIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABB3331C5D9BA5F09388CB3D /* APIClientTests.swift */; };
 		B1329C353019752B007D8AA6 /* RouteRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329C343019752B007D8AA6 /* RouteRepository.swift */; };
 		B1329C3730197676007D8AA6 /* LocationUpdatePolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329C3630197676007D8AA6 /* LocationUpdatePolicy.swift */; };
@@ -191,10 +194,13 @@
 
 /* Begin PBXFileReference section */
 		037E7A8FBBEE405C1868A017 /* RequestRideUseCase.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RequestRideUseCase.swift; sourceTree = "<group>"; };
+		0947084BC016A7C3ABA5CE20 /* DriverModeTabView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DriverModeTabView.swift; path = DriverMode/Presentation/Views/DriverModeTabView.swift; sourceTree = "<group>"; };
+		09D48BD6C0312A7226CE20A7 /* AppSessionStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppSessionStoreTests.swift; path = AppSessionStoreTests.swift; sourceTree = "<group>"; };
 		0D49101571FAFE30C837E6EE /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		10107C778C671DC6FE789AEE /* LoginViewModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LoginViewModelTests.swift; sourceTree = "<group>"; };
 		13BB2B83AE9054AEFE0E087D /* ConnectivityStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConnectivityStore.swift; path = "New Group/New Group/App/AppShell/ConnectivityStore.swift"; sourceTree = "<group>"; };
 		14403616D8C3A7476839B994 /* ConnectivityStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ConnectivityStoreTests.swift; sourceTree = "<group>"; };
+		15DAF617A63899E37DEFEBA6 /* AuthDTOTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AuthDTOTests.swift; path = AuthDTOTests.swift; sourceTree = "<group>"; };
 		1E251A5D2D4D111800FE1206 /* LocationSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchView.swift; sourceTree = "<group>"; };
 		1E251A602D4D327400FE1206 /* LocationSearchResultCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchResultCell.swift; sourceTree = "<group>"; };
 		1E251A622D4D5A0400FE1206 /* LocationSearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchViewModel.swift; sourceTree = "<group>"; };
@@ -436,6 +442,7 @@
 				B1329D08301AA7D1007D8AA6 /* TripBooking */,
 				B14C116B301C4BA5002C0A0A /* Shared */,
 				4C7C819BE6EE44FD14F7EE53 /* New Group */,
+				B1755EAFEC00AF15969859D7 /* DriverMode */,
 			);
 			path = "Yalla Go";
 			sourceTree = "<group>";
@@ -560,6 +567,14 @@
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
+		45E2CED49D41E4EC1475E73C /* Presentation */ = {
+			isa = PBXGroup;
+			children = (
+				FAD7E4EE7C9933108F391B80 /* Views */,
+			);
+			name = Presentation;
+			sourceTree = "<group>";
+		};
 		4C7C819BE6EE44FD14F7EE53 /* New Group */ = {
 			isa = PBXGroup;
 			children = (
@@ -641,6 +656,8 @@
 				7376718315D9A099C77C7939 /* MockAuthenticationRepositoryTests.swift */,
 				EEE032FF5FAD11F888C5D3B1 /* RegisterViewModelTests.swift */,
 				8A0D1C554CECEDB835CAD2BD /* RemoteAuthenticationRepositoryTests.swift */,
+				15DAF617A63899E37DEFEBA6 /* AuthDTOTests.swift */,
+				09D48BD6C0312A7226CE20A7 /* AppSessionStoreTests.swift */,
 			);
 			path = Authentication;
 			sourceTree = "<group>";
@@ -1470,6 +1487,14 @@
 			path = Keychain;
 			sourceTree = "<group>";
 		};
+		B1755EAFEC00AF15969859D7 /* DriverMode */ = {
+			isa = PBXGroup;
+			children = (
+				45E2CED49D41E4EC1475E73C /* Presentation */,
+			);
+			name = DriverMode;
+			sourceTree = "<group>";
+		};
 		B9A3F57D510CC855D97560D0 /* Core */ = {
 			isa = PBXGroup;
 			children = (
@@ -1581,6 +1606,14 @@
 				25630CE1D59968E97EE31D5E /* FavoritePlaceIconTests.swift */,
 			);
 			path = FavoritePlaces;
+			sourceTree = "<group>";
+		};
+		FAD7E4EE7C9933108F391B80 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				0947084BC016A7C3ABA5CE20 /* DriverModeTabView.swift */,
+			);
+			name = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1815,6 +1848,7 @@
 				371C400A29F8F4ECF6DDE67B /* NWPathMonitorReachability.swift in Sources */,
 				B6425A5F918056BC72AFE94E /* ConnectivityStore.swift in Sources */,
 				B66E534980CEEB079CAC5E60 /* OfflineBannerModifier.swift in Sources */,
+				AE254823BF6736EE03032649 /* DriverModeTabView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1853,6 +1887,8 @@
 				1F77D125E11A15274A85C336 /* RetryingAPIClientTests.swift in Sources */,
 				298F72C6338C6632C96EBA0C /* ConnectivityStoreTests.swift in Sources */,
 				A39ED13102EE8A2DE1A52C29 /* RemoteAuthenticationRepositoryTests.swift in Sources */,
+				53CEB33C456760E1687ED92B /* AuthDTOTests.swift in Sources */,
+				99F9ECE10B6109392DB6790C /* AppSessionStoreTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -9,6 +9,12 @@ import Foundation
 /// Data Transfer Objects for the profile endpoints.
 enum ProfileDTO {
 
+    /// Nested on ProfileResponse — presence (non-nil) means the user has
+    /// driver capability. Matches backend's DriverProfileResponse { is_online }.
+    struct DriverProfileResponse: Decodable {
+        let isOnline: Bool
+    }
+
     /// Response body for GET /auth/me and PATCH /users/me. Backend has no
     /// profile-image field yet, so profileImageURL is always nil here.
     struct ProfileResponse: Decodable {
@@ -17,6 +23,7 @@ enum ProfileDTO {
         let email: String
         let phoneNumber: String
         let createdAt: Date
+        let driverProfile: DriverProfileResponse?
 
         func toDomain() -> User {
             User(
@@ -25,7 +32,8 @@ enum ProfileDTO {
                 email: email,
                 phoneNumber: phoneNumber,
                 profileImageURL: nil,
-                createdAt: createdAt
+                createdAt: createdAt,
+                driverProfile: driverProfile.map { DriverProfile(isOnline: $0.isOnline) }
             )
         }
     }
