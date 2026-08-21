@@ -29,13 +29,16 @@ actor MockTripRepository: TripRepository {
         self.artificialDelay = artificialDelay
     }
 
-    func fetchTripHistory(offset: Int, limit: Int) async throws -> TripHistoryPage {
+    /// `view` doesn't filter the mock's injected trip list — the same
+    /// deterministic list stands in for whichever side is requested since
+    /// this repository has no separate rider/driver datasets to distinguish.
+    func fetchTripHistory(offset: Int, limit: Int, view: RideView) async throws -> TripHistoryPage {
         await simulateNetworkDelay()
         guard behavior == .success else { throw TripHistoryError.historyUnavailable }
         return page(offset: offset, limit: limit)
     }
 
-    func refreshTripHistory(limit: Int) async throws -> TripHistoryPage {
+    func refreshTripHistory(limit: Int, view: RideView) async throws -> TripHistoryPage {
         await simulateNetworkDelay()
         guard behavior == .success else { throw TripHistoryError.refreshFailed }
         return page(offset: 0, limit: limit)

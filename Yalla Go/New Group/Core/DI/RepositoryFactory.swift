@@ -20,6 +20,7 @@ protocol RepositoryFactory {
     func makeTripBookingRepository() -> any TripBookingRepository
     func makeFavoritePlaceRepository() -> any FavoritePlaceRepository
     func makeSettingsRepository() -> any SettingsRepository
+    func makeDriverRepository() -> any DriverRepository
 }
 
 // MARK: - Mock factory  (development default)
@@ -33,6 +34,7 @@ struct MockRepositoryFactory: RepositoryFactory {
     func makeTripBookingRepository()    -> any TripBookingRepository    { MockTripBookingRepository() }
     func makeFavoritePlaceRepository()  -> any FavoritePlaceRepository  { MockFavoritePlaceRepository() }
     func makeSettingsRepository()       -> any SettingsRepository       { MockSettingsRepository() }
+    func makeDriverRepository()         -> any DriverRepository         { MockDriverRepository() }
 }
 
 // MARK: - Remote factory  (production)
@@ -65,4 +67,5 @@ struct RemoteRepositoryFactory: RepositoryFactory {
     func makeTripBookingRepository()    -> any TripBookingRepository    { RemoteTripBookingRepository(client: client) }
     func makeFavoritePlaceRepository()  -> any FavoritePlaceRepository  { RemoteFavoritePlaceRepository(client: client) }
     func makeSettingsRepository()       -> any SettingsRepository       { MockSettingsRepository() }
+    func makeDriverRepository()         -> any DriverRepository         { RemoteDriverRepository(client: client) }
 }
