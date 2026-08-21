@@ -51,6 +51,7 @@
 		53CEB33C456760E1687ED92B /* AuthDTOTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15DAF617A63899E37DEFEBA6 /* AuthDTOTests.swift */; };
 		577B43492F4BBF7DCA953786 /* MockProfileRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93EE224A474F66908A5F4FA /* MockProfileRepositoryTests.swift */; };
 		5B53221E37146888032F0F6A /* RemoteDriverRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D882BD7F270E0C87975E2726 /* RemoteDriverRepositoryTests.swift */; };
+		60A71786BE5D4E99C00A05A3 /* RideAnnotationDiffTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75F938A2EF276A6AFAF43C21 /* RideAnnotationDiffTests.swift */; };
 		630441F3D19AB069D76F05BF /* RemoteFavoritePlaceRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C47711104C046D1AEFFB293F /* RemoteFavoritePlaceRepositoryTests.swift */; };
 		677566F94F2403050AD702B9 /* MockAuthenticationRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7376718315D9A099C77C7939 /* MockAuthenticationRepositoryTests.swift */; };
 		6A246116BCFE50A06FDF2C16 /* TripHistoryPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FC0E496C38D5F38B78D7E7B /* TripHistoryPage.swift */; };
@@ -160,6 +161,7 @@
 		B1329D2E301AA885007D8AA6 /* TripBookingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329D2D301AA885007D8AA6 /* TripBookingViewModel.swift */; };
 		B1329D30301AA892007D8AA6 /* DriverCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329D2F301AA892007D8AA6 /* DriverCard.swift */; };
 		B1329D32301AA8A1007D8AA6 /* TripBookingStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329D31301AA8A1007D8AA6 /* TripBookingStatusView.swift */; };
+		B1499B277C48B38F182A5F72 /* RideAnnotationDiff.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD64C192B7ACCC2577C830B5 /* RideAnnotationDiff.swift */; };
 		B14C116D301C4BAE002C0A0A /* Coordinate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B14C116C301C4BAE002C0A0A /* Coordinate.swift */; };
 		B152BF9F301D52E9004C677C /* HTTPMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = B152BF9E301D52E9004C677C /* HTTPMethod.swift */; };
 		B152BFA1301D52ED004C677C /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B152BFA0301D52ED004C677C /* NetworkError.swift */; };
@@ -183,6 +185,7 @@
 		B15639CE3023DA81001EB8C7 /* KeychainTokenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15639CD3023DA81001EB8C7 /* KeychainTokenProvider.swift */; };
 		B15639D03023DA85001EB8C7 /* SessionBootstrapUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15639CF3023DA85001EB8C7 /* SessionBootstrapUseCase.swift */; };
 		B15639D23023DA87001EB8C7 /* EmptyResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15639D13023DA87001EB8C7 /* EmptyResponse.swift */; };
+		B215B96B7964FD3B91A1906E /* AvailableRidesMapViewRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D9941A27611DFBEA2678CA /* AvailableRidesMapViewRepresentable.swift */; };
 		B6425A5F918056BC72AFE94E /* ConnectivityStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13BB2B83AE9054AEFE0E087D /* ConnectivityStore.swift */; };
 		B66E534980CEEB079CAC5E60 /* OfflineBannerModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61F38A5700774898F3A4AA12 /* OfflineBannerModifier.swift */; };
 		B7357C2EB727087EDD7509CB /* DriverHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2464F4C152791060F60FB1F1 /* DriverHomeView.swift */; };
@@ -215,6 +218,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		01D9941A27611DFBEA2678CA /* AvailableRidesMapViewRepresentable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AvailableRidesMapViewRepresentable.swift; path = DriverMode/Presentation/Views/AvailableRidesMapViewRepresentable.swift; sourceTree = "<group>"; };
 		037E7A8FBBEE405C1868A017 /* RequestRideUseCase.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RequestRideUseCase.swift; sourceTree = "<group>"; };
 		0947084BC016A7C3ABA5CE20 /* DriverModeTabView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DriverModeTabView.swift; path = DriverMode/Presentation/Views/DriverModeTabView.swift; sourceTree = "<group>"; };
 		09D48BD6C0312A7226CE20A7 /* AppSessionStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppSessionStoreTests.swift; path = AppSessionStoreTests.swift; sourceTree = "<group>"; };
@@ -267,6 +271,7 @@
 		64DB25AFB7E8AE620484AE9F /* RetryingAPIClientTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RetryingAPIClientTests.swift; sourceTree = "<group>"; };
 		7376718315D9A099C77C7939 /* MockAuthenticationRepositoryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MockAuthenticationRepositoryTests.swift; sourceTree = "<group>"; };
 		75B03A61410551CB9ACD1F19 /* AcceptRideUseCase.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AcceptRideUseCase.swift; path = DriverMode/Domain/UseCases/AcceptRideUseCase.swift; sourceTree = "<group>"; };
+		75F938A2EF276A6AFAF43C21 /* RideAnnotationDiffTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RideAnnotationDiffTests.swift; path = DriverMode/RideAnnotationDiffTests.swift; sourceTree = "<group>"; };
 		827CF56E45CF7E9D3426065D /* DriverRepositorySpy.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DriverRepositorySpy.swift; path = DriverMode/Doubles/DriverRepositorySpy.swift; sourceTree = "<group>"; };
 		83B8EBBDEEAF2404772B443F /* SettingsViewModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SettingsViewModelTests.swift; sourceTree = "<group>"; };
 		8A0D1C554CECEDB835CAD2BD /* RemoteAuthenticationRepositoryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RemoteAuthenticationRepositoryTests.swift; sourceTree = "<group>"; };
@@ -414,6 +419,7 @@
 		EEE032FF5FAD11F888C5D3B1 /* RegisterViewModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RegisterViewModelTests.swift; sourceTree = "<group>"; };
 		EFD5C8F4448F23111B8098EA /* FavoritePlacesViewModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FavoritePlacesViewModelTests.swift; sourceTree = "<group>"; };
 		F62A9DC8CFD7D79AA329EEAF /* FavoritePlacesListView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FavoritePlacesListView.swift; path = Views/FavoritePlacesListView.swift; sourceTree = "<group>"; };
+		FD64C192B7ACCC2577C830B5 /* RideAnnotationDiff.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RideAnnotationDiff.swift; path = DriverMode/Domain/Support/RideAnnotationDiff.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -652,6 +658,7 @@
 				114FB8D6559964534D0E29F5 /* DriverModeViewModelTests.swift */,
 				9A6B381F9D0841AF6665B92E /* MockDriverRepositoryTests.swift */,
 				D882BD7F270E0C87975E2726 /* RemoteDriverRepositoryTests.swift */,
+				75F938A2EF276A6AFAF43C21 /* RideAnnotationDiffTests.swift */,
 			);
 			name = DriverMode;
 			sourceTree = "<group>";
@@ -1739,6 +1746,7 @@
 			isa = PBXGroup;
 			children = (
 				E460DAC0D089A78CB8CAB368 /* AvailableRidesPollingService.swift */,
+				FD64C192B7ACCC2577C830B5 /* RideAnnotationDiff.swift */,
 			);
 			name = Support;
 			sourceTree = "<group>";
@@ -1790,6 +1798,7 @@
 			children = (
 				0947084BC016A7C3ABA5CE20 /* DriverModeTabView.swift */,
 				2464F4C152791060F60FB1F1 /* DriverHomeView.swift */,
+				01D9941A27611DFBEA2678CA /* AvailableRidesMapViewRepresentable.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -2045,6 +2054,8 @@
 				8A7F2478F1FB73CA156546F8 /* RideView.swift in Sources */,
 				32B98CD68E25118925634CBD /* FavoritePlaceFormView.swift in Sources */,
 				ACA9ADD4B921AB2173B8AF42 /* FavoritePlacesListView.swift in Sources */,
+				B1499B277C48B38F182A5F72 /* RideAnnotationDiff.swift in Sources */,
+				B215B96B7964FD3B91A1906E /* AvailableRidesMapViewRepresentable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2089,6 +2100,7 @@
 				AA338F5489E8B5E817991EDC /* DriverModeViewModelTests.swift in Sources */,
 				035409871859BD1609E40DB5 /* MockDriverRepositoryTests.swift in Sources */,
 				5B53221E37146888032F0F6A /* RemoteDriverRepositoryTests.swift in Sources */,
+				60A71786BE5D4E99C00A05A3 /* RideAnnotationDiffTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
