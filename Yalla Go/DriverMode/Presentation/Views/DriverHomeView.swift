@@ -5,12 +5,14 @@
 
 import SwiftUI
 
-/// The driver-mode "Drive" screen: online/offline toggle, the polled
-/// available-rides list (or the active-ride card once one is accepted).
-/// Binds to `DriverModeViewModel`; contains no business logic.
+/// The driver-mode "Drive" screen: online/offline toggle, an interactive map
+/// of polled available rides (or the active-ride card once one is
+/// accepted). Binds to `DriverModeViewModel`; contains no business logic.
 struct DriverHomeView: View {
     @StateObject private var viewModel: DriverModeViewModel
     @EnvironmentObject private var session: AppSessionStore
+    @State private var selectedRideID: String?
+    @State private var recenterTrigger = false
 
     init(dependencies: DriverModeDependencies = DriverModeDependencies()) {
         _viewModel = StateObject(wrappedValue: dependencies.makeDriverModeViewModel())
@@ -39,33 +41,91 @@ struct DriverHomeView: View {
             .onChange(of: viewModel.isSessionExpired) { expired in
                 if expired { session.signOut() }
             }
+            // Covers both outcomes of an accept attempt: success removes the
+            // ride from `rides` (Phase 2a), and a 409 race-loss also removes
+            // it — either way the sheet should just quietly go away rather
+            // than dangle on a ride that's no longer selectable.
+            .onChange(of: viewModel.rides) { rides in
+                if let selectedRideID, !rides.contains(where: { $0.id == selectedRideID }) {
+                    self.selectedRideID = nil
+                }
+            }
     }
 
-    // MARK: - Sections
+    // MARK: - Layout
 
     @ViewBuilder
     private var content: some View {
+        if viewModel.activeRide == nil && viewModel.isOnline {
+            mapLayout
+        } else {
+            scrollLayout
+        }
+    }
+
+    /// Offline and active-ride states, unchanged from Phase 2a's list-based
+    /// layout — only the online-and-browsing state became a map.
+    private var scrollLayout: some View {
         ScrollView {
             VStack(spacing: 16) {
                 statusToggle
-                if let raceConditionMessage = viewModel.raceConditionMessage {
-                    InlineBanner(message: raceConditionMessage, tone: .neutral)
-                        .accessibilityIdentifier("driver_race_condition_banner")
-                }
-                if let actionErrorMessage = viewModel.actionErrorMessage {
-                    InlineBanner(message: actionErrorMessage, tone: .error)
-                        .accessibilityIdentifier("driver_action_error_banner")
-                }
+                bannerStack
 
                 if let activeRide = viewModel.activeRide {
                     activeRideCard(activeRide)
-                } else if viewModel.isOnline {
-                    availableRidesSection
                 } else {
                     offlineState
                 }
             }
             .padding(16)
+        }
+    }
+
+    private var mapLayout: some View {
+        AvailableRidesMapViewRepresentable(
+            rides: viewModel.rides,
+            recenterTrigger: $recenterTrigger,
+            onSelectRide: { id in selectedRideID = id }
+        )
+        .ignoresSafeArea(edges: .bottom)
+        .overlay(alignment: .top) {
+            VStack(spacing: 12) {
+                statusToggle
+                bannerStack
+                ridesStatusPill
+            }
+            .padding(16)
+        }
+        .overlay(alignment: .bottomTrailing) {
+            recenterButton
+                .padding(.trailing, 16)
+                .padding(.bottom, selectedRide == nil ? 24 : 200)
+        }
+        .overlay(alignment: .bottom) {
+            if let selectedRide {
+                rideDetailCard(selectedRide)
+                    .transition(.move(edge: .bottom))
+            }
+        }
+        .animation(.spring(response: 0.4, dampingFraction: 0.85), value: selectedRideID)
+    }
+
+    private var selectedRide: Trip? {
+        guard let selectedRideID else { return nil }
+        return viewModel.rides.first { $0.id == selectedRideID }
+    }
+
+    // MARK: - Pieces
+
+    @ViewBuilder
+    private var bannerStack: some View {
+        if let raceConditionMessage = viewModel.raceConditionMessage {
+            InlineBanner(message: raceConditionMessage, tone: .neutral)
+                .accessibilityIdentifier("driver_race_condition_banner")
+        }
+        if let actionErrorMessage = viewModel.actionErrorMessage {
+            InlineBanner(message: actionErrorMessage, tone: .error)
+                .accessibilityIdentifier("driver_action_error_banner")
         }
     }
 
@@ -105,52 +165,59 @@ struct DriverHomeView: View {
         .accessibilityIdentifier("driver_offline_state")
     }
 
+    /// Small status pill overlaid on the map — keeps the loading/error/empty
+    /// states from Phase 2a's list, without covering the whole map the way
+    /// a full-screen state card would.
     @ViewBuilder
-    private var availableRidesSection: some View {
+    private var ridesStatusPill: some View {
         if viewModel.isLoadingRides && viewModel.rides.isEmpty {
-            ProgressView("Looking for rides…")
-                .padding(32)
-                .frame(maxWidth: .infinity)
+            statusPill(text: "Looking for rides…", systemImage: nil)
                 .accessibilityIdentifier("driver_rides_loading")
         } else if let ridesErrorMessage = viewModel.ridesErrorMessage, viewModel.rides.isEmpty {
-            VStack(spacing: 16) {
-                Image(systemName: "exclamationmark.triangle")
-                    .font(.system(size: 40))
-                    .foregroundStyle(.orange)
-                    .accessibilityHidden(true)
-                Text(ridesErrorMessage)
-                    .multilineTextAlignment(.center)
-                    .foregroundStyle(.secondary)
-            }
-            .padding(32)
-            .frame(maxWidth: .infinity)
-            .accessibilityIdentifier("driver_rides_error_state")
+            statusPill(text: ridesErrorMessage, systemImage: "exclamationmark.triangle")
+                .accessibilityIdentifier("driver_rides_error_state")
         } else if viewModel.rides.isEmpty {
-            VStack(spacing: 16) {
-                Image(systemName: "car.2")
-                    .font(.system(size: 48))
-                    .foregroundStyle(.secondary)
-                    .accessibilityHidden(true)
-                Text("No rides available right now")
-                    .font(.title3).bold()
-                Text("New requests appear here automatically.")
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-            }
-            .padding(32)
-            .frame(maxWidth: .infinity)
-            .accessibilityIdentifier("driver_rides_empty_state")
-        } else {
-            VStack(spacing: 12) {
-                ForEach(viewModel.rides) { ride in
-                    availableRideRow(ride)
-                }
-            }
+            statusPill(text: "No rides available right now", systemImage: "car.2")
+                .accessibilityIdentifier("driver_rides_empty_state")
         }
     }
 
-    private func availableRideRow(_ ride: Trip) -> some View {
+    private func statusPill(text: String, systemImage: String?) -> some View {
+        HStack(spacing: 8) {
+            if systemImage != nil {
+                Image(systemName: systemImage!)
+            } else {
+                ProgressView().controlSize(.small)
+            }
+            Text(text).font(.subheadline)
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 10)
+        .background(Color(.systemBackground), in: Capsule())
+        .shadow(color: .black.opacity(0.1), radius: 6)
+    }
+
+    private var recenterButton: some View {
+        Button {
+            recenterTrigger = true
+        } label: {
+            Image(systemName: "location.fill")
+                .font(.title3)
+                .foregroundColor(.black)
+                .padding()
+                .background(.white)
+                .clipShape(Circle())
+                .shadow(color: .black.opacity(0.3), radius: 6)
+        }
+        .accessibilityLabel("Recenter map")
+        .accessibilityIdentifier("driver_map_recenter_button")
+    }
+
+    private func rideDetailCard(_ ride: Trip) -> some View {
         VStack(spacing: 12) {
+            Capsule()
+                .foregroundColor(Color(.systemGray5))
+                .frame(width: 50, height: 6)
             TripCard(trip: ride)
             Button {
                 viewModel.accept(rideID: ride.id)
@@ -169,6 +236,11 @@ struct DriverHomeView: View {
             .disabled(viewModel.isAccepting)
             .accessibilityIdentifier("driver_accept_button_\(ride.id)")
         }
+        .padding(16)
+        .background(Color(.systemBackground), in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .shadow(color: .black.opacity(0.12), radius: 12, x: 0, y: -4)
+        .padding(.horizontal, 12)
+        .padding(.bottom, 12)
         .accessibilityIdentifier("driver_available_ride_\(ride.id)")
     }
 
