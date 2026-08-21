@@ -5,48 +5,41 @@
 
 import SwiftUI
 
-/// Placeholder root shown while `AppSessionStore.currentMode == .driver`.
-/// Proves the mode-switch plumbing (RootView branching, Settings' mode
-/// control, AppSessionStore's gating) works end-to-end. Phase 2 replaces
-/// this single screen with the real driver tab set (available rides,
-/// online/offline status, driver-side trip history).
+/// Root shown while `AppSessionStore.currentMode == .driver`. Mirrors
+/// `MainTabView`'s conventions: each tab needing push nav/title bar gets its
+/// own `NavigationView`. "History" reuses the exact same `TripHistoryView`/
+/// `TripHistoryViewModel` the rider side uses — only `TripHistoryDependencies`'
+/// `view: .driver` differs, so `GET /rides/history?as=driver` is fetched
+/// instead — no parallel driver history screen needed. "Profile" reuses
+/// `ProfileView` as-is — it's the only path to Settings, and Settings is
+/// where the mode switch back to Customer lives, so driver mode needs it too.
 struct DriverModeTabView: View {
-    @EnvironmentObject private var session: AppSessionStore
-
     var body: some View {
         TabView {
             NavigationView {
-                comingSoon
+                DriverHomeView()
             }
             .navigationViewStyle(.stack)
             .tabItem {
-                Label("Driving", systemImage: "car.fill")
+                Label("Drive", systemImage: "car.fill")
             }
-        }
-    }
 
-    private var comingSoon: some View {
-        VStack(spacing: 16) {
-            Image(systemName: "car.fill")
-                .font(.system(size: 56))
-                .foregroundStyle(.secondary)
-                .accessibilityHidden(true)
-            Text("Driver Mode")
-                .font(.title2).bold()
-            Text("Driver Mode — Coming Soon")
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-            Button("Switch Back to Customer Mode") {
-                session.switchMode(to: .customer)
+            NavigationView {
+                TripHistoryView(dependencies: TripHistoryDependencies(view: .driver))
             }
-            .buttonStyle(.borderedProminent)
-            .accessibilityIdentifier("driver_mode_switch_back_button")
+            .navigationViewStyle(.stack)
+            .tabItem {
+                Label("History", systemImage: "clock.fill")
+            }
+
+            NavigationView {
+                ProfileView()
+            }
+            .navigationViewStyle(.stack)
+            .tabItem {
+                Label("Profile", systemImage: "person.crop.circle")
+            }
         }
-        .padding(24)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .navigationTitle("Driver Mode")
-        .navigationBarTitleDisplayMode(.inline)
-        .accessibilityIdentifier("driver_mode_placeholder")
     }
 }
 
