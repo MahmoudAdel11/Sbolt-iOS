@@ -39,6 +39,7 @@
 		2E28B93D1BC06A47D28BCC3C /* RemoteDriverRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A7EDAEABFA867DAE3ED9AA2 /* RemoteDriverRepository.swift */; };
 		300E99BE287D4AD00EE0FB2B /* MockTripBookingRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE72EB5483367351B4A938ED /* MockTripBookingRepositoryTests.swift */; };
 		321B843AACE48E33D419DEBC /* RidePollingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B02631181B3A4990A41ADD0 /* RidePollingService.swift */; };
+		32B98CD68E25118925634CBD /* FavoritePlaceFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ED76C4A6A063E1E69EE4495 /* FavoritePlaceFormView.swift */; };
 		3567A6CAED86C27F75AE47C7 /* RemoteTripBookingRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99B18C9AF4D80C3D6BF5A476 /* RemoteTripBookingRepository.swift */; };
 		371C400A29F8F4ECF6DDE67B /* NWPathMonitorReachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E723FC8F65F97A6EA2ECA0 /* NWPathMonitorReachability.swift */; };
 		3B27F9B48F3EFA310C0F59F7 /* CancelRideUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC0000B0511ACBE9B0CCAE4 /* CancelRideUseCase.swift */; };
@@ -74,6 +75,7 @@
 		A8D18370FB20762904B97ECD /* ProfileUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A5E83495DD5EF4E3306E779 /* ProfileUseCaseTests.swift */; };
 		AA338F5489E8B5E817991EDC /* DriverModeViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 114FB8D6559964534D0E29F5 /* DriverModeViewModelTests.swift */; };
 		AB5106DD3D82906D0045C1B1 /* MockFavoritePlaceRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16D747E146BF7DDB0C0FB3F /* MockFavoritePlaceRepositoryTests.swift */; };
+		ACA9ADD4B921AB2173B8AF42 /* FavoritePlacesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62A9DC8CFD7D79AA329EEAF /* FavoritePlacesListView.swift */; };
 		AE254823BF6736EE03032649 /* DriverModeTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0947084BC016A7C3ABA5CE20 /* DriverModeTabView.swift */; };
 		B06A4A90A4E4AC43688BC0DD /* APIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABB3331C5D9BA5F09388CB3D /* APIClientTests.swift */; };
 		B1329C353019752B007D8AA6 /* RouteRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329C343019752B007D8AA6 /* RouteRepository.swift */; };
@@ -258,6 +260,7 @@
 		4DD629B922669225BCAA9775 /* TripHistoryViewModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TripHistoryViewModelTests.swift; sourceTree = "<group>"; };
 		4E3CF9A61EF87939A97937C2 /* SavedPlacePickerView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SavedPlacePickerView.swift; path = Views/SavedPlacePickerView.swift; sourceTree = "<group>"; };
 		4FC0E496C38D5F38B78D7E7B /* TripHistoryPage.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TripHistoryPage.swift; sourceTree = "<group>"; };
+		5ED76C4A6A063E1E69EE4495 /* FavoritePlaceFormView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FavoritePlaceFormView.swift; path = Views/FavoritePlaceFormView.swift; sourceTree = "<group>"; };
 		5EE37A0940BAE1875B3F3B89 /* AuthenticationRepositorySpy.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AuthenticationRepositorySpy.swift; sourceTree = "<group>"; };
 		61F38A5700774898F3A4AA12 /* OfflineBannerModifier.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OfflineBannerModifier.swift; path = "New Group/New Group/App/AppShell/OfflineBannerModifier.swift"; sourceTree = "<group>"; };
 		6254D022183AC43C7A97566A /* MockTripRepositoryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MockTripRepositoryTests.swift; sourceTree = "<group>"; };
@@ -410,6 +413,7 @@
 		EDC0000B0511ACBE9B0CCAE4 /* CancelRideUseCase.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CancelRideUseCase.swift; sourceTree = "<group>"; };
 		EEE032FF5FAD11F888C5D3B1 /* RegisterViewModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RegisterViewModelTests.swift; sourceTree = "<group>"; };
 		EFD5C8F4448F23111B8098EA /* FavoritePlacesViewModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FavoritePlacesViewModelTests.swift; sourceTree = "<group>"; };
+		F62A9DC8CFD7D79AA329EEAF /* FavoritePlacesListView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FavoritePlacesListView.swift; path = Views/FavoritePlacesListView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -745,6 +749,8 @@
 			isa = PBXGroup;
 			children = (
 				4E3CF9A61EF87939A97937C2 /* SavedPlacePickerView.swift */,
+				5ED76C4A6A063E1E69EE4495 /* FavoritePlaceFormView.swift */,
+				F62A9DC8CFD7D79AA329EEAF /* FavoritePlacesListView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -2037,6 +2043,8 @@
 				13F5F9410E8C82E5FD5DFCCE /* DriverModeViewModel.swift in Sources */,
 				B7357C2EB727087EDD7509CB /* DriverHomeView.swift in Sources */,
 				8A7F2478F1FB73CA156546F8 /* RideView.swift in Sources */,
+				32B98CD68E25118925634CBD /* FavoritePlaceFormView.swift in Sources */,
+				ACA9ADD4B921AB2173B8AF42 /* FavoritePlacesListView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

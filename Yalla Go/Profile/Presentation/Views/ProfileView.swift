@@ -89,6 +89,16 @@ struct ProfileView: View {
             }
 
             Section {
+                NavigationLink {
+                    FavoritePlacesListView()
+                } label: {
+                    Label("Saved Places", systemImage: "star.fill")
+                }
+                .accessibilityIdentifier("profile_saved_places_link")
+                .accessibilityHint("Manage your saved places")
+            }
+
+            Section {
                 Button {
                     isEditing = true
                 } label: {
