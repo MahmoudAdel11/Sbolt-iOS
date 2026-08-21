@@ -9,9 +9,10 @@ import Foundation
 /// (a mock today, a real API later). Paginated: the backend only ever
 /// returns `{items, has_more}`, no total count or cursor.
 protocol TripRepository {
-    /// Loads one page of the user's trip history, most recent first.
-    func fetchTripHistory(offset: Int, limit: Int) async throws -> TripHistoryPage
+    /// Loads one page of history, most recent first, for the given side of
+    /// the ride (`.rider` or `.driver` — mirrors the backend's `as` param).
+    func fetchTripHistory(offset: Int, limit: Int, view: RideView) async throws -> TripHistoryPage
 
     /// Forces a fresh load of the first page.
-    func refreshTripHistory(limit: Int) async throws -> TripHistoryPage
+    func refreshTripHistory(limit: Int, view: RideView) async throws -> TripHistoryPage
 }

@@ -62,7 +62,7 @@ struct RemoteTripRepositoryTests {
         client.result = .success(historyJSON())
         let sut = RemoteTripRepository(client: client)
 
-        let page = try await sut.fetchTripHistory(offset: 0, limit: 20)
+        let page = try await sut.fetchTripHistory(offset: 0, limit: 20, view: .rider)
 
         #expect(page.trips.count == 2)
         #expect(page.trips[0].status == .requested)
@@ -73,6 +73,7 @@ struct RemoteTripRepositoryTests {
         #expect(client.capturedEndpoint?.method == .get)
         #expect(client.capturedEndpoint?.queryItems.first { $0.name == "limit" }?.value == "20")
         #expect(client.capturedEndpoint?.queryItems.first { $0.name == "offset" }?.value == "0")
+        #expect(client.capturedEndpoint?.queryItems.first { $0.name == "as" }?.value == "rider")
     }
 
     @Test func fetchTripHistoryForwardsOffsetAndHasMore() async throws {
@@ -80,10 +81,20 @@ struct RemoteTripRepositoryTests {
         client.result = .success(historyJSON(hasMore: true))
         let sut = RemoteTripRepository(client: client)
 
-        let page = try await sut.fetchTripHistory(offset: 20, limit: 20)
+        let page = try await sut.fetchTripHistory(offset: 20, limit: 20, view: .rider)
 
         #expect(page.hasMore == true)
         #expect(client.capturedEndpoint?.queryItems.first { $0.name == "offset" }?.value == "20")
+    }
+
+    @Test func fetchTripHistoryForwardsDriverView() async throws {
+        let client = StubAPIClient()
+        client.result = .success(historyJSON())
+        let sut = RemoteTripRepository(client: client)
+
+        _ = try await sut.fetchTripHistory(offset: 0, limit: 20, view: .driver)
+
+        #expect(client.capturedEndpoint?.queryItems.first { $0.name == "as" }?.value == "driver")
     }
 
     @Test func refreshTripHistoryAlwaysUsesOffsetZero() async throws {
@@ -91,7 +102,7 @@ struct RemoteTripRepositoryTests {
         client.result = .success(historyJSON())
         let sut = RemoteTripRepository(client: client)
 
-        let page = try await sut.refreshTripHistory(limit: 20)
+        let page = try await sut.refreshTripHistory(limit: 20, view: .rider)
 
         #expect(page.trips.count == 2)
         #expect(client.capturedEndpoint?.queryItems.first { $0.name == "offset" }?.value == "0")
@@ -103,7 +114,7 @@ struct RemoteTripRepositoryTests {
         let sut = RemoteTripRepository(client: client)
 
         await #expect(throws: TripHistoryError.historyUnavailable) {
-            _ = try await sut.fetchTripHistory(offset: 0, limit: 20)
+            _ = try await sut.fetchTripHistory(offset: 0, limit: 20, view: .rider)
         }
     }
 
@@ -113,7 +124,7 @@ struct RemoteTripRepositoryTests {
         let sut = RemoteTripRepository(client: client)
 
         await #expect(throws: TripHistoryError.sessionExpired) {
-            _ = try await sut.fetchTripHistory(offset: 0, limit: 20)
+            _ = try await sut.fetchTripHistory(offset: 0, limit: 20, view: .rider)
         }
     }
 
@@ -123,7 +134,7 @@ struct RemoteTripRepositoryTests {
         let sut = RemoteTripRepository(client: client)
 
         await #expect(throws: TripHistoryError.networkUnavailable) {
-            _ = try await sut.fetchTripHistory(offset: 0, limit: 20)
+            _ = try await sut.fetchTripHistory(offset: 0, limit: 20, view: .rider)
         }
     }
 }

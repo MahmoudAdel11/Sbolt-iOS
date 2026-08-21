@@ -11,8 +11,8 @@ import Foundation
 /// reacts to a specific typed error without widening `MockTripRepository`.
 private struct FailingTripRepository: TripRepository {
     let error: Error
-    func fetchTripHistory(offset: Int, limit: Int) async throws -> TripHistoryPage { throw error }
-    func refreshTripHistory(limit: Int) async throws -> TripHistoryPage { throw error }
+    func fetchTripHistory(offset: Int, limit: Int, view: RideView) async throws -> TripHistoryPage { throw error }
+    func refreshTripHistory(limit: Int, view: RideView) async throws -> TripHistoryPage { throw error }
 }
 
 @MainActor
