@@ -14,6 +14,7 @@ import SwiftUI
 struct SavedPlacePickerView: View {
     @StateObject private var viewModel = FavoritePlacesDependencies().makeFavoritePlacesViewModel()
     @Environment(\.dismiss) private var dismiss
+    @State private var isAdding = false
     let onSelect: (FavoritePlace) -> Void
 
     var body: some View {
@@ -28,6 +29,13 @@ struct SavedPlacePickerView: View {
                 }
                 .task {
                     if viewModel.favoritePlaces.isEmpty { viewModel.loadFavorites() }
+                }
+                // Sheet-over-sheet: presented from the picker itself, sharing
+                // the picker's own `viewModel` instance — a newly added place
+                // lands straight in the same in-memory list the picker reads,
+                // so it appears without dismissing/losing the ride-booking flow.
+                .sheet(isPresented: $isAdding) {
+                    FavoritePlaceFormView(viewModel: viewModel)
                 }
         }
     }
@@ -49,27 +57,47 @@ struct SavedPlacePickerView: View {
             VStack(spacing: 12) {
                 Image(systemName: "star.slash").font(.system(size: 40)).foregroundStyle(.secondary)
                 Text("No saved places yet").font(.headline)
+                addPlaceButton
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         } else {
-            List(viewModel.favoritePlaces) { place in
-                Button {
-                    onSelect(place)
-                } label: {
-                    HStack(spacing: 14) {
-                        Image(systemName: place.icon)
-                            .foregroundStyle(Color.accentColor)
-                            .frame(width: 28)
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text(place.title).font(.body).foregroundStyle(.primary)
-                            Text(place.address).font(.caption).foregroundStyle(.secondary)
+            List {
+                Section {
+                    ForEach(viewModel.favoritePlaces) { place in
+                        Button {
+                            onSelect(place)
+                        } label: {
+                            HStack(spacing: 14) {
+                                Image(systemName: place.icon)
+                                    .foregroundStyle(Color.accentColor)
+                                    .frame(width: 28)
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(place.title).font(.body).foregroundStyle(.primary)
+                                    Text(place.address).font(.caption).foregroundStyle(.secondary)
+                                }
+                            }
                         }
+                        .accessibilityIdentifier("saved_place_row_\(place.id)")
                     }
                 }
-                .accessibilityIdentifier("saved_place_row_\(place.id)")
+                // Always visible — not just an empty-state action — so a
+                // user with existing places can still add another without
+                // leaving the picker.
+                Section {
+                    addPlaceButton
+                }
             }
             .listStyle(.plain)
         }
+    }
+
+    private var addPlaceButton: some View {
+        Button {
+            isAdding = true
+        } label: {
+            Label("Add a Place", systemImage: "plus")
+        }
+        .accessibilityIdentifier("saved_place_picker_add_button")
     }
 }
 
