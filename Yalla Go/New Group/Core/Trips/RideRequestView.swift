@@ -14,7 +14,9 @@ struct RideRequestView: View {
     @EnvironmentObject var locationViewModel:LocationSearchViewModel
     @EnvironmentObject private var session: AppSessionStore
     @StateObject private var bookingViewModel = TripBookingDependencies().makeTripBookingViewModel()
+    @StateObject private var favoritePlacesViewModel = FavoritePlacesDependencies().makeFavoritePlacesViewModel()
     @State private var isChoosingSavedPlace = false
+    @State private var isSavingDestinationAsPlace = false
 
     var body: some View {
         Group {
@@ -41,6 +43,15 @@ struct RideRequestView: View {
             SavedPlacePickerView { place in
                 locationViewModel.selectDestination(title: place.title, coordinate: place.coordinate)
                 isChoosingSavedPlace = false
+            }
+        }
+        // Sheet-over-sheet from the booking form itself, sharing this view's
+        // own `favoritePlacesViewModel` — saving doesn't touch or clear
+        // `locationViewModel.selectedYallaGoLocation`, so the ride request
+        // in progress is undisturbed underneath.
+        .sheet(isPresented: $isSavingDestinationAsPlace) {
+            if let coordinate = destinationCoordinate {
+                FavoritePlaceFormView(viewModel: favoritePlacesViewModel, lockedCoordinate: coordinate)
             }
         }
     }
@@ -81,6 +92,14 @@ struct RideRequestView: View {
                         if let location = locationViewModel.selectedYallaGoLocation {
                             Text(location.titel)
                                 .font(.system(size: 16, weight: .semibold  ))
+                            Button {
+                                isSavingDestinationAsPlace = true
+                            } label: {
+                                Image(systemName: "star")
+                                    .foregroundColor(.gray)
+                            }
+                            .accessibilityLabel("Save this place")
+                            .accessibilityIdentifier("save_destination_as_place_button")
                         }
                         Spacer()
                         Text(locationViewModel.dropoffTime ?? "")
@@ -173,6 +192,11 @@ struct RideRequestView: View {
 
     private var estimatedFare: Double {
         locationViewModel.computeRidePrice(forType: defaultRideType)
+    }
+
+    private var destinationCoordinate: Coordinate? {
+        guard let coordinate = locationViewModel.selectedYallaGoLocation?.coordinate else { return nil }
+        return Coordinate(latitude: coordinate.latitude, longitude: coordinate.longitude)
     }
 
     private func confirmRide() {
