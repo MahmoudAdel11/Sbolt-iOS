@@ -11,13 +11,15 @@ import Foundation
 struct TripHistoryDependencies {
 
     private let repository: any TripRepository
+    private let view: RideView
 
-    init(repository: (any TripRepository)? = nil) {
+    init(repository: (any TripRepository)? = nil, view: RideView = .rider) {
         self.repository = repository ?? AppEnvironment.current.repositoryFactory.makeTripRepository()
+        self.view = view
     }
 
     @MainActor
     func makeTripHistoryViewModel() -> TripHistoryViewModel {
-        TripHistoryViewModel(getTripHistoryUseCase: GetTripHistoryUseCase(repository: repository))
+        TripHistoryViewModel(getTripHistoryUseCase: GetTripHistoryUseCase(repository: repository, view: view))
     }
 }

@@ -15,15 +15,15 @@ final class RemoteTripRepository: TripRepository {
         self.client = client
     }
 
-    func fetchTripHistory(offset: Int, limit: Int) async throws -> TripHistoryPage {
-        try await loadPage(offset: offset, limit: limit)
+    func fetchTripHistory(offset: Int, limit: Int, view: RideView) async throws -> TripHistoryPage {
+        try await loadPage(offset: offset, limit: limit, view: view)
     }
 
-    func refreshTripHistory(limit: Int) async throws -> TripHistoryPage {
-        try await loadPage(offset: 0, limit: limit)
+    func refreshTripHistory(limit: Int, view: RideView) async throws -> TripHistoryPage {
+        try await loadPage(offset: 0, limit: limit, view: view)
     }
 
-    private func loadPage(offset: Int, limit: Int) async throws -> TripHistoryPage {
+    private func loadPage(offset: Int, limit: Int, view: RideView) async throws -> TripHistoryPage {
         do {
             let dto: RideDTO.RideHistoryResponse = try await client.send(
                 Endpoint(
@@ -31,7 +31,8 @@ final class RemoteTripRepository: TripRepository {
                     method: .get,
                     queryItems: [
                         URLQueryItem(name: "limit", value: String(limit)),
-                        URLQueryItem(name: "offset", value: String(offset))
+                        URLQueryItem(name: "offset", value: String(offset)),
+                        URLQueryItem(name: "as", value: view.rawValue)
                     ]
                 )
             )
