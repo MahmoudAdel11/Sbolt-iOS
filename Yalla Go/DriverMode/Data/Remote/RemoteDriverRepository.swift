@@ -77,8 +77,8 @@ final class RemoteDriverRepository: DriverRepository {
             return .notAuthorizedAsDriver
         case NetworkError.notFound:
             return .rideNotFound
-        case NetworkError.conflict:
-            return conflict
+        case NetworkError.conflict(let errorCode):
+            return errorCode == "ride_cancelled" ? .rideCancelledByRider : conflict
         case NetworkError.noInternet, NetworkError.timeout:
             return .networkUnavailable
         default:

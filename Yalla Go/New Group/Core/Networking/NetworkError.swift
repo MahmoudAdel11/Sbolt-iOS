@@ -22,8 +22,12 @@ enum NetworkError: Error, Equatable {
     case forbidden
     /// The server returned 404 Not Found.
     case notFound
-    /// The server returned 409 Conflict.
-    case conflict
+    /// The server returned 409 Conflict. `errorCode` carries the backend's
+    /// `error_code` body field when present (e.g. `"conflict"`,
+    /// `"ride_cancelled"`) — `nil` if the body was empty or didn't decode —
+    /// so callers that need to distinguish *why* it conflicted (not just
+    /// that it did) have something to switch on without a second request.
+    case conflict(errorCode: String?)
     /// The request exceeded the allowed time limit.
     case timeout
     /// The device has no active internet connection.

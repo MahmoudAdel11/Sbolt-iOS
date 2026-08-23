@@ -78,7 +78,7 @@ struct RemoteFavoritePlaceRepositoryTests {
 
     @Test func addFavoritePlaceMapsConflictToDuplicateLabel() async {
         let client = StubAPIClient()
-        client.result = .failure(NetworkError.conflict)
+        client.result = .failure(NetworkError.conflict(errorCode: nil))
         let sut = RemoteFavoritePlaceRepository(client: client)
 
         await #expect(throws: FavoritePlaceError.duplicateLabel) {

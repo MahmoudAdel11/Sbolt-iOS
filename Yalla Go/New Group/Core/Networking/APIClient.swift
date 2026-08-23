@@ -86,7 +86,7 @@ final class URLSessionAPIClient: APIClient {
         case 401:       throw NetworkError.unauthorized
         case 403:       throw NetworkError.forbidden
         case 404:       throw NetworkError.notFound
-        case 409:       throw NetworkError.conflict
+        case 409:       throw NetworkError.conflict(errorCode: try? decoder.decode(BackendErrorBody.self, from: data).errorCode)
         default:
             let message = String(data: data, encoding: .utf8)
             throw NetworkError.serverError(statusCode: http.statusCode, message: message)
@@ -102,4 +102,11 @@ final class URLSessionAPIClient: APIClient {
             throw NetworkError.decodingFailed(error.localizedDescription)
         }
     }
+}
+
+/// Shape of every backend error body (`{"error_code": ..., "message": ...}`,
+/// per `app/api/error_handlers.py`), used only to pull `error_code` out for
+/// `NetworkError.conflict(errorCode:)` — never surfaced beyond that.
+private struct BackendErrorBody: Decodable {
+    let errorCode: String
 }
