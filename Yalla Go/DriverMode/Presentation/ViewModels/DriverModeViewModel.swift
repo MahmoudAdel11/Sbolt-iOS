@@ -125,9 +125,11 @@ final class DriverModeViewModel: ObservableObject {
         }
     }
 
-    /// Accepts an available ride. On a 409 (another driver got there first),
-    /// shows `raceConditionMessage` and drops it from the list rather than a
-    /// generic error.
+    /// Accepts an available ride. On a 409 — another driver got there first,
+    /// or the rider cancelled it — shows `raceConditionMessage` (an accurate
+    /// one for whichever actually happened) and drops it from the list
+    /// rather than a generic error. Both outcomes behave identically besides
+    /// the message: the ride is removed from `rides` either way.
     func accept(rideID: String) {
         guard !isAccepting, activeRide == nil else { return }
         isAccepting = true
@@ -141,8 +143,8 @@ final class DriverModeViewModel: ObservableObject {
                 self.rides.removeAll { $0.id == rideID }
                 self.activeRide = trip
                 self.refreshPolling() // stops: an active ride pauses browsing
-            } catch DriverError.rideNoLongerAvailable {
-                self.raceConditionMessage = self.errorPresenter.message(for: DriverError.rideNoLongerAvailable)
+            } catch let error as DriverError where error == .rideNoLongerAvailable || error == .rideCancelledByRider {
+                self.raceConditionMessage = self.errorPresenter.message(for: error)
                 self.rides.removeAll { $0.id == rideID }
             } catch is CancellationError {
             } catch {
