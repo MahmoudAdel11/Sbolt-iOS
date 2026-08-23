@@ -58,6 +58,30 @@ struct APIClientTests {
         }
     }
 
+    @Test func throws409WithDecodedErrorCode() async {
+        defer { MockURLProtocol.requestHandler = nil }
+        let body = #"{"error_code":"ride_cancelled","message":"This ride was cancelled by the rider."}"#
+            .data(using: .utf8)!
+        let url = baseURL
+        MockURLProtocol.requestHandler = { _ in
+            (HTTPURLResponse(url: url, statusCode: 409, httpVersion: nil, headerFields: nil)!, body)
+        }
+        await #expect(throws: NetworkError.conflict(errorCode: "ride_cancelled")) {
+            let _: Stub = try await makeSUT().send(Endpoint(path: "/rides/1/accept", method: .post))
+        }
+    }
+
+    @Test func throws409WithUndecodableBodyAsNilErrorCode() async {
+        defer { MockURLProtocol.requestHandler = nil }
+        let url = baseURL
+        MockURLProtocol.requestHandler = { _ in
+            (HTTPURLResponse(url: url, statusCode: 409, httpVersion: nil, headerFields: nil)!, Data())
+        }
+        await #expect(throws: NetworkError.conflict(errorCode: nil)) {
+            let _: Stub = try await makeSUT().send(Endpoint(path: "/rides/1/accept", method: .post))
+        }
+    }
+
     @Test func throws500AsServerError() async {
         defer { MockURLProtocol.requestHandler = nil }
         let body = "Internal Server Error".data(using: .utf8)!

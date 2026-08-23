@@ -168,6 +168,25 @@ struct DriverModeViewModelTests {
         #expect(!sut.rides.contains { $0.id == Trip.driverStub.id })
     }
 
+    @Test func acceptConflictShowsCancelledByRiderMessageDistinctFromTakenByAnotherDriver() async {
+        let spy = DriverRepositorySpy(fetchAvailableRidesResult: .success([.driverStub]),
+                                       acceptRideResult: .failure(DriverError.rideCancelledByRider))
+        let sut = makeSUT(spy: spy)
+        sut.screenDidAppear(location: Coordinate(latitude: 30, longitude: 31))
+        sut.setOnline(true)
+        await sut.statusTask?.value
+        await waitUntil { !sut.rides.isEmpty }
+        sut.screenDidDisappear()
+
+        sut.accept(rideID: Trip.driverStub.id)
+        await sut.actionTask?.value
+
+        #expect(sut.raceConditionMessage == "This ride was cancelled by the rider.")
+        #expect(sut.actionErrorMessage == nil)
+        #expect(sut.activeRide == nil)
+        #expect(!sut.rides.contains { $0.id == Trip.driverStub.id })
+    }
+
     // MARK: - Complete
 
     @Test func completeActiveRideClearsActiveRide() async {

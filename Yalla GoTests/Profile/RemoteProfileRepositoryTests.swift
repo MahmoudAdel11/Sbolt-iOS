@@ -118,7 +118,7 @@ struct RemoteProfileRepositoryTests {
 
     @Test func updateProfileMapsConflictToUpdateFailed() async {
         let client = StubAPIClient()
-        client.result = .failure(NetworkError.conflict)
+        client.result = .failure(NetworkError.conflict(errorCode: nil))
         let sut = RemoteProfileRepository(client: client)
         let update = ProfileUpdate(username: "Name", phoneNumber: "+201111111111", profileImageURL: nil)
 

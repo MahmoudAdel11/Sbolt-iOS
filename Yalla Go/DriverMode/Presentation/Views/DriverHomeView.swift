@@ -84,6 +84,7 @@ struct DriverHomeView: View {
     private var mapLayout: some View {
         AvailableRidesMapViewRepresentable(
             rides: viewModel.rides,
+            selectedRide: selectedRide,
             recenterTrigger: $recenterTrigger,
             onSelectRide: { id in selectedRideID = id }
         )
