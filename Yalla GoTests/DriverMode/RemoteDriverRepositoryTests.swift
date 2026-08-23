@@ -99,7 +99,27 @@ struct RemoteDriverRepositoryTests {
 
     @Test func acceptRideConflictMapsToRideNoLongerAvailable() async {
         let client = StubAPIClient()
-        client.result = .failure(NetworkError.conflict)
+        client.result = .failure(NetworkError.conflict(errorCode: "conflict"))
+        let sut = RemoteDriverRepository(client: client)
+
+        await #expect(throws: DriverError.rideNoLongerAvailable) {
+            _ = try await sut.acceptRide(id: "ride-1")
+        }
+    }
+
+    @Test func acceptRideCancelledConflictMapsToRideCancelledByRider() async {
+        let client = StubAPIClient()
+        client.result = .failure(NetworkError.conflict(errorCode: "ride_cancelled"))
+        let sut = RemoteDriverRepository(client: client)
+
+        await #expect(throws: DriverError.rideCancelledByRider) {
+            _ = try await sut.acceptRide(id: "ride-1")
+        }
+    }
+
+    @Test func acceptRideConflictWithNoErrorCodeMapsToRideNoLongerAvailable() async {
+        let client = StubAPIClient()
+        client.result = .failure(NetworkError.conflict(errorCode: nil))
         let sut = RemoteDriverRepository(client: client)
 
         await #expect(throws: DriverError.rideNoLongerAvailable) {
@@ -120,10 +140,20 @@ struct RemoteDriverRepositoryTests {
 
     @Test func completeRideConflictMapsToRideNotCompletable() async {
         let client = StubAPIClient()
-        client.result = .failure(NetworkError.conflict)
+        client.result = .failure(NetworkError.conflict(errorCode: "conflict"))
         let sut = RemoteDriverRepository(client: client)
 
         await #expect(throws: DriverError.rideNotCompletable) {
+            _ = try await sut.completeRide(id: "ride-1")
+        }
+    }
+
+    @Test func completeRideCancelledConflictMapsToRideCancelledByRider() async {
+        let client = StubAPIClient()
+        client.result = .failure(NetworkError.conflict(errorCode: "ride_cancelled"))
+        let sut = RemoteDriverRepository(client: client)
+
+        await #expect(throws: DriverError.rideCancelledByRider) {
             _ = try await sut.completeRide(id: "ride-1")
         }
     }
