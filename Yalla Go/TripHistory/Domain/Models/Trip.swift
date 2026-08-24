@@ -20,4 +20,8 @@ struct Trip: Identifiable, Equatable {
     let acceptedAt: Date?
     let completedAt: Date?
     let cancelledAt: Date?
+    /// Rider-facing driver summary, embedded on the backend's `RideResponse`
+    /// once a driver is assigned. `nil` until then (or if it somehow didn't
+    /// decode) — defaulted so every existing call site is unaffected.
+    var driver: Driver? = nil
 }

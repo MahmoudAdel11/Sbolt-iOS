@@ -32,6 +32,17 @@ final class TripBookingViewModel: ObservableObject {
     /// Best-effort cleanup after cancel/completion. Exposed read-only for tests.
     private(set) var cleanupTask: Task<Void, Never>?
 
+    /// Gates the `.completed` → `.idle` auto-reset on the rating prompt's
+    /// decision (submit or skip) rather than a fixed delay.
+    /// `proceedPastRatingPrompt()` resumes it — but it can be called *before*
+    /// `awaitRatingDecision()` has started suspending (e.g. a `Combine`
+    /// subscriber reacting to `.completed` synchronously, in the same call
+    /// stack as the `phase` assignment below), in which case there's no live
+    /// continuation yet to resume. This flag remembers that early call so
+    /// `awaitRatingDecision()` returns immediately instead of hanging forever.
+    private var earlyRatingAcknowledgment = false
+    private var ratingDecisionContinuation: CheckedContinuation<Void, Never>?
+
     var isIdle: Bool { phase.isIdle }
     var isCancellable: Bool { phase.isCancellable }
 
@@ -102,6 +113,8 @@ final class TripBookingViewModel: ObservableObject {
                 try Task.checkCancellation()
                 if updated.status == .completed {
                     phase = .completed(updated)
+                    await awaitRatingDecision()
+                    try Task.checkCancellation()
                     try await sleep(timings.resetAfterTerminal)
                     try Task.checkCancellation()
                     reset()
@@ -121,6 +134,30 @@ final class TripBookingViewModel: ObservableObject {
         } catch {
             phase = .failed(message: errorPresenter.message(for: error))
             if case RideError.sessionExpired = error { isSessionExpired = true }
+        }
+    }
+
+    /// Called by the rating-prompt UI once the rider has submitted a rating
+    /// or explicitly skipped — resumes the `.completed` → `.idle` auto-reset
+    /// that was waiting on this decision. Safe to call at any time, including
+    /// before the wait has started (see `earlyRatingAcknowledgment`'s doc
+    /// comment) or after it's already been consumed (a harmless no-op).
+    func proceedPastRatingPrompt() {
+        if let continuation = ratingDecisionContinuation {
+            continuation.resume()
+            ratingDecisionContinuation = nil
+        } else {
+            earlyRatingAcknowledgment = true
+        }
+    }
+
+    private func awaitRatingDecision() async {
+        if earlyRatingAcknowledgment {
+            earlyRatingAcknowledgment = false
+            return
+        }
+        await withCheckedContinuation { continuation in
+            ratingDecisionContinuation = continuation
         }
     }
 

@@ -28,7 +28,7 @@ struct DriverCard: View {
                     Text(driver.name ?? "Driver assigned").font(.headline)
                     Spacer()
                     if let rating = driver.rating {
-                        Label(String(format: "%.1f", rating), systemImage: "star.fill")
+                        Label(ratingText(rating), systemImage: "star.fill")
                             .font(.subheadline)
                             .foregroundStyle(.orange)
                     }
@@ -60,6 +60,15 @@ struct DriverCard: View {
         .background(Color(.secondarySystemGroupedBackground),
                     in: RoundedRectangle(cornerRadius: 14, style: .continuous))
         .accessibilityElement(children: .combine)
+    }
+
+    /// "4.8 (12 rides)" when a count is known and non-zero; a bare "4.8"
+    /// otherwise (e.g. a driver with no ratings yet, or the count didn't decode).
+    private func ratingText(_ rating: Double) -> String {
+        guard let count = driver.ratingCount, count > 0 else {
+            return String(format: "%.1f", rating)
+        }
+        return String(format: "%.1f (%d ride%@)", rating, count, count == 1 ? "" : "s")
     }
 }
 
