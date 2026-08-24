@@ -41,6 +41,7 @@
 		2E28B93D1BC06A47D28BCC3C /* RemoteDriverRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A7EDAEABFA867DAE3ED9AA2 /* RemoteDriverRepository.swift */; };
 		300E99BE287D4AD00EE0FB2B /* MockTripBookingRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE72EB5483367351B4A938ED /* MockTripBookingRepositoryTests.swift */; };
 		321B843AACE48E33D419DEBC /* RidePollingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B02631181B3A4990A41ADD0 /* RidePollingService.swift */; };
+		322A2E11E2B61F7440DE54B6 /* AutoZoomTriggerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83EEE79EBBA1F405D58D0E76 /* AutoZoomTriggerTests.swift */; };
 		32B98CD68E25118925634CBD /* FavoritePlaceFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ED76C4A6A063E1E69EE4495 /* FavoritePlaceFormView.swift */; };
 		3567A6CAED86C27F75AE47C7 /* RemoteTripBookingRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99B18C9AF4D80C3D6BF5A476 /* RemoteTripBookingRepository.swift */; };
 		371C400A29F8F4ECF6DDE67B /* NWPathMonitorReachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E723FC8F65F97A6EA2ECA0 /* NWPathMonitorReachability.swift */; };
@@ -59,6 +60,7 @@
 		677566F94F2403050AD702B9 /* MockAuthenticationRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7376718315D9A099C77C7939 /* MockAuthenticationRepositoryTests.swift */; };
 		6A246116BCFE50A06FDF2C16 /* TripHistoryPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FC0E496C38D5F38B78D7E7B /* TripHistoryPage.swift */; };
 		6E5B91BCEAA3625769FA4658 /* RetryingAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4289C581C400C0FA554FD4F /* RetryingAPIClient.swift */; };
+		7321BB977DD232CFD1AB455A /* AutoZoomTrigger.swift in Sources */ = {isa = PBXBuildFile; fileRef = E627D9E9503DDF1CEB38D655 /* AutoZoomTrigger.swift */; };
 		76374AFF7E56DA0F6AFEFE8A /* AvailableRidesPollingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E460DAC0D089A78CB8CAB368 /* AvailableRidesPollingService.swift */; };
 		78ABC9297C93D39067DCFA24 /* SetDriverStatusUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB6B2A3BB3F0A7C7A690A2F /* SetDriverStatusUseCase.swift */; };
 		7A72D86A98FDC55A4FDF4B09 /* AuthenticationRepositorySpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EE37A0940BAE1875B3F3B89 /* AuthenticationRepositorySpy.swift */; };
@@ -280,6 +282,7 @@
 		827CF56E45CF7E9D3426065D /* DriverRepositorySpy.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DriverRepositorySpy.swift; path = DriverMode/Doubles/DriverRepositorySpy.swift; sourceTree = "<group>"; };
 		83B8EBBDEEAF2404772B443F /* SettingsViewModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SettingsViewModelTests.swift; sourceTree = "<group>"; };
 		8986F65940F0A3C87EA317DA /* RatingSubmissionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RatingSubmissionView.swift; sourceTree = "<group>"; };
+		83EEE79EBBA1F405D58D0E76 /* AutoZoomTriggerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AutoZoomTriggerTests.swift; path = DriverMode/AutoZoomTriggerTests.swift; sourceTree = "<group>"; };
 		8A0D1C554CECEDB835CAD2BD /* RemoteAuthenticationRepositoryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RemoteAuthenticationRepositoryTests.swift; sourceTree = "<group>"; };
 		8D00AD53C85EE08E7FB3329C /* DriverRepository.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DriverRepository.swift; path = DriverMode/Domain/Repositories/DriverRepository.swift; sourceTree = "<group>"; };
 		8D7B007985E7AEDBFF9A325F /* TripBookingViewModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TripBookingViewModelTests.swift; sourceTree = "<group>"; };
@@ -420,6 +423,7 @@
 		E085DF83B8961F3FEFA74AC8 /* Yalla-Go-Info-Debug.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Yalla-Go-Info-Debug.plist"; sourceTree = "<group>"; };
 		E460DAC0D089A78CB8CAB368 /* AvailableRidesPollingService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AvailableRidesPollingService.swift; path = DriverMode/Domain/Support/AvailableRidesPollingService.swift; sourceTree = "<group>"; };
 		E52DF9E1B593F95EC45370B1 /* RemoteProfileRepositoryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RemoteProfileRepositoryTests.swift; sourceTree = "<group>"; };
+		E627D9E9503DDF1CEB38D655 /* AutoZoomTrigger.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AutoZoomTrigger.swift; path = DriverMode/Domain/Support/AutoZoomTrigger.swift; sourceTree = "<group>"; };
 		E714B4C0B4F165509A47949D /* NetworkReachabilityMonitoring.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NetworkReachabilityMonitoring.swift; path = "New Group/Core/Networking/Reachability/NetworkReachabilityMonitoring.swift"; sourceTree = "<group>"; };
 		ECDDC8C9982B98415AE76814 /* PollRideStatusUseCase.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PollRideStatusUseCase.swift; sourceTree = "<group>"; };
 		ED650A767507B2B67FC6FA4C /* DriverError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DriverError.swift; path = DriverMode/Domain/Errors/DriverError.swift; sourceTree = "<group>"; };
@@ -667,6 +671,7 @@
 				9A6B381F9D0841AF6665B92E /* MockDriverRepositoryTests.swift */,
 				D882BD7F270E0C87975E2726 /* RemoteDriverRepositoryTests.swift */,
 				75F938A2EF276A6AFAF43C21 /* RideAnnotationDiffTests.swift */,
+				83EEE79EBBA1F405D58D0E76 /* AutoZoomTriggerTests.swift */,
 			);
 			name = DriverMode;
 			sourceTree = "<group>";
@@ -1759,6 +1764,7 @@
 			children = (
 				E460DAC0D089A78CB8CAB368 /* AvailableRidesPollingService.swift */,
 				FD64C192B7ACCC2577C830B5 /* RideAnnotationDiff.swift */,
+				E627D9E9503DDF1CEB38D655 /* AutoZoomTrigger.swift */,
 			);
 			name = Support;
 			sourceTree = "<group>";
@@ -2072,6 +2078,7 @@
 				146ADA84A8A4224282048C04 /* SubmitRatingUseCase.swift in Sources */,
 				1B8A220E132D5B6F12762729 /* RatingSubmissionViewModel.swift in Sources */,
 				59447EC811A53199EE0D1CE8 /* RatingSubmissionView.swift in Sources */,
+				7321BB977DD232CFD1AB455A /* AutoZoomTrigger.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2117,6 +2124,7 @@
 				035409871859BD1609E40DB5 /* MockDriverRepositoryTests.swift in Sources */,
 				5B53221E37146888032F0F6A /* RemoteDriverRepositoryTests.swift in Sources */,
 				60A71786BE5D4E99C00A05A3 /* RideAnnotationDiffTests.swift in Sources */,
+				322A2E11E2B61F7440DE54B6 /* AutoZoomTriggerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

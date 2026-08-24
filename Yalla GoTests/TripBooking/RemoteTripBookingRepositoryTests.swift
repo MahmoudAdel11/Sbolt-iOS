@@ -79,7 +79,7 @@ struct RemoteTripBookingRepositoryTests {
 
     @Test func requestRideMapsConflictToActiveRideAlreadyExists() async {
         let client = StubAPIClient()
-        client.result = .failure(NetworkError.conflict)
+        client.result = .failure(NetworkError.conflict(errorCode: nil))
         let sut = RemoteTripBookingRepository(client: client)
 
         await #expect(throws: RideError.activeRideAlreadyExists) {
@@ -101,7 +101,7 @@ struct RemoteTripBookingRepositoryTests {
 
     @Test func cancelRideMapsConflictToCancellationFailed() async {
         let client = StubAPIClient()
-        client.result = .failure(NetworkError.conflict)
+        client.result = .failure(NetworkError.conflict(errorCode: nil))
         let sut = RemoteTripBookingRepository(client: client)
 
         await #expect(throws: RideError.cancellationFailed) {
