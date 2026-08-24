@@ -34,6 +34,24 @@ struct TripBookingUseCaseTests {
         #expect(cancelled.status == .cancelled)
     }
 
+    @Test func submitRatingSucceeds() async throws {
+        let repository = MockTripBookingRepository()
+        let requested = try await repository.requestRide(pickup: pickup, dropoff: dropoff)
+        let sut = SubmitRatingUseCase(repository: repository)
+
+        try await sut.execute(rideID: requested.id, score: 5)
+        // No throw is success — the mock has no persistent rating store to assert against.
+    }
+
+    @Test func submitRatingPropagatesFailure() async {
+        let repository = MockTripBookingRepository(behavior: .networkFailure)
+        let sut = SubmitRatingUseCase(repository: repository)
+
+        await #expect(throws: RideError.networkUnavailable) {
+            try await sut.execute(rideID: "ride-1", score: 5)
+        }
+    }
+
     @Test func pollRideStatusYieldsUntilTerminal() async throws {
         let repository = MockTripBookingRepository(statusProgression: [.requested, .accepted, .completed])
         let requested = try await repository.requestRide(pickup: pickup, dropoff: dropoff)

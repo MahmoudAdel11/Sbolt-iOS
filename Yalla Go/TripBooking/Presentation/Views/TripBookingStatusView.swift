@@ -9,6 +9,7 @@ import SwiftUI
 /// `viewModel.phase` and sends intents (cancel / retry) only.
 struct TripBookingStatusView: View {
     @ObservedObject var viewModel: TripBookingViewModel
+    @State private var isShowingRatingPrompt = false
 
     var body: some View {
         VStack(spacing: 16) {
@@ -24,6 +25,19 @@ struct TripBookingStatusView: View {
         .padding(.bottom, 12)
         .frame(maxWidth: .infinity)
         .animation(.spring(response: 0.4, dampingFraction: 0.85), value: viewModel.phase)
+        .onChange(of: viewModel.phase) { phase in
+            if case .completed = phase { isShowingRatingPrompt = true }
+        }
+        // `onDismiss` fires however the sheet closed — Submit, Skip, or a
+        // swipe-down — so it's the single place that resumes the paused
+        // auto-dismiss (see TripBookingViewModel.proceedPastRatingPrompt).
+        .sheet(isPresented: $isShowingRatingPrompt, onDismiss: {
+            viewModel.proceedPastRatingPrompt()
+        }) {
+            if case let .completed(trip) = viewModel.phase {
+                RatingSubmissionView(rideID: trip.id)
+            }
+        }
     }
 
     // MARK: - Phase content
@@ -46,7 +60,11 @@ struct TripBookingStatusView: View {
         case let .active(trip):
             VStack(spacing: 10) {
                 statusHeader(activeStatusTitle(for: trip), systemImage: activeStatusIcon(for: trip), tint: .blue)
-                if let driverID = trip.driverID {
+                if let driver = trip.driver {
+                    DriverCard(driver: driver, statusText: trip.status.displayName)
+                } else if let driverID = trip.driverID {
+                    // Assigned but the embedded summary didn't decode/arrive —
+                    // degrade to the bare-ID fallback rather than a blank gap.
                     DriverCard(driver: Driver(id: driverID), statusText: trip.status.displayName)
                 } else {
                     ProgressView()

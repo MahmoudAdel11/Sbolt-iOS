@@ -55,6 +55,17 @@ final class RemoteTripBookingRepository: TripBookingRepository {
         }
     }
 
+    func submitRating(rideID: String, score: Int) async throws {
+        do {
+            let body = try JSONEncoder.backend.encode(RatingDTO.RatingRequest(score: score))
+            let _: RatingDTO.RatingResponse = try await client.send(
+                Endpoint(path: "/rides/\(rideID)/rating", method: .post, body: body)
+            )
+        } catch {
+            throw mapped(error, conflict: .ratingFailed)
+        }
+    }
+
     // MARK: - Error mapping
 
     private func mapped(_ error: Error, conflict: RideError) -> RideError {

@@ -32,4 +32,12 @@ struct TripBookingDependencies {
             timings: timings
         )
     }
+
+    @MainActor
+    func makeRatingSubmissionViewModel(rideID: String) -> RatingSubmissionViewModel {
+        RatingSubmissionViewModel(
+            rideID: rideID,
+            submitRatingUseCase: SubmitRatingUseCase(repository: repository)
+        )
+    }
 }

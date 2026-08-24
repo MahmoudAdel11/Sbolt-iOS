@@ -12,8 +12,10 @@
 		090191E27233B33A00B0BD32 /* SettingsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B8EBBDEEAF2404772B443F /* SettingsViewModelTests.swift */; };
 		13B09C4FCB8D219CA9EEEAD9 /* MockSettingsRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B95D53B36D309387BE6924F5 /* MockSettingsRepositoryTests.swift */; };
 		13F5F9410E8C82E5FD5DFCCE /* DriverModeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C126EB3101A815D73755C064 /* DriverModeViewModel.swift */; };
+		146ADA84A8A4224282048C04 /* SubmitRatingUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF24A9EBB16A58F7CC54EA35 /* SubmitRatingUseCase.swift */; };
 		1656907CF7AD6CD8FF228D12 /* ProfileViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 904F8A1D5B54A11FBACFF5F7 /* ProfileViewModelTests.swift */; };
 		1B39D4F9519207651900A3D3 /* DriverError.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED650A767507B2B67FC6FA4C /* DriverError.swift */; };
+		1B8A220E132D5B6F12762729 /* RatingSubmissionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38A094FFF71F70CB85C4835 /* RatingSubmissionViewModel.swift */; };
 		1C790C9B13B7FC7ED0FEB573 /* PollRideStatusUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECDDC8C9982B98415AE76814 /* PollRideStatusUseCase.swift */; };
 		1E251A5E2D4D111800FE1206 /* LocationSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E251A5D2D4D111800FE1206 /* LocationSearchView.swift */; };
 		1E251A612D4D327400FE1206 /* LocationSearchResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E251A602D4D327400FE1206 /* LocationSearchResultCell.swift */; };
@@ -50,6 +52,7 @@
 		4F688965A3C91AA19E75B1CE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D49101571FAFE30C837E6EE /* Foundation.framework */; };
 		53CEB33C456760E1687ED92B /* AuthDTOTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15DAF617A63899E37DEFEBA6 /* AuthDTOTests.swift */; };
 		577B43492F4BBF7DCA953786 /* MockProfileRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93EE224A474F66908A5F4FA /* MockProfileRepositoryTests.swift */; };
+		59447EC811A53199EE0D1CE8 /* RatingSubmissionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8986F65940F0A3C87EA317DA /* RatingSubmissionView.swift */; };
 		5B53221E37146888032F0F6A /* RemoteDriverRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D882BD7F270E0C87975E2726 /* RemoteDriverRepositoryTests.swift */; };
 		60A71786BE5D4E99C00A05A3 /* RideAnnotationDiffTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75F938A2EF276A6AFAF43C21 /* RideAnnotationDiffTests.swift */; };
 		630441F3D19AB069D76F05BF /* RemoteFavoritePlaceRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C47711104C046D1AEFFB293F /* RemoteFavoritePlaceRepositoryTests.swift */; };
@@ -201,6 +204,7 @@
 		D6A220D825281DBA9B577F53 /* FavoritePlacesViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFD5C8F4448F23111B8098EA /* FavoritePlacesViewModelTests.swift */; };
 		DB840C9BD520EF09DC231C8D /* FavoritePlacesDependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB899E9AB5C50F4BB0BD5FB4 /* FavoritePlacesDependencies.swift */; };
 		E0DECBF449FC8F89D9DD22A8 /* DriverDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFF5C897647A0FCEFD921511 /* DriverDTO.swift */; };
+		EACEBCB8CCBC7D233D000403 /* RatingDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F7669993CA09DF6F19627B3 /* RatingDTO.swift */; };
 		EE19143E1065E9950BD94B00 /* AuthenticationUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF6A51A4309665F722F6FA50 /* AuthenticationUseCaseTests.swift */; };
 		F4FC3BFF274CB2021059D958 /* GetTripHistoryUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 350D39ADE19B72101B2049B6 /* GetTripHistoryUseCaseTests.swift */; };
 		FEF356C67FF315F14A43733D /* PollAvailableRidesUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2192B834B86DBFFF40AE1FFE /* PollAvailableRidesUseCase.swift */; };
@@ -225,6 +229,7 @@
 		0A650DEA4364FC5A5E5BA71B /* RideView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RideView.swift; sourceTree = "<group>"; };
 		0B6F12665A7F85A74E50EC70 /* MockDriverRepository.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MockDriverRepository.swift; path = DriverMode/Data/Mock/MockDriverRepository.swift; sourceTree = "<group>"; };
 		0D49101571FAFE30C837E6EE /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		0F7669993CA09DF6F19627B3 /* RatingDTO.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RatingDTO.swift; path = DTO/RatingDTO.swift; sourceTree = "<group>"; };
 		10107C778C671DC6FE789AEE /* LoginViewModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LoginViewModelTests.swift; sourceTree = "<group>"; };
 		114FB8D6559964534D0E29F5 /* DriverModeViewModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DriverModeViewModelTests.swift; path = DriverMode/DriverModeViewModelTests.swift; sourceTree = "<group>"; };
 		13BB2B83AE9054AEFE0E087D /* ConnectivityStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConnectivityStore.swift; path = "New Group/New Group/App/AppShell/ConnectivityStore.swift"; sourceTree = "<group>"; };
@@ -274,6 +279,7 @@
 		75F938A2EF276A6AFAF43C21 /* RideAnnotationDiffTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RideAnnotationDiffTests.swift; path = DriverMode/RideAnnotationDiffTests.swift; sourceTree = "<group>"; };
 		827CF56E45CF7E9D3426065D /* DriverRepositorySpy.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DriverRepositorySpy.swift; path = DriverMode/Doubles/DriverRepositorySpy.swift; sourceTree = "<group>"; };
 		83B8EBBDEEAF2404772B443F /* SettingsViewModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SettingsViewModelTests.swift; sourceTree = "<group>"; };
+		8986F65940F0A3C87EA317DA /* RatingSubmissionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RatingSubmissionView.swift; sourceTree = "<group>"; };
 		8A0D1C554CECEDB835CAD2BD /* RemoteAuthenticationRepositoryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RemoteAuthenticationRepositoryTests.swift; sourceTree = "<group>"; };
 		8D00AD53C85EE08E7FB3329C /* DriverRepository.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DriverRepository.swift; path = DriverMode/Domain/Repositories/DriverRepository.swift; sourceTree = "<group>"; };
 		8D7B007985E7AEDBFF9A325F /* TripBookingViewModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TripBookingViewModelTests.swift; sourceTree = "<group>"; };
@@ -397,12 +403,14 @@
 		B95D53B36D309387BE6924F5 /* MockSettingsRepositoryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MockSettingsRepositoryTests.swift; sourceTree = "<group>"; };
 		BC9AE464E82AC77322D4CAF3 /* FavoritePlaceUseCaseTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FavoritePlaceUseCaseTests.swift; sourceTree = "<group>"; };
 		BCAEE3D47DB2132D90F1CB09 /* NetworkErrorTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NetworkErrorTests.swift; sourceTree = "<group>"; };
+		BF24A9EBB16A58F7CC54EA35 /* SubmitRatingUseCase.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SubmitRatingUseCase.swift; sourceTree = "<group>"; };
 		C126EB3101A815D73755C064 /* DriverModeViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DriverModeViewModel.swift; path = DriverMode/Presentation/ViewModels/DriverModeViewModel.swift; sourceTree = "<group>"; };
 		C16D747E146BF7DDB0C0FB3F /* MockFavoritePlaceRepositoryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MockFavoritePlaceRepositoryTests.swift; sourceTree = "<group>"; };
 		C4289C581C400C0FA554FD4F /* RetryingAPIClient.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RetryingAPIClient.swift; path = "New Group/Core/Networking/RetryingAPIClient.swift"; sourceTree = "<group>"; };
 		C47711104C046D1AEFFB293F /* RemoteFavoritePlaceRepositoryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RemoteFavoritePlaceRepositoryTests.swift; sourceTree = "<group>"; };
 		C6617BAB4E1356D06E5F1C2B /* DriverErrorPresenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DriverErrorPresenter.swift; path = DriverMode/Presentation/Support/DriverErrorPresenter.swift; sourceTree = "<group>"; };
 		C93EE224A474F66908A5F4FA /* MockProfileRepositoryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MockProfileRepositoryTests.swift; sourceTree = "<group>"; };
+		D38A094FFF71F70CB85C4835 /* RatingSubmissionViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RatingSubmissionViewModel.swift; sourceTree = "<group>"; };
 		D447E322A8CBE2994244FAF9 /* CompleteRideUseCase.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CompleteRideUseCase.swift; path = DriverMode/Domain/UseCases/CompleteRideUseCase.swift; sourceTree = "<group>"; };
 		D882BD7F270E0C87975E2726 /* RemoteDriverRepositoryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RemoteDriverRepositoryTests.swift; path = DriverMode/RemoteDriverRepositoryTests.swift; sourceTree = "<group>"; };
 		DA43F8338FAA3A20C8354E37 /* RideDTO.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RideDTO.swift; path = DTO/RideDTO.swift; sourceTree = "<group>"; };
@@ -1484,6 +1492,7 @@
 				037E7A8FBBEE405C1868A017 /* RequestRideUseCase.swift */,
 				EDC0000B0511ACBE9B0CCAE4 /* CancelRideUseCase.swift */,
 				ECDDC8C9982B98415AE76814 /* PollRideStatusUseCase.swift */,
+				BF24A9EBB16A58F7CC54EA35 /* SubmitRatingUseCase.swift */,
 			);
 			path = UseCases;
 			sourceTree = "<group>";
@@ -1510,6 +1519,7 @@
 			isa = PBXGroup;
 			children = (
 				B1329D2D301AA885007D8AA6 /* TripBookingViewModel.swift */,
+				D38A094FFF71F70CB85C4835 /* RatingSubmissionViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -1526,6 +1536,7 @@
 			isa = PBXGroup;
 			children = (
 				B1329D31301AA8A1007D8AA6 /* TripBookingStatusView.swift */,
+				8986F65940F0A3C87EA317DA /* RatingSubmissionView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1738,6 +1749,7 @@
 			isa = PBXGroup;
 			children = (
 				DA43F8338FAA3A20C8354E37 /* RideDTO.swift */,
+				0F7669993CA09DF6F19627B3 /* RatingDTO.swift */,
 			);
 			name = DTO;
 			sourceTree = "<group>";
@@ -2056,6 +2068,10 @@
 				ACA9ADD4B921AB2173B8AF42 /* FavoritePlacesListView.swift in Sources */,
 				B1499B277C48B38F182A5F72 /* RideAnnotationDiff.swift in Sources */,
 				B215B96B7964FD3B91A1906E /* AvailableRidesMapViewRepresentable.swift in Sources */,
+				EACEBCB8CCBC7D233D000403 /* RatingDTO.swift in Sources */,
+				146ADA84A8A4224282048C04 /* SubmitRatingUseCase.swift in Sources */,
+				1B8A220E132D5B6F12762729 /* RatingSubmissionViewModel.swift in Sources */,
+				59447EC811A53199EE0D1CE8 /* RatingSubmissionView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

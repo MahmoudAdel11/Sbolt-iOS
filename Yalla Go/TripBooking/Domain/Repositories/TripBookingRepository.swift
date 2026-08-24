@@ -19,4 +19,7 @@ protocol TripBookingRepository {
     func cancelRide(id: String) async throws -> Trip
     /// Fetches the current state of a ride — the polling target.
     func getRideDetails(id: String) async throws -> Trip
+    /// Submits a 1-5 star rating for a completed ride. Optional from the
+    /// rider's perspective — callers should treat failure as non-blocking.
+    func submitRating(rideID: String, score: Int) async throws
 }
