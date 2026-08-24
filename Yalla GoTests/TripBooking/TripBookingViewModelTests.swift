@@ -15,6 +15,7 @@ private struct FailingTripBookingRepository: TripBookingRepository {
     func requestRide(pickup: Coordinate, dropoff: Coordinate) async throws -> Trip { throw error }
     func cancelRide(id: String) async throws -> Trip { throw error }
     func getRideDetails(id: String) async throws -> Trip { throw error }
+    func submitRating(rideID: String, score: Int) async throws { throw error }
 }
 
 @MainActor
@@ -52,7 +53,15 @@ struct TripBookingViewModelTests {
     @Test func successfulFlowTransitionsThroughStatusesToIdle() async {
         let (sut, _) = makeSUT()
         var recorded: [TripPhase] = []
-        let cancellable = sut.$phase.sink { recorded.append($0) }
+        // The `.completed` → `.idle` reset now waits on a rating decision (see
+        // `proceedPastRatingPrompt` tests below) — a real UI would present the
+        // rating sheet here; this test stands in for "the rider decided" the
+        // instant `.completed` is observed, so the rest of the flow proceeds
+        // exactly as it did before that gate existed.
+        let cancellable = sut.$phase.sink { phase in
+            recorded.append(phase)
+            if case .completed = phase { sut.proceedPastRatingPrompt() }
+        }
         defer { cancellable.cancel() }
 
         sut.confirmTrip(pickup: pickup, dropoff: dropoff, estimatedFare: 42)
@@ -121,6 +130,34 @@ struct TripBookingViewModelTests {
 
         sut.confirmTrip(pickup: pickup, dropoff: dropoff, estimatedFare: 99) // ignored — not idle
         #expect(sut.estimatedFare == 42)
+    }
+
+    @Test func completedPhaseWaitsForRatingDecisionBeforeResetting() async {
+        let (sut, _) = makeSUT() // timings: .immediate — resetAfterTerminal == 0
+
+        sut.confirmTrip(pickup: pickup, dropoff: dropoff, estimatedFare: 42)
+        // Give the booking task time to reach `.completed` and start waiting.
+        // No real production delay to race against here: with resetAfterTerminal
+        // == 0, if the gate didn't exist the phase would already be `.idle`
+        // well before this returns.
+        try? await Task.sleep(nanoseconds: 100_000_000)
+
+        guard case .completed = sut.phase else {
+            Issue.record("Expected .completed, got \(sut.phase)")
+            return
+        }
+
+        sut.proceedPastRatingPrompt()
+        await sut.bookingTask?.value
+
+        #expect(sut.phase == .idle)
+    }
+
+    @Test func proceedPastRatingPromptIsANoOpWhenNothingIsWaiting() {
+        let (sut, _) = makeSUT()
+        // No booking in flight at all - must not crash or hang a future call.
+        sut.proceedPastRatingPrompt()
+        #expect(sut.phase == .idle)
     }
 
     @Test func sessionExpiredSetsFlagAndClearMessage() async {

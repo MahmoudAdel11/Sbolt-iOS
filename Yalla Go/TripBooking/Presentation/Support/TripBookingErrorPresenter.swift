@@ -26,6 +26,7 @@ struct TripBookingErrorPresenter {
         case .cancellationFailed:      return "This ride can no longer be cancelled."
         case .sessionExpired:          return "Your session has expired. Please log in again."
         case .networkUnavailable:      return "No internet connection. Please try again."
+        case .ratingFailed:            return "Couldn't submit your rating. Please try again."
         case .unknown:                 return "Something went wrong. Please try again."
         }
     }

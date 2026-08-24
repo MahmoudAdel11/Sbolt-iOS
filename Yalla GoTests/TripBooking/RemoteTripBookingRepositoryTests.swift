@@ -27,11 +27,13 @@ private final class StubAPIClient: APIClient {
     }
 }
 
-private func rideJSON(id: String = "ride-1", status: String = "requested", driverId: String? = nil) -> Data {
+private func rideJSON(id: String = "ride-1", status: String = "requested", driverId: String? = nil,
+                      driverSummaryJSON: String = "null") -> Data {
     let driverField = driverId.map { "\"\($0)\"" } ?? "null"
     let json = """
     {
         "id": "\(id)", "rider_id": "rider-1", "driver_id": \(driverField),
+        "driver": \(driverSummaryJSON),
         "status": "\(status)",
         "pickup_latitude": 30.05, "pickup_longitude": 31.23,
         "dropoff_latitude": 30.06, "dropoff_longitude": 31.24,
@@ -41,6 +43,17 @@ private func rideJSON(id: String = "ride-1", status: String = "requested", drive
     """
     return Data(json.utf8)
 }
+
+private let sampleDriverSummaryJSON = """
+{
+    "name": "Jane Driver",
+    "vehicle_type": "Sedan",
+    "vehicle_color": "White",
+    "license_plate": "ABC-123",
+    "average_rating": 4.8,
+    "rating_count": 12
+}
+"""
 
 struct RemoteTripBookingRepositoryTests {
 
@@ -107,6 +120,75 @@ struct RemoteTripBookingRepositoryTests {
         #expect(trip.driverID == "driver-9")
         #expect(client.capturedEndpoint?.path == "/rides/ride-1")
         #expect(client.capturedEndpoint?.method == .get)
+    }
+
+    @Test func getRideDetailsHasNilDriverWhenNoneAssigned() async throws {
+        let client = StubAPIClient()
+        client.result = .success(rideJSON(status: "requested", driverId: nil))
+        let sut = RemoteTripBookingRepository(client: client)
+
+        let trip = try await sut.getRideDetails(id: "ride-1")
+
+        #expect(trip.driverID == nil)
+        #expect(trip.driver == nil)
+    }
+
+    @Test func getRideDetailsDecodesEmbeddedDriverSummary() async throws {
+        let client = StubAPIClient()
+        client.result = .success(
+            rideJSON(status: "accepted", driverId: "driver-9", driverSummaryJSON: sampleDriverSummaryJSON)
+        )
+        let sut = RemoteTripBookingRepository(client: client)
+
+        let trip = try await sut.getRideDetails(id: "ride-1")
+
+        let driver = try #require(trip.driver)
+        #expect(driver.id == "driver-9")
+        #expect(driver.name == "Jane Driver")
+        #expect(driver.vehicleName == "Sedan")
+        #expect(driver.vehicleColor == "White")
+        #expect(driver.plateNumber == "ABC-123")
+        #expect(driver.rating == 4.8)
+        #expect(driver.ratingCount == 12)
+    }
+
+    @Test func submitRatingSendsScoreAndSucceeds() async throws {
+        let client = StubAPIClient()
+        client.result = .success(Data("""
+        {
+            "id": "rating-1", "ride_id": "ride-1", "rider_id": "rider-1",
+            "driver_id": "driver-9", "score": 5, "created_at": "2026-01-01T00:00:00.000000Z"
+        }
+        """.utf8))
+        let sut = RemoteTripBookingRepository(client: client)
+
+        try await sut.submitRating(rideID: "ride-1", score: 5)
+
+        #expect(client.capturedEndpoint?.path == "/rides/ride-1/rating")
+        #expect(client.capturedEndpoint?.method == .post)
+        let body = try #require(client.capturedEndpoint?.body)
+        let json = try #require(try JSONSerialization.jsonObject(with: body) as? [String: Any])
+        #expect(json["score"] as? Int == 5)
+    }
+
+    @Test func submitRatingMapsConflictToRatingFailed() async {
+        let client = StubAPIClient()
+        client.result = .failure(NetworkError.conflict)
+        let sut = RemoteTripBookingRepository(client: client)
+
+        await #expect(throws: RideError.ratingFailed) {
+            try await sut.submitRating(rideID: "ride-1", score: 5)
+        }
+    }
+
+    @Test func submitRatingMapsUnauthorizedToSessionExpired() async {
+        let client = StubAPIClient()
+        client.result = .failure(NetworkError.unauthorized)
+        let sut = RemoteTripBookingRepository(client: client)
+
+        await #expect(throws: RideError.sessionExpired) {
+            try await sut.submitRating(rideID: "ride-1", score: 5)
+        }
     }
 
     @Test func getRideDetailsMapsNotFound() async {
