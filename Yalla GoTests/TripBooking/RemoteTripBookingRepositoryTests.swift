@@ -173,7 +173,7 @@ struct RemoteTripBookingRepositoryTests {
 
     @Test func submitRatingMapsConflictToRatingFailed() async {
         let client = StubAPIClient()
-        client.result = .failure(NetworkError.conflict)
+        client.result = .failure(NetworkError.conflict(errorCode: nil))
         let sut = RemoteTripBookingRepository(client: client)
 
         await #expect(throws: RideError.ratingFailed) {
