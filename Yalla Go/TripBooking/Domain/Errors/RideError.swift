@@ -21,6 +21,10 @@ enum RideError: Error, Equatable {
     case sessionExpired
     /// No internet connection or the request timed out.
     case networkUnavailable
+    /// `POST /rides/{id}/rating` failed — covers every cause (already rated,
+    /// network, etc.) uniformly since the UI doesn't act differently on any
+    /// of them: submitting a rating is optional and never blocks the flow.
+    case ratingFailed
     /// Any unclassified failure.
     case unknown
 }

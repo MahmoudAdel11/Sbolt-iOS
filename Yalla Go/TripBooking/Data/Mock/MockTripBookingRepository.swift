@@ -103,4 +103,11 @@ actor MockTripBookingRepository: TripBookingRepository {
         ride = updated
         return updated
     }
+
+    func submitRating(rideID: String, score: Int) async throws {
+        guard behavior != .networkFailure else { throw RideError.networkUnavailable }
+        guard let current = ride, current.id == rideID else { throw RideError.rideNotFound }
+        // No persistent rating store needed for a mock - callers only care
+        // whether this throws.
+    }
 }

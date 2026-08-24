@@ -25,11 +25,29 @@ enum RideDTO {
         let dropoffLongitude: Double
     }
 
+    /// Nested on RideResponse once a driver is assigned — rider-safe summary
+    /// only (no email/phone/other PII, per the backend's own design). Has no
+    /// `id` of its own; the sibling `RideResponse.driverId` supplies it.
+    struct RideDriverSummary: Decodable {
+        let name: String
+        let vehicleType: String?
+        let vehicleColor: String?
+        let licensePlate: String?
+        let averageRating: Double?
+        let ratingCount: Int
+
+        func toDomain(id: String) -> Driver {
+            Driver(id: id, name: name, rating: averageRating, ratingCount: ratingCount,
+                  vehicleName: vehicleType, vehicleColor: vehicleColor, plateNumber: licensePlate)
+        }
+    }
+
     /// Response body for POST /rides, GET /rides/{id}, POST /rides/{id}/cancel.
     struct RideResponse: Decodable {
         let id: String
         let riderId: String
         let driverId: String?
+        let driver: RideDriverSummary?
         let status: String
         let pickupLatitude: Double
         let pickupLongitude: Double
@@ -51,7 +69,8 @@ enum RideDTO {
                 requestedAt: requestedAt,
                 acceptedAt: acceptedAt,
                 completedAt: completedAt,
-                cancelledAt: cancelledAt
+                cancelledAt: cancelledAt,
+                driver: driverId.flatMap { id in driver?.toDomain(id: id) }
             )
         }
     }
