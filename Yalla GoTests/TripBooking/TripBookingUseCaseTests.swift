@@ -14,20 +14,26 @@ struct TripBookingUseCaseTests {
 
     @Test func requestRideReturnsTrip() async throws {
         let sut = RequestRideUseCase(repository: MockTripBookingRepository())
-        let trip = try await sut.execute(pickup: pickup, dropoff: dropoff)
+        let trip = try await sut.execute(pickup: pickup, dropoff: dropoff, tier: .economy)
         #expect(trip.status == .requested)
+    }
+
+    @Test func requestRideForwardsSelectedTierToRepository() async throws {
+        let sut = RequestRideUseCase(repository: MockTripBookingRepository())
+        let trip = try await sut.execute(pickup: pickup, dropoff: dropoff, tier: .comfort)
+        #expect(trip.tier == .comfort)
     }
 
     @Test func requestRidePropagatesFailure() async {
         let sut = RequestRideUseCase(repository: MockTripBookingRepository(behavior: .activeRideAlreadyExists))
         await #expect(throws: RideError.activeRideAlreadyExists) {
-            _ = try await sut.execute(pickup: pickup, dropoff: dropoff)
+            _ = try await sut.execute(pickup: pickup, dropoff: dropoff, tier: .economy)
         }
     }
 
     @Test func cancelRideReturnsCancelledTrip() async throws {
         let repository = MockTripBookingRepository()
-        let requested = try await repository.requestRide(pickup: pickup, dropoff: dropoff)
+        let requested = try await repository.requestRide(pickup: pickup, dropoff: dropoff, tier: .economy)
         let sut = CancelRideUseCase(repository: repository)
 
         let cancelled = try await sut.execute(rideID: requested.id)
@@ -36,7 +42,7 @@ struct TripBookingUseCaseTests {
 
     @Test func submitRatingSucceeds() async throws {
         let repository = MockTripBookingRepository()
-        let requested = try await repository.requestRide(pickup: pickup, dropoff: dropoff)
+        let requested = try await repository.requestRide(pickup: pickup, dropoff: dropoff, tier: .economy)
         let sut = SubmitRatingUseCase(repository: repository)
 
         try await sut.execute(rideID: requested.id, score: 5)
@@ -54,7 +60,7 @@ struct TripBookingUseCaseTests {
 
     @Test func pollRideStatusYieldsUntilTerminal() async throws {
         let repository = MockTripBookingRepository(statusProgression: [.requested, .accepted, .completed])
-        let requested = try await repository.requestRide(pickup: pickup, dropoff: dropoff)
+        let requested = try await repository.requestRide(pickup: pickup, dropoff: dropoff, tier: .economy)
         let sut = PollRideStatusUseCase(repository: repository, interval: 0)
 
         var statuses: [TripStatus] = []

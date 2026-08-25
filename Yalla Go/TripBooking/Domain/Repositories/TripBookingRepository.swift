@@ -13,8 +13,8 @@ import Foundation
 /// "start trip" call, and no push/websocket mechanism, so status changes are
 /// only observable by re-fetching ride details.
 protocol TripBookingRepository {
-    /// Requests a new ride for the given pickup/dropoff coordinates.
-    func requestRide(pickup: Coordinate, dropoff: Coordinate) async throws -> Trip
+    /// Requests a new ride for the given pickup/dropoff coordinates and tier.
+    func requestRide(pickup: Coordinate, dropoff: Coordinate, tier: RideType) async throws -> Trip
     /// Cancels an in-progress ride. Valid from any non-terminal status.
     func cancelRide(id: String) async throws -> Trip
     /// Fetches the current state of a ride — the polling target.

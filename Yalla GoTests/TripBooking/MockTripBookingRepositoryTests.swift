@@ -14,28 +14,35 @@ struct MockTripBookingRepositoryTests {
 
     @Test func requestRideReturnsRequestedTrip() async throws {
         let sut = MockTripBookingRepository()
-        let trip = try await sut.requestRide(pickup: pickup, dropoff: dropoff)
+        let trip = try await sut.requestRide(pickup: pickup, dropoff: dropoff, tier: .economy)
         #expect(trip.status == .requested)
         #expect(trip.driverID == nil)
+    }
+
+    @Test func requestRideThreadsSelectedTierAndFare() async throws {
+        let sut = MockTripBookingRepository()
+        let trip = try await sut.requestRide(pickup: pickup, dropoff: dropoff, tier: .premium)
+        #expect(trip.tier == .premium)
+        #expect(trip.fare == RideType.premium.baseFare)
     }
 
     @Test func requestRideThrowsWhenActiveRideExists() async {
         let sut = MockTripBookingRepository(behavior: .activeRideAlreadyExists)
         await #expect(throws: RideError.activeRideAlreadyExists) {
-            _ = try await sut.requestRide(pickup: pickup, dropoff: dropoff)
+            _ = try await sut.requestRide(pickup: pickup, dropoff: dropoff, tier: .economy)
         }
     }
 
     @Test func requestRideThrowsOnNetworkFailure() async {
         let sut = MockTripBookingRepository(behavior: .networkFailure)
         await #expect(throws: RideError.networkUnavailable) {
-            _ = try await sut.requestRide(pickup: pickup, dropoff: dropoff)
+            _ = try await sut.requestRide(pickup: pickup, dropoff: dropoff, tier: .economy)
         }
     }
 
     @Test func getRideDetailsAdvancesThroughProgression() async throws {
         let sut = MockTripBookingRepository(statusProgression: [.requested, .accepted, .completed])
-        let trip = try await sut.requestRide(pickup: pickup, dropoff: dropoff)
+        let trip = try await sut.requestRide(pickup: pickup, dropoff: dropoff, tier: .economy)
 
         let first = try await sut.getRideDetails(id: trip.id)
         #expect(first.status == .requested)
@@ -61,14 +68,14 @@ struct MockTripBookingRepositoryTests {
 
     @Test func cancelRideSucceedsWhileNonTerminal() async throws {
         let sut = MockTripBookingRepository()
-        let trip = try await sut.requestRide(pickup: pickup, dropoff: dropoff)
+        let trip = try await sut.requestRide(pickup: pickup, dropoff: dropoff, tier: .economy)
         let cancelled = try await sut.cancelRide(id: trip.id)
         #expect(cancelled.status == .cancelled)
     }
 
     @Test func cancelRideFailsWhenAlreadyTerminal() async throws {
         let sut = MockTripBookingRepository(statusProgression: [.completed])
-        let trip = try await sut.requestRide(pickup: pickup, dropoff: dropoff)
+        let trip = try await sut.requestRide(pickup: pickup, dropoff: dropoff, tier: .economy)
         _ = try await sut.getRideDetails(id: trip.id) // advances to .completed
 
         await #expect(throws: RideError.cancellationFailed) {

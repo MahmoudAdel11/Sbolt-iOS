@@ -13,7 +13,7 @@ struct RequestRideUseCase {
         self.repository = repository
     }
 
-    func execute(pickup: Coordinate, dropoff: Coordinate) async throws -> Trip {
-        try await repository.requestRide(pickup: pickup, dropoff: dropoff)
+    func execute(pickup: Coordinate, dropoff: Coordinate, tier: RideType) async throws -> Trip {
+        try await repository.requestRide(pickup: pickup, dropoff: dropoff, tier: tier)
     }
 }

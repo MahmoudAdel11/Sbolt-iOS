@@ -12,7 +12,7 @@ import Combine
 /// reacts to a specific typed error without widening `MockTripBookingRepository`.
 private struct FailingTripBookingRepository: TripBookingRepository {
     let error: Error
-    func requestRide(pickup: Coordinate, dropoff: Coordinate) async throws -> Trip { throw error }
+    func requestRide(pickup: Coordinate, dropoff: Coordinate, tier: RideType) async throws -> Trip { throw error }
     func cancelRide(id: String) async throws -> Trip { throw error }
     func getRideDetails(id: String) async throws -> Trip { throw error }
     func submitRating(rideID: String, score: Int) async throws { throw error }
@@ -45,9 +45,8 @@ struct TripBookingViewModelTests {
 
     @Test func confirmSetsRequestingSynchronously() {
         let (sut, _) = makeSUT()
-        sut.confirmTrip(pickup: pickup, dropoff: dropoff, estimatedFare: 42)
+        sut.confirmTrip(pickup: pickup, dropoff: dropoff, tier: .economy)
         #expect(sut.phase == .requesting)
-        #expect(sut.estimatedFare == 42)
     }
 
     @Test func successfulFlowTransitionsThroughStatusesToIdle() async {
@@ -64,7 +63,7 @@ struct TripBookingViewModelTests {
         }
         defer { cancellable.cancel() }
 
-        sut.confirmTrip(pickup: pickup, dropoff: dropoff, estimatedFare: 42)
+        sut.confirmTrip(pickup: pickup, dropoff: dropoff, tier: .economy)
         await sut.bookingTask?.value
 
         #expect(recorded.contains(.requesting))
@@ -72,13 +71,12 @@ struct TripBookingViewModelTests {
         #expect(recorded.contains { if case let .active(trip) = $0 { return trip.status == .accepted }; return false })
         #expect(recorded.contains { if case .completed = $0 { return true }; return false })
         #expect(sut.phase == .idle)
-        #expect(sut.estimatedFare == nil)
     }
 
     @Test func activeRideAlreadyExistsEndsInFailed() async {
         let (sut, _) = makeSUT(behavior: .activeRideAlreadyExists)
 
-        sut.confirmTrip(pickup: pickup, dropoff: dropoff, estimatedFare: 42)
+        sut.confirmTrip(pickup: pickup, dropoff: dropoff, tier: .economy)
         await sut.bookingTask?.value
 
         #expect(sut.phase == .failed(message: "You already have an active ride."))
@@ -87,7 +85,7 @@ struct TripBookingViewModelTests {
     @Test func networkFailureEndsInFailed() async {
         let (sut, _) = makeSUT(behavior: .networkFailure)
 
-        sut.confirmTrip(pickup: pickup, dropoff: dropoff, estimatedFare: 42)
+        sut.confirmTrip(pickup: pickup, dropoff: dropoff, tier: .economy)
         await sut.bookingTask?.value
 
         #expect(sut.phase == .failed(message: "No internet connection. Please try again."))
@@ -96,7 +94,7 @@ struct TripBookingViewModelTests {
     @Test func cancelWhileActiveReturnsToIdle() async throws {
         let (sut, _) = makeSUT(statusProgression: [.requested]) // never auto-advances to terminal
 
-        sut.confirmTrip(pickup: pickup, dropoff: dropoff, estimatedFare: 42)
+        sut.confirmTrip(pickup: pickup, dropoff: dropoff, tier: .economy)
         // Wait for the first poll to publish an .active phase.
         try await Task.sleep(nanoseconds: 50_000_000)
         #expect(sut.isCancellable == true)
@@ -115,7 +113,7 @@ struct TripBookingViewModelTests {
     @Test func retryFromFailedReturnsToIdle() async {
         let (sut, _) = makeSUT(behavior: .activeRideAlreadyExists)
 
-        sut.confirmTrip(pickup: pickup, dropoff: dropoff, estimatedFare: 42)
+        sut.confirmTrip(pickup: pickup, dropoff: dropoff, tier: .economy)
         await sut.bookingTask?.value
         #expect(sut.phase == .failed(message: "You already have an active ride."))
 
@@ -125,17 +123,17 @@ struct TripBookingViewModelTests {
 
     @Test func confirmIgnoredWhileBookingInProgress() {
         let (sut, _) = makeSUT()
-        sut.confirmTrip(pickup: pickup, dropoff: dropoff, estimatedFare: 42)
+        sut.confirmTrip(pickup: pickup, dropoff: dropoff, tier: .economy)
         #expect(sut.phase == .requesting)
 
-        sut.confirmTrip(pickup: pickup, dropoff: dropoff, estimatedFare: 99) // ignored — not idle
-        #expect(sut.estimatedFare == 42)
+        sut.confirmTrip(pickup: pickup, dropoff: dropoff, tier: .premium) // ignored — not idle
+        #expect(sut.phase == .requesting)
     }
 
     @Test func completedPhaseWaitsForRatingDecisionBeforeResetting() async {
         let (sut, _) = makeSUT() // timings: .immediate — resetAfterTerminal == 0
 
-        sut.confirmTrip(pickup: pickup, dropoff: dropoff, estimatedFare: 42)
+        sut.confirmTrip(pickup: pickup, dropoff: dropoff, tier: .economy)
         // Give the booking task time to reach `.completed` and start waiting.
         // No real production delay to race against here: with resetAfterTerminal
         // == 0, if the gate didn't exist the phase would already be `.idle`
@@ -169,7 +167,7 @@ struct TripBookingViewModelTests {
             timings: .immediate
         )
 
-        sut.confirmTrip(pickup: pickup, dropoff: dropoff, estimatedFare: 42)
+        sut.confirmTrip(pickup: pickup, dropoff: dropoff, tier: .economy)
         await sut.bookingTask?.value
 
         #expect(sut.isSessionExpired == true)
@@ -179,7 +177,7 @@ struct TripBookingViewModelTests {
     @Test func otherFailuresDoNotSetSessionExpiredFlag() async {
         let (sut, _) = makeSUT(behavior: .activeRideAlreadyExists)
 
-        sut.confirmTrip(pickup: pickup, dropoff: dropoff, estimatedFare: 42)
+        sut.confirmTrip(pickup: pickup, dropoff: dropoff, tier: .economy)
         await sut.bookingTask?.value
 
         #expect(sut.isSessionExpired == false)

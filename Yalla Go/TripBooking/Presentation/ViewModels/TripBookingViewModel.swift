@@ -13,9 +13,6 @@ import Combine
 final class TripBookingViewModel: ObservableObject {
 
     @Published private(set) var phase: TripPhase = .idle
-    /// Client-side fare estimate for the current/last request. Never sent to
-    /// the backend — display only, and always presented as an estimate.
-    @Published private(set) var estimatedFare: Double?
     /// `true` once a `.sessionExpired` error is caught. The view observes
     /// this and signs the session out — the ViewModel itself has no access
     /// to `AppSessionStore` (kept environment-agnostic, testable in isolation).
@@ -65,13 +62,12 @@ final class TripBookingViewModel: ObservableObject {
 
     /// Starts the booking flow. Ignored unless the flow is idle, so there is
     /// never more than one concurrent booking task.
-    func confirmTrip(pickup: Coordinate, dropoff: Coordinate, estimatedFare: Double) {
+    func confirmTrip(pickup: Coordinate, dropoff: Coordinate, tier: RideType) {
         guard phase.isIdle else { return }
         bookingTask?.cancel()
-        self.estimatedFare = estimatedFare
         phase = .requesting // set synchronously so the UI reflects it immediately
         bookingTask = Task { [weak self] in
-            await self?.runBooking(pickup: pickup, dropoff: dropoff)
+            await self?.runBooking(pickup: pickup, dropoff: dropoff, tier: tier)
         }
     }
 
@@ -79,7 +75,6 @@ final class TripBookingViewModel: ObservableObject {
     func retry() {
         guard case .failed = phase else { return }
         phase = .idle
-        estimatedFare = nil
     }
 
     /// Cancels the active ride. Only valid once a ride exists and hasn't
@@ -103,9 +98,9 @@ final class TripBookingViewModel: ObservableObject {
         }
     }
 
-    private func runBooking(pickup: Coordinate, dropoff: Coordinate) async {
+    private func runBooking(pickup: Coordinate, dropoff: Coordinate, tier: RideType) async {
         do {
-            let trip = try await requestRideUseCase.execute(pickup: pickup, dropoff: dropoff)
+            let trip = try await requestRideUseCase.execute(pickup: pickup, dropoff: dropoff, tier: tier)
             try Task.checkCancellation()
             phase = .active(trip)
 
@@ -163,7 +158,6 @@ final class TripBookingViewModel: ObservableObject {
 
     private func reset() {
         phase = .idle
-        estimatedFare = nil
     }
 
     private func sleep(_ seconds: TimeInterval) async throws {
