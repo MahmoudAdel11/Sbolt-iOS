@@ -46,7 +46,7 @@ private func rideJSON(id: String = "ride-1", status: String = "requested") -> St
     """
     {
         "id": "\(id)", "rider_id": "rider-1", "driver_id": null,
-        "status": "\(status)",
+        "status": "\(status)", "tier": "economy", "fare": 15.0,
         "pickup_latitude": 30.05, "pickup_longitude": 31.23,
         "dropoff_latitude": 30.06, "dropoff_longitude": 31.24,
         "requested_at": "2026-01-01T00:00:00.000000Z",
