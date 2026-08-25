@@ -35,7 +35,7 @@ actor MockTripBookingRepository: TripBookingRepository {
         self.statusProgression = statusProgression
     }
 
-    func requestRide(pickup: Coordinate, dropoff: Coordinate) async throws -> Trip {
+    func requestRide(pickup: Coordinate, dropoff: Coordinate, tier: RideType) async throws -> Trip {
         switch behavior {
         case .activeRideAlreadyExists:
             throw RideError.activeRideAlreadyExists
@@ -51,6 +51,8 @@ actor MockTripBookingRepository: TripBookingRepository {
                         status: .requested,
                         pickupCoordinate: pickup,
                         destinationCoordinate: dropoff,
+                        tier: tier,
+                        fare: tier.baseFare,
                         requestedAt: Date(),
                         acceptedAt: nil,
                         completedAt: nil,
@@ -70,6 +72,7 @@ actor MockTripBookingRepository: TripBookingRepository {
         current = Trip(id: current.id, riderID: current.riderID, driverID: current.driverID,
                        status: .cancelled, pickupCoordinate: current.pickupCoordinate,
                        destinationCoordinate: current.destinationCoordinate,
+                       tier: current.tier, fare: current.fare,
                        requestedAt: current.requestedAt, acceptedAt: current.acceptedAt,
                        completedAt: nil, cancelledAt: Date())
         ride = current
@@ -95,6 +98,8 @@ actor MockTripBookingRepository: TripBookingRepository {
             status: nextStatus,
             pickupCoordinate: current.pickupCoordinate,
             destinationCoordinate: current.destinationCoordinate,
+            tier: current.tier,
+            fare: current.fare,
             requestedAt: current.requestedAt,
             acceptedAt: nextStatus == .accepted || nextStatus == .ongoing || nextStatus == .completed ? Date() : nil,
             completedAt: nextStatus == .completed ? Date() : nil,

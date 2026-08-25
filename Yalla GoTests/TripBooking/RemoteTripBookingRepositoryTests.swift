@@ -28,13 +28,13 @@ private final class StubAPIClient: APIClient {
 }
 
 private func rideJSON(id: String = "ride-1", status: String = "requested", driverId: String? = nil,
-                      driverSummaryJSON: String = "null") -> Data {
+                      driverSummaryJSON: String = "null", tier: String = "economy", fare: Double = 15.0) -> Data {
     let driverField = driverId.map { "\"\($0)\"" } ?? "null"
     let json = """
     {
         "id": "\(id)", "rider_id": "rider-1", "driver_id": \(driverField),
         "driver": \(driverSummaryJSON),
-        "status": "\(status)",
+        "status": "\(status)", "tier": "\(tier)", "fare": \(fare),
         "pickup_latitude": 30.05, "pickup_longitude": 31.23,
         "dropoff_latitude": 30.06, "dropoff_longitude": 31.24,
         "requested_at": "2026-01-01T00:00:00.000000Z",
@@ -65,7 +65,7 @@ struct RemoteTripBookingRepositoryTests {
         client.result = .success(rideJSON())
         let sut = RemoteTripBookingRepository(client: client)
 
-        let trip = try await sut.requestRide(pickup: pickup, dropoff: dropoff)
+        let trip = try await sut.requestRide(pickup: pickup, dropoff: dropoff, tier: .economy)
 
         #expect(trip.status == .requested)
         #expect(client.capturedEndpoint?.path == "/rides")
@@ -77,13 +77,28 @@ struct RemoteTripBookingRepositoryTests {
         #expect(json["dropoff_longitude"] as? Double == 31.24)
     }
 
+    @Test func requestRideSendsSelectedTierAndDecodesRealFare() async throws {
+        let client = StubAPIClient()
+        client.result = .success(rideJSON(tier: "premium", fare: 40.0))
+        let sut = RemoteTripBookingRepository(client: client)
+
+        let trip = try await sut.requestRide(pickup: pickup, dropoff: dropoff, tier: .premium)
+
+        let body = try #require(client.capturedEndpoint?.body)
+        let json = try #require(try JSONSerialization.jsonObject(with: body) as? [String: Any])
+        #expect(json["tier"] as? String == "premium")
+
+        #expect(trip.tier == .premium)
+        #expect(trip.fare == 40.0)
+    }
+
     @Test func requestRideMapsConflictToActiveRideAlreadyExists() async {
         let client = StubAPIClient()
         client.result = .failure(NetworkError.conflict(errorCode: nil))
         let sut = RemoteTripBookingRepository(client: client)
 
         await #expect(throws: RideError.activeRideAlreadyExists) {
-            _ = try await sut.requestRide(pickup: pickup, dropoff: dropoff)
+            _ = try await sut.requestRide(pickup: pickup, dropoff: dropoff, tier: .economy)
         }
     }
 
@@ -227,7 +242,7 @@ struct RemoteTripBookingRepositoryTests {
         let sut = RemoteTripBookingRepository(client: client)
 
         await #expect(throws: RideError.sessionExpired) {
-            _ = try await sut.requestRide(pickup: pickup, dropoff: dropoff)
+            _ = try await sut.requestRide(pickup: pickup, dropoff: dropoff, tier: .economy)
         }
         await #expect(throws: RideError.sessionExpired) {
             _ = try await sut.cancelRide(id: "ride-1")

@@ -16,13 +16,14 @@ import Foundation
 /// key conversion (see Sprint 3.1).
 enum RideDTO {
 
-    /// Request body for POST /rides. Lat/lng only — the backend has no
-    /// address-string or ride-tier field.
+    /// Request body for POST /rides. `tier` is `RideType.rawValue` directly
+    /// (already the exact backend string) — no second representation.
     struct RideRequest: Encodable {
         let pickupLatitude: Double
         let pickupLongitude: Double
         let dropoffLatitude: Double
         let dropoffLongitude: Double
+        let tier: String
     }
 
     /// Nested on RideResponse once a driver is assigned — rider-safe summary
@@ -49,6 +50,8 @@ enum RideDTO {
         let driverId: String?
         let driver: RideDriverSummary?
         let status: String
+        let tier: String
+        let fare: Double
         let pickupLatitude: Double
         let pickupLongitude: Double
         let dropoffLatitude: Double
@@ -66,6 +69,8 @@ enum RideDTO {
                 status: TripStatus(rawValue: status) ?? .requested,
                 pickupCoordinate: Coordinate(latitude: pickupLatitude, longitude: pickupLongitude),
                 destinationCoordinate: Coordinate(latitude: dropoffLatitude, longitude: dropoffLongitude),
+                tier: RideType(rawValue: tier) ?? .economy,
+                fare: fare,
                 requestedAt: requestedAt,
                 acceptedAt: acceptedAt,
                 completedAt: completedAt,

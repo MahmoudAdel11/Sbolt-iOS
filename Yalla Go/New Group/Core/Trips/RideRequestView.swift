@@ -8,9 +8,10 @@
 import SwiftUI
 
 struct RideRequestView: View {
-    /// Ride tiers are deferred (the backend has no tier concept yet); this
-    /// implicit default is only used to compute the client-side fare estimate.
-    private let defaultRideType: RideType = .uberX
+    /// Always has a selection — the tier picker below defaults to `.economy`
+    /// and there's no way to deselect, so the request body always has a
+    /// valid, non-optional tier to send.
+    @State private var selectedRideType: RideType = .economy
     @EnvironmentObject var locationViewModel:LocationSearchViewModel
     @EnvironmentObject private var session: AppSessionStore
     @StateObject private var bookingViewModel = TripBookingDependencies().makeTripBookingViewModel()
@@ -121,9 +122,14 @@ struct RideRequestView: View {
             .padding(.bottom, 8)
 
             Divider()
-            // Estimated fare — client-side only, never sent to the backend.
-            // Ride-tier selection is deferred (no backend concept yet), so
-            // this uses a single implicit default tier for the estimate.
+                .padding(.vertical, 8)
+
+            tierPicker
+
+            // Pre-request-only estimate, client-side, never sent to the
+            // backend — the real, authoritative fare comes back on
+            // `Trip.fare` once the ride actually exists
+            // (see TripBookingStatusView) and is what's shown from then on.
             VStack(alignment: .leading, spacing: 4) {
                 HStack {
                     Text("Estimated fare")
@@ -190,8 +196,33 @@ struct RideRequestView: View {
         .shadow(color: .black.opacity(0.12), radius: 12, x: 0, y: -4)
     }
 
+    /// Three tappable tier options, matching this file's existing inline
+    /// button-styling convention (the "visa" payment badge above uses the
+    /// same solid-background/rounded-corner shape) rather than introducing
+    /// a new component.
+    private var tierPicker: some View {
+        HStack(spacing: 10) {
+            ForEach(RideType.allCases) { type in
+                Button {
+                    selectedRideType = type
+                } label: {
+                    Text(type.description)
+                        .font(.system(size: 14, weight: .semibold))
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 10)
+                        .background(selectedRideType == type ? Color.blue : Color(.systemGroupedBackground))
+                        .foregroundColor(selectedRideType == type ? .white : .black)
+                        .cornerRadius(10)
+                }
+                .accessibilityIdentifier("ride_tier_\(type.rawValue)_button")
+            }
+        }
+        .padding(.horizontal)
+        .padding(.bottom, 8)
+    }
+
     private var estimatedFare: Double {
-        locationViewModel.computeRidePrice(forType: defaultRideType)
+        locationViewModel.computeRidePrice(forType: selectedRideType)
     }
 
     private var destinationCoordinate: Coordinate? {
@@ -204,7 +235,7 @@ struct RideRequestView: View {
               let destination = locationViewModel.selectedYallaGoLocation?.coordinate else { return }
         let pickup = Coordinate(latitude: userCoordinate.latitude, longitude: userCoordinate.longitude)
         let dropoff = Coordinate(latitude: destination.latitude, longitude: destination.longitude)
-        bookingViewModel.confirmTrip(pickup: pickup, dropoff: dropoff, estimatedFare: estimatedFare)
+        bookingViewModel.confirmTrip(pickup: pickup, dropoff: dropoff, tier: selectedRideType)
     }
 }
 

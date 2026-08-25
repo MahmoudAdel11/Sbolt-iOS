@@ -76,6 +76,7 @@ extension Trip {
         Trip(id: "ride-1", riderID: "rider-1", driverID: "driver-1", status: .accepted,
              pickupCoordinate: Coordinate(latitude: 30.0, longitude: 31.0),
              destinationCoordinate: Coordinate(latitude: 30.1, longitude: 31.1),
+             tier: .economy, fare: 25.0,
              requestedAt: Date(timeIntervalSince1970: 0), acceptedAt: Date(timeIntervalSince1970: 1),
              completedAt: nil, cancelledAt: nil)
     }
