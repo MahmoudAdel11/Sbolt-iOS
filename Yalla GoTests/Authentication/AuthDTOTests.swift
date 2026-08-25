@@ -77,4 +77,64 @@ struct AuthDTOTests {
 
         #expect(dto.toDomain().driverProfile == DriverProfile(isOnline: false))
     }
+
+    // MARK: - LoginResponse decoding
+
+    @Test func loginResponseDecodesAccessAndRefreshToken() throws {
+        let json = Data("""
+        {"access_token": "access-abc", "refresh_token": "refresh-xyz", "token_type": "bearer"}
+        """.utf8)
+
+        let dto = try JSONDecoder.backend.decode(AuthDTO.LoginResponse.self, from: json)
+
+        #expect(dto.accessToken == "access-abc")
+        #expect(dto.refreshToken == "refresh-xyz")
+        #expect(dto.tokenType == "bearer")
+    }
+
+    // MARK: - RegisterResponse decoding
+
+    @Test func registerResponseDecodesNestedUserAndBothTokens() throws {
+        let json = Data("""
+        {
+            "user": {
+                "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                "email": "jane@example.com",
+                "full_name": "Jane Doe",
+                "phone_number": "+201234567890",
+                "created_at": "2026-01-01T00:00:00.000000Z",
+                "driver_profile": null
+            },
+            "access_token": "access-abc",
+            "refresh_token": "refresh-xyz",
+            "token_type": "bearer"
+        }
+        """.utf8)
+
+        let dto = try JSONDecoder.backend.decode(AuthDTO.RegisterResponse.self, from: json)
+
+        #expect(dto.user.email == "jane@example.com")
+        #expect(dto.accessToken == "access-abc")
+        #expect(dto.refreshToken == "refresh-xyz")
+        #expect(dto.user.toDomain().email == "jane@example.com")
+    }
+
+    // MARK: - RefreshRequest encoding / RefreshResponse decoding
+
+    @Test func refreshRequestEncodesRefreshTokenSnakeCase() throws {
+        let request = AuthDTO.RefreshRequest(refreshToken: "refresh-xyz")
+        let data = try JSONEncoder.backend.encode(request)
+        let json = try #require(try JSONSerialization.jsonObject(with: data) as? [String: Any])
+
+        #expect(json["refresh_token"] as? String == "refresh-xyz")
+    }
+
+    @Test func refreshResponseDecodesAccessTokenOnly() throws {
+        let json = Data(#"{"access_token": "new-access-token", "token_type": "bearer"}"#.utf8)
+
+        let dto = try JSONDecoder.backend.decode(AuthDTO.RefreshResponse.self, from: json)
+
+        #expect(dto.accessToken == "new-access-token")
+        #expect(dto.tokenType == "bearer")
+    }
 }

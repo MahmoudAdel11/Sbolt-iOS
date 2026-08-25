@@ -65,7 +65,8 @@ final class AppSessionStore: ObservableObject {
     /// persisted Keychain token, so a stale/expired token can never be
     /// reused on the next launch.
     func signOut() {
-        KeychainTokenStorage().delete()
+        KeychainTokenStorage(account: TokenAccount.access).delete()
+        KeychainTokenStorage(account: TokenAccount.refresh).delete()
         currentUser = nil
         currentMode = .customer
     }

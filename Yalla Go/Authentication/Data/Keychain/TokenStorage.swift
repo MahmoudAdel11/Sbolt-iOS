@@ -8,23 +8,37 @@ import Security
 
 // MARK: - Protocol
 
-/// Persists an access token across app launches.
-/// No token-type knowledge lives here — callers decide what to store.
+/// Persists a single token (access or refresh) across app launches.
+/// No token-type knowledge lives here — callers decide what to store, via
+/// the `account` a `KeychainTokenStorage` instance is created with.
 protocol TokenStorage {
     func save(_ token: String)
     func retrieve() -> String?
     func delete()
 }
 
+/// The two distinct Keychain slots this app stores tokens under. Shared here
+/// so every call site (RepositoryFactory, AppSessionStore, KeychainTokenProvider)
+/// uses the same strings instead of re-typing them.
+enum TokenAccount {
+    static let access = "accessToken"
+    static let refresh = "refreshToken"
+}
+
 // MARK: - Keychain implementation
 
-/// Stores the access token in the system Keychain using the Security framework.
+/// Stores a token in the system Keychain using the Security framework, under
+/// the given `account` — one instance per token kind (see `TokenAccount`).
 /// No third-party dependency — kSecClassGenericPassword is process-safe and
 /// survives app reinstalls until the user signs out or the OS removes the item.
 struct KeychainTokenStorage: TokenStorage {
 
     private let service = "com.yallago.auth"
-    private let account = "accessToken"
+    private let account: String
+
+    init(account: String = TokenAccount.access) {
+        self.account = account
+    }
 
     func save(_ token: String) {
         delete()  // Remove any stale item before inserting.
