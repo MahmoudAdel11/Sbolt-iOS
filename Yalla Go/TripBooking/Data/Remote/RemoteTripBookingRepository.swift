@@ -14,14 +14,15 @@ final class RemoteTripBookingRepository: TripBookingRepository {
         self.client = client
     }
 
-    func requestRide(pickup: Coordinate, dropoff: Coordinate) async throws -> Trip {
+    func requestRide(pickup: Coordinate, dropoff: Coordinate, tier: RideType) async throws -> Trip {
         do {
             let body = try JSONEncoder.backend.encode(
                 RideDTO.RideRequest(
                     pickupLatitude: pickup.latitude,
                     pickupLongitude: pickup.longitude,
                     dropoffLatitude: dropoff.latitude,
-                    dropoffLongitude: dropoff.longitude
+                    dropoffLongitude: dropoff.longitude,
+                    tier: tier.rawValue
                 )
             )
             let dto: RideDTO.RideResponse = try await client.send(

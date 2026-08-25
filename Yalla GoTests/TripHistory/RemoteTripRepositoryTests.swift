@@ -33,7 +33,7 @@ private func historyJSON(hasMore: Bool = false) -> Data {
         "items": [
             {
                 "id": "ride-1", "rider_id": "rider-1", "driver_id": null,
-                "status": "requested",
+                "status": "requested", "tier": "economy", "fare": 15.0,
                 "pickup_latitude": 30.05, "pickup_longitude": 31.23,
                 "dropoff_latitude": 30.06, "dropoff_longitude": 31.24,
                 "requested_at": "2026-01-01T00:00:00.000000Z",
@@ -41,7 +41,7 @@ private func historyJSON(hasMore: Bool = false) -> Data {
             },
             {
                 "id": "ride-2", "rider_id": "rider-1", "driver_id": "driver-2",
-                "status": "completed",
+                "status": "completed", "tier": "premium", "fare": 78.0,
                 "pickup_latitude": 30.01, "pickup_longitude": 31.20,
                 "dropoff_latitude": 30.02, "dropoff_longitude": 31.21,
                 "requested_at": "2026-01-01T00:00:00.000000Z",

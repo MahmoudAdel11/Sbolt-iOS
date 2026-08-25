@@ -60,6 +60,7 @@ struct TripBookingStatusView: View {
         case let .active(trip):
             VStack(spacing: 10) {
                 statusHeader(activeStatusTitle(for: trip), systemImage: activeStatusIcon(for: trip), tint: .blue)
+                fareRow(for: trip)
                 if let driver = trip.driver {
                     DriverCard(driver: driver, statusText: trip.status.displayName)
                 } else if let driverID = trip.driverID {
@@ -72,9 +73,12 @@ struct TripBookingStatusView: View {
             }
             .accessibilityIdentifier("trip_active_\(trip.status.rawValue)")
 
-        case .completed:
-            statusHeader("Trip completed successfully", systemImage: "flag.checkered", tint: .green)
-                .accessibilityIdentifier("trip_completed")
+        case let .completed(trip):
+            VStack(spacing: 10) {
+                statusHeader("Trip completed successfully", systemImage: "flag.checkered", tint: .green)
+                fareRow(for: trip)
+            }
+            .accessibilityIdentifier("trip_completed")
 
         case .cancelled:
             statusHeader("Trip cancelled", systemImage: "xmark.circle.fill", tint: .secondary)
@@ -136,6 +140,23 @@ struct TripBookingStatusView: View {
             }
             .accessibilityIdentifier("trip_retry_button")
         }
+    }
+
+    /// The real, server-computed fare — shown as soon as the ride exists
+    /// (fare is frozen at request time, so it's already final in `.active`,
+    /// not just at `.completed`). This is new UI: neither phase showed any
+    /// fare before, since the old client-side estimate was never surfaced
+    /// past the request form.
+    private func fareRow(for trip: Trip) -> some View {
+        HStack(spacing: 6) {
+            Text(trip.tier.description)
+            Text("·")
+            Text(trip.fare.toCurrency())
+                .fontWeight(.semibold)
+        }
+        .font(.subheadline)
+        .foregroundStyle(.secondary)
+        .accessibilityIdentifier("trip_fare")
     }
 
     private func statusHeader(_ title: String, systemImage: String, tint: Color) -> some View {

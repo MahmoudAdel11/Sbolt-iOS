@@ -62,6 +62,7 @@ actor MockDriverRepository: DriverRepository {
         let accepted = Trip(id: ride.id, riderID: ride.riderID, driverID: driverUser.id,
                             status: .accepted, pickupCoordinate: ride.pickupCoordinate,
                             destinationCoordinate: ride.destinationCoordinate,
+                            tier: ride.tier, fare: ride.fare,
                             requestedAt: ride.requestedAt, acceptedAt: Date(),
                             completedAt: nil, cancelledAt: nil)
         activeRide = accepted
@@ -75,6 +76,7 @@ actor MockDriverRepository: DriverRepository {
         let completed = Trip(id: ride.id, riderID: ride.riderID, driverID: ride.driverID,
                              status: .completed, pickupCoordinate: ride.pickupCoordinate,
                              destinationCoordinate: ride.destinationCoordinate,
+                             tier: ride.tier, fare: ride.fare,
                              requestedAt: ride.requestedAt, acceptedAt: ride.acceptedAt,
                              completedAt: Date(), cancelledAt: nil)
         activeRide = nil
@@ -99,10 +101,12 @@ actor MockDriverRepository: DriverRepository {
             Trip(id: "available-1", riderID: "rider-9", driverID: nil, status: .requested,
                  pickupCoordinate: Coordinate(latitude: 30.0444, longitude: 31.2357),
                  destinationCoordinate: Coordinate(latitude: 30.0614, longitude: 31.2197),
+                 tier: .economy, fare: 22.0,
                  requestedAt: Date(), acceptedAt: nil, completedAt: nil, cancelledAt: nil),
             Trip(id: "available-2", riderID: "rider-10", driverID: nil, status: .requested,
                  pickupCoordinate: Coordinate(latitude: 30.0080, longitude: 31.4913),
                  destinationCoordinate: Coordinate(latitude: 29.9603, longitude: 31.2569),
+                 tier: .comfort, fare: 41.0,
                  requestedAt: Date(), acceptedAt: nil, completedAt: nil, cancelledAt: nil)
         ]
     }
