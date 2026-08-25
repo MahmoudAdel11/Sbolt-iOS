@@ -10,17 +10,26 @@ import Foundation
 /// Responsibilities:
 /// - Encodes request bodies via `JSONEncoder.backend`.
 /// - Sends typed endpoints via `APIClient`.
-/// - Persists / clears the access token via `TokenStorage`.
+/// - Persists / clears both the access and refresh tokens via `TokenStorage`.
+///   (Silent renewal of an expired access token happens transparently inside
+///   `AuthenticatedAPIClient`/`KeychainTokenRefresher` — a 401 reaching this
+///   repository means refresh was already attempted and failed too.)
 /// - Maps `NetworkError` and HTTP status codes to `AuthenticationError`
 ///   so the Presentation layer never sees raw networking errors.
 final class RemoteAuthenticationRepository: AuthenticationRepository {
 
     private let client: any APIClient
-    private let tokenStorage: any TokenStorage
+    private let accessTokenStorage: any TokenStorage
+    private let refreshTokenStorage: any TokenStorage
 
-    init(client: any APIClient, tokenStorage: any TokenStorage) {
+    init(
+        client: any APIClient,
+        accessTokenStorage: any TokenStorage,
+        refreshTokenStorage: any TokenStorage
+    ) {
         self.client = client
-        self.tokenStorage = tokenStorage
+        self.accessTokenStorage = accessTokenStorage
+        self.refreshTokenStorage = refreshTokenStorage
     }
 
     // MARK: - AuthenticationRepository
@@ -33,14 +42,14 @@ final class RemoteAuthenticationRepository: AuthenticationRepository {
             let loginDTO: AuthDTO.LoginResponse = try await client.send(
                 Endpoint(path: "/auth/login", method: .post, body: body)
             )
-            tokenStorage.save(loginDTO.accessToken)
+            saveTokens(access: loginDTO.accessToken, refresh: loginDTO.refreshToken)
             do {
                 let userDTO: AuthDTO.UserResponse = try await client.send(
                     Endpoint(path: "/auth/me", method: .get)
                 )
                 return userDTO.toDomain()
             } catch {
-                tokenStorage.delete()
+                clearTokens()
                 throw error
             }
         } catch {
@@ -59,17 +68,21 @@ final class RemoteAuthenticationRepository: AuthenticationRepository {
                     registerAsDriver: details.registerAsDriver
                 )
             )
-            let _: AuthDTO.UserResponse = try await client.send(
+            // Register now returns the user alongside both tokens directly —
+            // no follow-up login() call needed to fetch what the response
+            // already contains.
+            let registerDTO: AuthDTO.RegisterResponse = try await client.send(
                 Endpoint(path: "/auth/register", method: .post, body: body)
             )
+            saveTokens(access: registerDTO.accessToken, refresh: registerDTO.refreshToken)
+            return registerDTO.user.toDomain()
         } catch {
             throw mapped(error)
         }
-        return try await login(email: details.email, password: details.password)
     }
 
     func logout() async throws {
-        defer { tokenStorage.delete() }
+        defer { clearTokens() }
         do {
             let _: EmptyResponse = try await client.send(
                 Endpoint(path: "/auth/logout", method: .post)
@@ -85,14 +98,16 @@ final class RemoteAuthenticationRepository: AuthenticationRepository {
     }
 
     func currentUser() async -> User? {
-        guard tokenStorage.retrieve() != nil else { return nil }
+        guard accessTokenStorage.retrieve() != nil else { return nil }
         do {
             let dto: AuthDTO.UserResponse = try await client.send(
                 Endpoint(path: "/auth/me", method: .get)
             )
             return dto.toDomain()
         } catch NetworkError.unauthorized {
-            tokenStorage.delete()   // Token expired or revoked — clear it
+            // Reaching here means AuthenticatedAPIClient already tried a
+            // silent refresh and it also failed — the session is genuinely over.
+            clearTokens()
             return nil
         } catch {
             return nil              // Network/other transient failure — keep token
@@ -100,7 +115,19 @@ final class RemoteAuthenticationRepository: AuthenticationRepository {
     }
 
     func isAuthenticated() async -> Bool {
-        tokenStorage.retrieve() != nil
+        accessTokenStorage.retrieve() != nil
+    }
+
+    // MARK: - Token persistence
+
+    private func saveTokens(access: String, refresh: String) {
+        accessTokenStorage.save(access)
+        refreshTokenStorage.save(refresh)
+    }
+
+    private func clearTokens() {
+        accessTokenStorage.delete()
+        refreshTokenStorage.delete()
     }
 
     // MARK: - Error mapping

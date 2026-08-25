@@ -41,26 +41,43 @@ struct MockRepositoryFactory: RepositoryFactory {
 
 /// Wires every feature to its remote repository backed by `AuthenticatedAPIClient`.
 ///
-/// `KeychainTokenStorage` is created once; it supplies both the token provider
-/// (for automatic Bearer-header injection) and the auth repository (for
-/// token persistence on login/logout). All other repositories receive the
-/// authenticated client so their requests carry the token automatically.
+/// Two `KeychainTokenStorage` instances are created once (access + refresh
+/// slots — see `TokenAccount`); together they supply the token provider (for
+/// automatic Bearer-header injection), the token refresher (for silent
+/// renewal on 401 — see `AuthenticatedAPIClient`), and the auth repository
+/// (for token persistence on login/register/logout). All other repositories
+/// receive the authenticated client so their requests carry the token, and
+/// transparently retry once after a silent refresh, automatically.
 struct RemoteRepositoryFactory: RepositoryFactory {
 
     let client: any APIClient
-    private let tokenStorage: any TokenStorage
+    private let accessTokenStorage: any TokenStorage
+    private let refreshTokenStorage: any TokenStorage
 
-    init(tokenStorage: any TokenStorage = KeychainTokenStorage(),
+    init(accessTokenStorage: any TokenStorage = KeychainTokenStorage(account: TokenAccount.access),
+         refreshTokenStorage: any TokenStorage = KeychainTokenStorage(account: TokenAccount.refresh),
          reachability: any NetworkReachabilityMonitoring = NWPathMonitorReachability()) {
-        let provider = KeychainTokenProvider(storage: tokenStorage)
+        let provider = KeychainTokenProvider(storage: accessTokenStorage)
         let base = URLSessionAPIClient(baseURL: APIConfiguration.baseURL)
-        let authenticated = AuthenticatedAPIClient(client: base, tokenProvider: provider)
+        let refresher = KeychainTokenRefresher(
+            client: base,
+            accessTokenStorage: accessTokenStorage,
+            refreshTokenStorage: refreshTokenStorage
+        )
+        let authenticated = AuthenticatedAPIClient(
+            client: base, tokenProvider: provider, tokenRefresher: refresher
+        )
         self.client = RetryingAPIClient(inner: authenticated, reachability: reachability)
-        self.tokenStorage = tokenStorage
+        self.accessTokenStorage = accessTokenStorage
+        self.refreshTokenStorage = refreshTokenStorage
     }
 
     func makeAuthenticationRepository() -> any AuthenticationRepository {
-        RemoteAuthenticationRepository(client: client, tokenStorage: tokenStorage)
+        RemoteAuthenticationRepository(
+            client: client,
+            accessTokenStorage: accessTokenStorage,
+            refreshTokenStorage: refreshTokenStorage
+        )
     }
     func makeProfileRepository()        -> any ProfileRepository        { RemoteProfileRepository(client: client) }
     func makeTripRepository()           -> any TripRepository           { RemoteTripRepository(client: client) }
