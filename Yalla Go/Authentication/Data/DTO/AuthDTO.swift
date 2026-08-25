@@ -14,10 +14,11 @@ import Foundation
 ///
 /// Confirmed backend response shape (FastAPI / JWT):
 ///
-/// POST /auth/login  →  LoginResponse  (token only, no user fields)
-/// POST /auth/register  →  UserResponse  (created user, no token)
-/// GET  /auth/me  →  UserResponse  (user fields only, no token)
-/// POST /auth/logout  →  204 No Content
+/// POST /auth/login    →  LoginResponse     ({access_token, refresh_token, token_type} — no user fields)
+/// POST /auth/register →  RegisterResponse  ({user, access_token, refresh_token, token_type})
+/// POST /auth/refresh  →  RefreshResponse   ({access_token, token_type} — sliding renewal, refresh_token unchanged)
+/// GET  /auth/me        →  UserResponse      (user fields only, no token)
+/// POST /auth/logout    →  204 No Content
 enum AuthDTO {
 
     // MARK: - Request bodies
@@ -35,11 +36,33 @@ enum AuthDTO {
         let registerAsDriver: Bool // → register_as_driver via convertToSnakeCase
     }
 
+    struct RefreshRequest: Encodable {
+        let refreshToken: String  // → refresh_token via convertToSnakeCase
+    }
+
     // MARK: - Response bodies
 
-    /// Response for POST /auth/login. The backend returns only the token —
-    /// no user fields — so the caller must follow up with GET /auth/me.
+    /// Response for POST /auth/login. Still no user fields — the caller must
+    /// follow up with GET /auth/me — but now carries both tokens.
     struct LoginResponse: Decodable {
+        let accessToken: String
+        let refreshToken: String
+        let tokenType: String
+    }
+
+    /// Response for POST /auth/register. Unlike login, the backend returns the
+    /// full user profile directly here, so no follow-up GET /auth/me is needed.
+    struct RegisterResponse: Decodable {
+        let user: UserResponse
+        let accessToken: String
+        let refreshToken: String
+        let tokenType: String
+    }
+
+    /// Response for POST /auth/refresh. Sliding renewal only extends the
+    /// existing refresh token's lifetime server-side — it is never reissued,
+    /// so only a new access_token comes back.
+    struct RefreshResponse: Decodable {
         let accessToken: String
         let tokenType: String
     }
@@ -50,9 +73,9 @@ enum AuthDTO {
         let isOnline: Bool
     }
 
-    /// Response for GET /auth/me and POST /auth/register — user fields only,
-    /// no token. Backend has no profile-image field yet, so profileImageURL
-    /// is always nil here.
+    /// Response for GET /auth/me, and nested inside RegisterResponse — user
+    /// fields only, no token. Backend has no profile-image field yet, so
+    /// profileImageURL is always nil here.
     struct UserResponse: Decodable {
         let id: String
         let fullName: String
