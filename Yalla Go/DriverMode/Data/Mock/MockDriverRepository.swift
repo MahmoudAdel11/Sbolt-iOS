@@ -69,6 +69,22 @@ actor MockDriverRepository: DriverRepository {
         return accepted
     }
 
+    func startRide(id: String) async throws -> Trip {
+        await simulateNetworkDelay()
+        guard behavior == .success else { throw DriverError.networkUnavailable }
+        guard let ride = activeRide, ride.id == id, ride.status == .accepted else {
+            throw DriverError.rideNotStartable
+        }
+        let ongoing = Trip(id: ride.id, riderID: ride.riderID, driverID: ride.driverID,
+                           status: .ongoing, pickupCoordinate: ride.pickupCoordinate,
+                           destinationCoordinate: ride.destinationCoordinate,
+                           tier: ride.tier, fare: ride.fare,
+                           requestedAt: ride.requestedAt, acceptedAt: ride.acceptedAt,
+                           completedAt: nil, cancelledAt: nil)
+        activeRide = ongoing
+        return ongoing
+    }
+
     func completeRide(id: String) async throws -> Trip {
         await simulateNetworkDelay()
         guard behavior == .success else { throw DriverError.networkUnavailable }

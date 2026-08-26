@@ -24,6 +24,7 @@ struct DriverErrorPresenter {
         case .rideNotFound:              return "This ride could not be found."
         case .rideNoLongerAvailable:     return "This ride was just accepted by another driver."
         case .rideCancelledByRider:      return "This ride was cancelled by the rider."
+        case .rideNotStartable:          return "This ride can't be started right now."
         case .rideNotCompletable:        return "This ride can't be completed right now."
         case .sessionExpired:            return "Your session has expired. Please log in again."
         case .networkUnavailable:        return "No internet connection. Please try again."

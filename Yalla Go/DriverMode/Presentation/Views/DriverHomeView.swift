@@ -248,6 +248,26 @@ struct DriverHomeView: View {
     private func activeRideCard(_ trip: Trip) -> some View {
         VStack(spacing: 12) {
             TripCard(trip: trip)
+            // Start is advisory, never required — it's only offered while
+            // .accepted; Complete stays reachable throughout either way.
+            if trip.status == .accepted {
+                Button {
+                    viewModel.startActiveRide()
+                } label: {
+                    HStack {
+                        Spacer()
+                        if viewModel.isStarting {
+                            ProgressView()
+                        } else {
+                            Text("Start Trip")
+                        }
+                        Spacer()
+                    }
+                }
+                .buttonStyle(.bordered)
+                .disabled(viewModel.isStarting || viewModel.isCompleting)
+                .accessibilityIdentifier("driver_start_ride_button")
+            }
             Button {
                 viewModel.completeActiveRide()
             } label: {
@@ -262,7 +282,7 @@ struct DriverHomeView: View {
                 }
             }
             .buttonStyle(.borderedProminent)
-            .disabled(viewModel.isCompleting)
+            .disabled(viewModel.isCompleting || viewModel.isStarting)
             .accessibilityIdentifier("driver_complete_ride_button")
         }
         .accessibilityIdentifier("driver_active_ride")

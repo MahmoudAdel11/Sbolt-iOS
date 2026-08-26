@@ -55,6 +55,17 @@ final class RemoteDriverRepository: DriverRepository {
         }
     }
 
+    func startRide(id: String) async throws -> Trip {
+        do {
+            let dto: RideDTO.RideResponse = try await client.send(
+                Endpoint(path: "/rides/\(id)/start", method: .post)
+            )
+            return dto.toDomain()
+        } catch {
+            throw mapped(error, conflict: .rideNotStartable)
+        }
+    }
+
     func completeRide(id: String) async throws -> Trip {
         do {
             let dto: RideDTO.RideResponse = try await client.send(
