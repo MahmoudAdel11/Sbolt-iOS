@@ -20,6 +20,9 @@ enum DriverError: Error, Equatable {
     /// `error_code: "ride_cancelled"` vs the generic `"conflict"`) so the UI
     /// doesn't misattribute the rider's cancellation to another driver.
     case rideCancelledByRider
+    /// `POST /rides/{id}/start` was called from a non-startable status (already
+    /// ongoing/completed, or somehow still requested).
+    case rideNotStartable
     /// `POST /rides/{id}/complete` was called from a non-completable status.
     case rideNotCompletable
     /// The session token is missing, expired, or was rejected by the backend.

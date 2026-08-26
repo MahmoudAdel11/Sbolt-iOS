@@ -15,6 +15,7 @@ struct DriverModeViewModelTests {
             setDriverStatusUseCase: SetDriverStatusUseCase(repository: spy),
             pollAvailableRidesUseCase: PollAvailableRidesUseCase(repository: spy, interval: pollInterval),
             acceptRideUseCase: AcceptRideUseCase(repository: spy),
+            startRideUseCase: StartRideUseCase(repository: spy),
             completeRideUseCase: CompleteRideUseCase(repository: spy)
         )
     }
@@ -187,6 +188,64 @@ struct DriverModeViewModelTests {
         #expect(!sut.rides.contains { $0.id == Trip.driverStub.id })
     }
 
+    // MARK: - Start
+
+    @Test func startActiveRideUpdatesActiveRideToOngoing() async {
+        let spy = DriverRepositorySpy(fetchAvailableRidesResult: .success([.driverStub]),
+                                       acceptRideResult: .success(.driverStub),
+                                       startRideResult: .success(.driverStubOngoing))
+        let sut = makeSUT(spy: spy)
+        sut.screenDidAppear(location: Coordinate(latitude: 30, longitude: 31))
+        sut.setOnline(true)
+        await sut.statusTask?.value
+        await waitUntil { !sut.rides.isEmpty }
+        sut.accept(rideID: Trip.driverStub.id)
+        await sut.actionTask?.value
+
+        sut.startActiveRide()
+        await sut.actionTask?.value
+
+        #expect(sut.activeRide == .driverStubOngoing)
+        #expect(sut.actionErrorMessage == nil)
+    }
+
+    @Test func startActiveRideFailurePublishesErrorAndKeepsActiveRideAccepted() async {
+        let spy = DriverRepositorySpy(fetchAvailableRidesResult: .success([.driverStub]),
+                                       acceptRideResult: .success(.driverStub),
+                                       startRideResult: .failure(DriverError.rideNotStartable))
+        let sut = makeSUT(spy: spy)
+        sut.screenDidAppear(location: Coordinate(latitude: 30, longitude: 31))
+        sut.setOnline(true)
+        await sut.statusTask?.value
+        await waitUntil { !sut.rides.isEmpty }
+        sut.accept(rideID: Trip.driverStub.id)
+        await sut.actionTask?.value
+
+        sut.startActiveRide()
+        await sut.actionTask?.value
+
+        #expect(sut.actionErrorMessage == "This ride can't be started right now.")
+        #expect(sut.activeRide == .driverStub) // unchanged — still .accepted
+    }
+
+    @Test func sessionExpiredOnStartSetsFlag() async {
+        let spy = DriverRepositorySpy(fetchAvailableRidesResult: .success([.driverStub]),
+                                       acceptRideResult: .success(.driverStub),
+                                       startRideResult: .failure(DriverError.sessionExpired))
+        let sut = makeSUT(spy: spy)
+        sut.screenDidAppear(location: Coordinate(latitude: 30, longitude: 31))
+        sut.setOnline(true)
+        await sut.statusTask?.value
+        await waitUntil { !sut.rides.isEmpty }
+        sut.accept(rideID: Trip.driverStub.id)
+        await sut.actionTask?.value
+
+        sut.startActiveRide()
+        await sut.actionTask?.value
+
+        #expect(sut.isSessionExpired == true)
+    }
+
     // MARK: - Complete
 
     @Test func completeActiveRideClearsActiveRide() async {
@@ -204,6 +263,29 @@ struct DriverModeViewModelTests {
         sut.completeActiveRide()
         await sut.actionTask?.value
 
+        #expect(sut.activeRide == nil)
+    }
+
+    /// Regression guard: Complete must remain reachable/functional whether or
+    /// not Start was ever tapped — this drives the flow WITHOUT calling
+    /// startActiveRide() at all, mirroring the backend's optional-start design.
+    @Test func completeActiveRideSucceedsWithoutStartHavingBeenCalled() async {
+        let spy = DriverRepositorySpy(fetchAvailableRidesResult: .success([.driverStub]),
+                                       acceptRideResult: .success(.driverStub),
+                                       completeRideResult: .success(.driverStub))
+        let sut = makeSUT(spy: spy)
+        sut.screenDidAppear(location: Coordinate(latitude: 30, longitude: 31))
+        sut.setOnline(true)
+        await sut.statusTask?.value
+        await waitUntil { !sut.rides.isEmpty }
+        sut.accept(rideID: Trip.driverStub.id)
+        await sut.actionTask?.value
+
+        sut.completeActiveRide()
+        await sut.actionTask?.value
+
+        let startCallCount = await spy.startRideCallCount
+        #expect(startCallCount == 0)
         #expect(sut.activeRide == nil)
     }
 
