@@ -53,7 +53,8 @@ struct AuthenticationUseCaseTests {
                                           email: " sam@x.com ",
                                           phoneNumber: " +2011 ",
                                           password: "secret",
-                                          registerAsDriver: false)
+                                          registerAsDriver: false,
+                                          scooterType: nil)
 
         _ = try await sut.execute(details)
 
@@ -71,7 +72,8 @@ struct AuthenticationUseCaseTests {
                                           email: "sam@x.com",
                                           phoneNumber: "+2011",
                                           password: "secret",
-                                          registerAsDriver: true)
+                                          registerAsDriver: true,
+                                          scooterType: .comfort)
 
         _ = try await sut.execute(details)
 
@@ -85,7 +87,8 @@ struct AuthenticationUseCaseTests {
                                           email: "not-an-email",
                                           phoneNumber: "",
                                           password: "123",
-                                          registerAsDriver: false)
+                                          registerAsDriver: false,
+                                          scooterType: nil)
 
         await #expect(throws: AuthenticationError.invalidInput) {
             _ = try await sut.execute(details)
@@ -100,11 +103,61 @@ struct AuthenticationUseCaseTests {
                                           email: "sam@x.com",
                                           phoneNumber: "+2011",
                                           password: "secret",
-                                          registerAsDriver: false)
+                                          registerAsDriver: false,
+                                          scooterType: nil)
 
         await #expect(throws: AuthenticationError.emailAlreadyExists) {
             _ = try await sut.execute(details)
         }
+    }
+
+    // MARK: - RegisterUseCase — scooterType validation
+
+    @Test func registerRejectsDriverRegistrationWithoutScooterType() async {
+        let spy = AuthenticationRepositorySpy()
+        let sut = RegisterUseCase(repository: spy)
+        let details = RegistrationDetails(username: "Sam",
+                                          email: "sam@x.com",
+                                          phoneNumber: "+2011",
+                                          password: "secret",
+                                          registerAsDriver: true,
+                                          scooterType: nil)
+
+        await #expect(throws: AuthenticationError.invalidInput) {
+            _ = try await sut.execute(details)
+        }
+        #expect(await spy.registerCallCount == 0)
+    }
+
+    @Test func registerAllowsRiderRegistrationWithoutScooterType() async throws {
+        let spy = AuthenticationRepositorySpy(registerResult: .success(.stub))
+        let sut = RegisterUseCase(repository: spy)
+        let details = RegistrationDetails(username: "Sam",
+                                          email: "sam@x.com",
+                                          phoneNumber: "+2011",
+                                          password: "secret",
+                                          registerAsDriver: false,
+                                          scooterType: nil)
+
+        _ = try await sut.execute(details)
+
+        #expect(await spy.registerCallCount == 1)
+    }
+
+    @Test func registerAllowsDriverRegistrationWithScooterType() async throws {
+        let spy = AuthenticationRepositorySpy(registerResult: .success(.stub))
+        let sut = RegisterUseCase(repository: spy)
+        let details = RegistrationDetails(username: "Sam",
+                                          email: "sam@x.com",
+                                          phoneNumber: "+2011",
+                                          password: "secret",
+                                          registerAsDriver: true,
+                                          scooterType: .premium)
+
+        _ = try await sut.execute(details)
+
+        #expect(await spy.registerCallCount == 1)
+        #expect(await spy.lastRegistration?.scooterType == .premium)
     }
 
     // MARK: - LogoutUseCase
