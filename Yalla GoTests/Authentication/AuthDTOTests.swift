@@ -14,7 +14,7 @@ struct AuthDTOTests {
     @Test func registerRequestEncodesRegisterAsDriverTrue() throws {
         let request = AuthDTO.RegisterRequest(
             fullName: "Jane", email: "jane@example.com", phoneNumber: "+201000000000",
-            password: "secret123", registerAsDriver: true
+            password: "secret123", registerAsDriver: true, scooterType: "comfort"
         )
         let data = try JSONEncoder.backend.encode(request)
         let json = try #require(try JSONSerialization.jsonObject(with: data) as? [String: Any])
@@ -25,12 +25,36 @@ struct AuthDTOTests {
     @Test func registerRequestEncodesRegisterAsDriverFalse() throws {
         let request = AuthDTO.RegisterRequest(
             fullName: "Jane", email: "jane@example.com", phoneNumber: "+201000000000",
-            password: "secret123", registerAsDriver: false
+            password: "secret123", registerAsDriver: false, scooterType: nil
         )
         let data = try JSONEncoder.backend.encode(request)
         let json = try #require(try JSONSerialization.jsonObject(with: data) as? [String: Any])
 
         #expect(json["register_as_driver"] as? Bool == false)
+    }
+
+    @Test func registerRequestEncodesScooterTypeSnakeCase() throws {
+        let request = AuthDTO.RegisterRequest(
+            fullName: "Jane", email: "jane@example.com", phoneNumber: "+201000000000",
+            password: "secret123", registerAsDriver: true, scooterType: "premium"
+        )
+        let data = try JSONEncoder.backend.encode(request)
+        let json = try #require(try JSONSerialization.jsonObject(with: data) as? [String: Any])
+
+        #expect(json["scooter_type"] as? String == "premium")
+    }
+
+    @Test func registerRequestOmitsScooterTypeKeyWhenNil() throws {
+        let request = AuthDTO.RegisterRequest(
+            fullName: "Jane", email: "jane@example.com", phoneNumber: "+201000000000",
+            password: "secret123", registerAsDriver: false, scooterType: nil
+        )
+        let data = try JSONEncoder.backend.encode(request)
+        let json = try #require(try JSONSerialization.jsonObject(with: data) as? [String: Any])
+
+        // Swift's JSONEncoder omits `nil` Optional fields entirely rather than
+        // encoding an explicit `null` - confirm the key isn't present at all.
+        #expect(json["scooter_type"] == nil)
     }
 
     // MARK: - UserResponse decoding

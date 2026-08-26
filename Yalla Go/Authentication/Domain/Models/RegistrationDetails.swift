@@ -15,4 +15,8 @@ struct RegistrationDetails: Equatable {
     let phoneNumber: String
     let password: String
     let registerAsDriver: Bool
+    /// Only meaningful (and required) when `registerAsDriver` is true — a
+    /// rider has no scooter to declare. `RegisterUseCase` enforces this
+    /// client-side, mirroring (not replacing) the backend's own validator.
+    let scooterType: RideType?
 }
