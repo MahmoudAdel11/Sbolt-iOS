@@ -28,11 +28,18 @@ struct RegisterUseCase {
             throw AuthenticationError.invalidInput
         }
 
+        // Mirrors the backend's own model_validator: scooterType is required
+        // when registering as a driver, never required otherwise.
+        guard !details.registerAsDriver || details.scooterType != nil else {
+            throw AuthenticationError.invalidInput
+        }
+
         let sanitized = RegistrationDetails(username: username,
                                             email: email,
                                             phoneNumber: phoneNumber,
                                             password: details.password,
-                                            registerAsDriver: details.registerAsDriver)
+                                            registerAsDriver: details.registerAsDriver,
+                                            scooterType: details.scooterType)
         return try await repository.register(sanitized)
     }
 }

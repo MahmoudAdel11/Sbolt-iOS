@@ -65,7 +65,8 @@ final class RemoteAuthenticationRepository: AuthenticationRepository {
                     email: details.email,
                     phoneNumber: details.phoneNumber,
                     password: details.password,
-                    registerAsDriver: details.registerAsDriver
+                    registerAsDriver: details.registerAsDriver,
+                    scooterType: details.scooterType?.rawValue
                 )
             )
             // Register now returns the user alongside both tokens directly —

@@ -20,6 +20,7 @@ final class RegisterViewModel: ObservableObject {
     @Published var password = ""
     @Published var confirmPassword = ""
     @Published var registerAsDriver = false
+    @Published var scooterType: RideType?
 
     // Outputs the view observes.
     @Published private(set) var isLoading = false
@@ -79,7 +80,8 @@ final class RegisterViewModel: ObservableObject {
                                           email: email,
                                           phoneNumber: phoneNumber,
                                           password: password,
-                                          registerAsDriver: registerAsDriver)
+                                          registerAsDriver: registerAsDriver,
+                                          scooterType: registerAsDriver ? scooterType : nil)
         do {
             let user = try await registerUseCase.execute(details)
             guard !Task.isCancelled else { return }

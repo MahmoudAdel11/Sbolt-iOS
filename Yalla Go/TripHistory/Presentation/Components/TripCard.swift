@@ -5,9 +5,12 @@
 
 import SwiftUI
 
-/// Reusable card summarising a single ride in any lifecycle state. The
-/// backend has no fare/distance/duration/location-name fields, so this shows
-/// coordinates and status only.
+/// Reusable card summarising a single ride in any lifecycle state — shown
+/// pre-accept (driver's available-ride card), post-accept (driver's active-ride
+/// card), and in trip history, uniformly. `tier`/`fare` are real, frozen
+/// backend fields (not client-side estimates) and are shown in all three
+/// contexts; the backend still has no distance/duration/location-name fields,
+/// so pickup/dropoff render as coordinates, not place names.
 struct TripCard: View {
     let trip: Trip
     var formatter = TripFormatter()
@@ -15,6 +18,7 @@ struct TripCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             topRow
+            fareRow
             route
             Divider()
             bottomRow
@@ -44,6 +48,18 @@ struct TripCard: View {
             .padding(.vertical, 4)
             .background(statusColor.opacity(0.15), in: Capsule())
             .foregroundStyle(statusColor)
+    }
+
+    private var fareRow: some View {
+        HStack(spacing: 6) {
+            Text(trip.tier.description)
+            Text("·")
+            Text(trip.fare.toCurrency())
+                .fontWeight(.semibold)
+        }
+        .font(.subheadline)
+        .foregroundStyle(.secondary)
+        .accessibilityIdentifier("trip_card_fare")
     }
 
     private var route: some View {

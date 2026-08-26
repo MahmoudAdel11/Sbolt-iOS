@@ -87,7 +87,21 @@ struct RegisterView: View {
 
             Toggle("Also register as a driver", isOn: $viewModel.registerAsDriver)
                 .accessibilityIdentifier("register_as_driver_toggle")
+
+            if viewModel.registerAsDriver {
+                scooterTypePicker
+            }
         }
+    }
+
+    private var scooterTypePicker: some View {
+        Picker("Scooter type", selection: $viewModel.scooterType) {
+            Text("Select a scooter type").tag(RideType?.none)
+            ForEach(RideType.allCases) { type in
+                Text(type.description).tag(RideType?.some(type))
+            }
+        }
+        .accessibilityIdentifier("register_scooter_type_picker")
     }
 
     @ViewBuilder

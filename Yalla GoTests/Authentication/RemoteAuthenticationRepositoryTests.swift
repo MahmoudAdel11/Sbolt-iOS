@@ -151,7 +151,7 @@ struct RemoteAuthenticationRepositoryTests {
         let user = try await sut.register(
             RegistrationDetails(
                 username: "Jane Doe", email: "jane@example.com", phoneNumber: "+201234567890",
-                password: "supersecret123", registerAsDriver: false
+                password: "supersecret123", registerAsDriver: false, scooterType: nil
             )
         )
 

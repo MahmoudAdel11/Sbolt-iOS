@@ -34,6 +34,7 @@ enum AuthDTO {
         let phoneNumber: String   // → phone_number via convertToSnakeCase
         let password: String
         let registerAsDriver: Bool // → register_as_driver via convertToSnakeCase
+        let scooterType: String?  // → scooter_type via convertToSnakeCase
     }
 
     struct RefreshRequest: Encodable {
