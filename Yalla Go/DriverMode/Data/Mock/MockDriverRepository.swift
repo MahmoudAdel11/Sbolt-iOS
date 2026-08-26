@@ -89,6 +89,9 @@ actor MockDriverRepository: DriverRepository {
         await simulateNetworkDelay()
         guard behavior == .success else { throw DriverError.networkUnavailable }
         guard let ride = activeRide, ride.id == id else { throw DriverError.rideNotCompletable }
+        // Mirrors the backend: .ongoing is now required before completion —
+        // .accepted (start not yet called) is a distinguishable, recoverable error.
+        guard ride.status != .accepted else { throw DriverError.rideNotStarted }
         let completed = Trip(id: ride.id, riderID: ride.riderID, driverID: ride.driverID,
                              status: .completed, pickupCoordinate: ride.pickupCoordinate,
                              destinationCoordinate: ride.destinationCoordinate,
