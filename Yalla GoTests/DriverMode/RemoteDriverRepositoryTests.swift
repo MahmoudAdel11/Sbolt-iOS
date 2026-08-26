@@ -127,6 +127,38 @@ struct RemoteDriverRepositoryTests {
         }
     }
 
+    @Test func startRideSucceeds() async throws {
+        let client = StubAPIClient()
+        client.result = .success(Data(rideJSON(id: "ride-1", status: "ongoing").utf8))
+        let sut = RemoteDriverRepository(client: client)
+
+        let trip = try await sut.startRide(id: "ride-1")
+
+        #expect(trip.status == .ongoing)
+        #expect(client.capturedEndpoint?.path == "/rides/ride-1/start")
+        #expect(client.capturedEndpoint?.method == .post)
+    }
+
+    @Test func startRideConflictMapsToRideNotStartable() async {
+        let client = StubAPIClient()
+        client.result = .failure(NetworkError.conflict(errorCode: "conflict"))
+        let sut = RemoteDriverRepository(client: client)
+
+        await #expect(throws: DriverError.rideNotStartable) {
+            _ = try await sut.startRide(id: "ride-1")
+        }
+    }
+
+    @Test func startRideCancelledConflictMapsToRideCancelledByRider() async {
+        let client = StubAPIClient()
+        client.result = .failure(NetworkError.conflict(errorCode: "ride_cancelled"))
+        let sut = RemoteDriverRepository(client: client)
+
+        await #expect(throws: DriverError.rideCancelledByRider) {
+            _ = try await sut.startRide(id: "ride-1")
+        }
+    }
+
     @Test func completeRideSucceeds() async throws {
         let client = StubAPIClient()
         client.result = .success(Data(rideJSON(id: "ride-1", status: "completed").utf8))

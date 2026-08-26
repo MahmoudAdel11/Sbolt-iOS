@@ -28,6 +28,7 @@ final class DriverModeViewModel: ObservableObject {
 
     @Published private(set) var activeRide: Trip?
     @Published private(set) var isAccepting = false
+    @Published private(set) var isStarting = false
     @Published private(set) var isCompleting = false
     @Published private(set) var actionErrorMessage: String?
     /// Set on a 409 from `acceptRide` — a non-alarming, distinct message from
@@ -42,6 +43,7 @@ final class DriverModeViewModel: ObservableObject {
     private let setDriverStatusUseCase: SetDriverStatusUseCase
     private let pollAvailableRidesUseCase: PollAvailableRidesUseCase
     private let acceptRideUseCase: AcceptRideUseCase
+    private let startRideUseCase: StartRideUseCase
     private let completeRideUseCase: CompleteRideUseCase
     private let errorPresenter: DriverErrorPresenter
 
@@ -59,11 +61,13 @@ final class DriverModeViewModel: ObservableObject {
     init(setDriverStatusUseCase: SetDriverStatusUseCase,
          pollAvailableRidesUseCase: PollAvailableRidesUseCase,
          acceptRideUseCase: AcceptRideUseCase,
+         startRideUseCase: StartRideUseCase,
          completeRideUseCase: CompleteRideUseCase,
          errorPresenter: DriverErrorPresenter = DriverErrorPresenter()) {
         self.setDriverStatusUseCase = setDriverStatusUseCase
         self.pollAvailableRidesUseCase = pollAvailableRidesUseCase
         self.acceptRideUseCase = acceptRideUseCase
+        self.startRideUseCase = startRideUseCase
         self.completeRideUseCase = completeRideUseCase
         self.errorPresenter = errorPresenter
     }
@@ -146,6 +150,27 @@ final class DriverModeViewModel: ObservableObject {
             } catch let error as DriverError where error == .rideNoLongerAvailable || error == .rideCancelledByRider {
                 self.raceConditionMessage = self.errorPresenter.message(for: error)
                 self.rides.removeAll { $0.id == rideID }
+            } catch is CancellationError {
+            } catch {
+                self.actionErrorMessage = self.errorPresenter.message(for: error)
+                if case DriverError.sessionExpired = error { self.isSessionExpired = true }
+            }
+        }
+    }
+
+    /// Marks the current active ride as underway. Purely advisory — never a
+    /// prerequisite for `completeActiveRide()`, which works from either
+    /// `.accepted` or `.ongoing`.
+    func startActiveRide() {
+        guard let trip = activeRide, !isStarting else { return }
+        isStarting = true
+        actionErrorMessage = nil
+        actionTask = Task { [weak self] in
+            guard let self else { return }
+            defer { self.isStarting = false }
+            do {
+                let updated = try await self.startRideUseCase.execute(rideID: trip.id)
+                self.activeRide = updated
             } catch is CancellationError {
             } catch {
                 self.actionErrorMessage = self.errorPresenter.message(for: error)

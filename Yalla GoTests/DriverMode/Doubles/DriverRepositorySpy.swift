@@ -13,21 +13,26 @@ actor DriverRepositorySpy: DriverRepository {
     private(set) var lastRequestedCoordinate: Coordinate?
     private(set) var acceptRideCallCount = 0
     private(set) var lastAcceptedRideID: String?
+    private(set) var startRideCallCount = 0
+    private(set) var lastStartedRideID: String?
     private(set) var completeRideCallCount = 0
     private(set) var lastCompletedRideID: String?
 
     private let setOnlineStatusResult: Result<User, Error>
     private let fetchAvailableRidesResult: Result<[Trip], Error>
     private let acceptRideResult: Result<Trip, Error>
+    private let startRideResult: Result<Trip, Error>
     private let completeRideResult: Result<Trip, Error>
 
     init(setOnlineStatusResult: Result<User, Error> = .success(.driverStub),
          fetchAvailableRidesResult: Result<[Trip], Error> = .success([]),
          acceptRideResult: Result<Trip, Error> = .success(.driverStub),
+         startRideResult: Result<Trip, Error> = .success(.driverStub),
          completeRideResult: Result<Trip, Error> = .success(.driverStub)) {
         self.setOnlineStatusResult = setOnlineStatusResult
         self.fetchAvailableRidesResult = fetchAvailableRidesResult
         self.acceptRideResult = acceptRideResult
+        self.startRideResult = startRideResult
         self.completeRideResult = completeRideResult
     }
 
@@ -56,6 +61,12 @@ actor DriverRepositorySpy: DriverRepository {
         return try acceptRideResult.get()
     }
 
+    func startRide(id: String) async throws -> Trip {
+        startRideCallCount += 1
+        lastStartedRideID = id
+        return try startRideResult.get()
+    }
+
     func completeRide(id: String) async throws -> Trip {
         completeRideCallCount += 1
         lastCompletedRideID = id
@@ -74,6 +85,15 @@ extension User {
 extension Trip {
     static var driverStub: Trip {
         Trip(id: "ride-1", riderID: "rider-1", driverID: "driver-1", status: .accepted,
+             pickupCoordinate: Coordinate(latitude: 30.0, longitude: 31.0),
+             destinationCoordinate: Coordinate(latitude: 30.1, longitude: 31.1),
+             tier: .economy, fare: 25.0,
+             requestedAt: Date(timeIntervalSince1970: 0), acceptedAt: Date(timeIntervalSince1970: 1),
+             completedAt: nil, cancelledAt: nil)
+    }
+
+    static var driverStubOngoing: Trip {
+        Trip(id: "ride-1", riderID: "rider-1", driverID: "driver-1", status: .ongoing,
              pickupCoordinate: Coordinate(latitude: 30.0, longitude: 31.0),
              destinationCoordinate: Coordinate(latitude: 30.1, longitude: 31.1),
              tier: .economy, fare: 25.0,
