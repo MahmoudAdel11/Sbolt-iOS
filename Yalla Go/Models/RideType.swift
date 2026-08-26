@@ -43,20 +43,40 @@ enum RideType: String, CaseIterable, Identifiable {
     /// ever sent (the real, authoritative fare comes back on `Trip.fare`
     /// once the ride actually exists — this is never sent to the backend
     /// and never treated as final).
+    ///
+    /// MAINTENANCE: these EGP values MUST be kept in sync by hand with the
+    /// backend's `_BASE_PRICE_EGP` in `app/domain/ride/pricing.py` — there is
+    /// no shared source of truth between the two codebases. If the backend's
+    /// pricing constants ever change, this estimate silently drifts out of
+    /// sync again until someone updates it here too; this fix makes the two
+    /// match today, it doesn't structurally prevent future divergence.
     var baseFare: Double {
         switch self {
-        case .economy: return 5
-        case .comfort: return 10
-        case .premium: return 20
+        case .economy: return 15
+        case .comfort: return 25
+        case .premium: return 40
         }
     }
 
-    func computePrice(for distanceInMeters: Double) -> Double {
-        let distanceInMiles = distanceInMeters / 1600
+    /// Per-km rate in EGP — same manual-sync caveat as `baseFare`, mirrors
+    /// the backend's `_PER_KM_RATE_EGP`.
+    private var perKilometerRateEGP: Double {
         switch self {
-        case .economy: return distanceInMiles * 1.5 + baseFare
-        case .comfort: return distanceInMiles * 1.75 + baseFare
-        case .premium: return distanceInMiles * 2.0 + baseFare
+        case .economy: return 3.0
+        case .comfort: return 4.5
+        case .premium: return 7.0
         }
+    }
+
+    /// Mirrors the backend's `compute_fare` exactly: `base_price[tier] +
+    /// distance_km * per_km_rate[tier]`. Distance measurement matches too —
+    /// the backend uses `haversine_km` (straight-line, great-circle)
+    /// specifically because that's what this call site already used
+    /// (`CLLocation.distance(from:)`, also straight-line); the two agree to
+    /// well under 1% for any realistic trip, so this doesn't introduce a
+    /// second discrepancy on top of fixing the pricing constants.
+    func computePrice(for distanceInMeters: Double) -> Double {
+        let distanceInKilometers = distanceInMeters / 1000
+        return baseFare + distanceInKilometers * perKilometerRateEGP
     }
 }
