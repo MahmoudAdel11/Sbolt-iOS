@@ -249,15 +249,19 @@ struct DriverModeViewModelTests {
     // MARK: - Complete
 
     @Test func completeActiveRideClearsActiveRide() async {
+        // Reflects the new required flow: accept -> start -> complete.
         let spy = DriverRepositorySpy(fetchAvailableRidesResult: .success([.driverStub]),
                                        acceptRideResult: .success(.driverStub),
-                                       completeRideResult: .success(.driverStub))
+                                       startRideResult: .success(.driverStubOngoing),
+                                       completeRideResult: .success(.driverStubOngoing))
         let sut = makeSUT(spy: spy)
         sut.screenDidAppear(location: Coordinate(latitude: 30, longitude: 31))
         sut.setOnline(true)
         await sut.statusTask?.value
         await waitUntil { !sut.rides.isEmpty }
         sut.accept(rideID: Trip.driverStub.id)
+        await sut.actionTask?.value
+        sut.startActiveRide()
         await sut.actionTask?.value
 
         sut.completeActiveRide()
@@ -266,13 +270,17 @@ struct DriverModeViewModelTests {
         #expect(sut.activeRide == nil)
     }
 
-    /// Regression guard: Complete must remain reachable/functional whether or
-    /// not Start was ever tapped — this drives the flow WITHOUT calling
-    /// startActiveRide() at all, mirroring the backend's optional-start design.
-    @Test func completeActiveRideSucceedsWithoutStartHavingBeenCalled() async {
+    /// Reverses a previously-passing test's expected outcome: completing without
+    /// ever calling start used to succeed (the earlier optional-start design).
+    /// Per an explicit product decision, .ongoing is now required, so this must
+    /// surface DriverError.rideNotStarted's message and leave activeRide
+    /// unchanged rather than clearing it. (The repository — real or mock — is
+    /// what actually enforces the guard; this spy is stubbed to return that
+    /// failure the same way the real backend/mock would.)
+    @Test func completeActiveRideFailsWithRideNotStartedWhenStartWasNeverCalled() async {
         let spy = DriverRepositorySpy(fetchAvailableRidesResult: .success([.driverStub]),
                                        acceptRideResult: .success(.driverStub),
-                                       completeRideResult: .success(.driverStub))
+                                       completeRideResult: .failure(DriverError.rideNotStarted))
         let sut = makeSUT(spy: spy)
         sut.screenDidAppear(location: Coordinate(latitude: 30, longitude: 31))
         sut.setOnline(true)
@@ -284,9 +292,8 @@ struct DriverModeViewModelTests {
         sut.completeActiveRide()
         await sut.actionTask?.value
 
-        let startCallCount = await spy.startRideCallCount
-        #expect(startCallCount == 0)
-        #expect(sut.activeRide == nil)
+        #expect(sut.actionErrorMessage == "Start the trip before completing it.")
+        #expect(sut.activeRide == .driverStub) // unchanged — still .accepted
     }
 
     // MARK: - Seeded initial state

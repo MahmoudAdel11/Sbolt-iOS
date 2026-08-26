@@ -248,8 +248,12 @@ struct DriverHomeView: View {
     private func activeRideCard(_ trip: Trip) -> some View {
         VStack(spacing: 12) {
             TripCard(trip: trip)
-            // Start is advisory, never required — it's only offered while
-            // .accepted; Complete stays reachable throughout either way.
+            // Start is now REQUIRED before completion (reversed from this
+            // session's earlier "both available while accepted" design) —
+            // only one action is ever shown at a time: Start while .accepted,
+            // Complete only once .ongoing. This makes reaching
+            // DriverError.rideNotStarted structurally unreachable through
+            // normal use, not just handled after the fact.
             if trip.status == .accepted {
                 Button {
                     viewModel.startActiveRide()
@@ -264,26 +268,27 @@ struct DriverHomeView: View {
                         Spacer()
                     }
                 }
-                .buttonStyle(.bordered)
-                .disabled(viewModel.isStarting || viewModel.isCompleting)
+                .buttonStyle(.borderedProminent)
+                .disabled(viewModel.isStarting)
                 .accessibilityIdentifier("driver_start_ride_button")
-            }
-            Button {
-                viewModel.completeActiveRide()
-            } label: {
-                HStack {
-                    Spacer()
-                    if viewModel.isCompleting {
-                        ProgressView()
-                    } else {
-                        Text("Complete Ride")
+            } else {
+                Button {
+                    viewModel.completeActiveRide()
+                } label: {
+                    HStack {
+                        Spacer()
+                        if viewModel.isCompleting {
+                            ProgressView()
+                        } else {
+                            Text("Complete Ride")
+                        }
+                        Spacer()
                     }
-                    Spacer()
                 }
+                .buttonStyle(.borderedProminent)
+                .disabled(viewModel.isCompleting)
+                .accessibilityIdentifier("driver_complete_ride_button")
             }
-            .buttonStyle(.borderedProminent)
-            .disabled(viewModel.isCompleting || viewModel.isStarting)
-            .accessibilityIdentifier("driver_complete_ride_button")
         }
         .accessibilityIdentifier("driver_active_ride")
     }

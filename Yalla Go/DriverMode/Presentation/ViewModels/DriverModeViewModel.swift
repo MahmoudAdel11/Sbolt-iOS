@@ -158,9 +158,11 @@ final class DriverModeViewModel: ObservableObject {
         }
     }
 
-    /// Marks the current active ride as underway. Purely advisory — never a
-    /// prerequisite for `completeActiveRide()`, which works from either
-    /// `.accepted` or `.ongoing`.
+    /// Marks the current active ride as underway. Now REQUIRED before
+    /// `completeActiveRide()` can succeed — reversed from this session's
+    /// earlier "advisory, works from either status" design, per an explicit
+    /// backend/product decision. `DriverHomeView` only offers "Complete Ride"
+    /// once `.ongoing`, so this is enforced structurally in the UI as well.
     func startActiveRide() {
         guard let trip = activeRide, !isStarting else { return }
         isStarting = true
@@ -179,7 +181,12 @@ final class DriverModeViewModel: ObservableObject {
         }
     }
 
-    /// Completes the current active ride, returning to browsing.
+    /// Completes the current active ride, returning to browsing. Requires
+    /// `.ongoing` — `DriverHomeView` only surfaces this action once `startActiveRide()`
+    /// has succeeded, so `.rideNotStarted` shouldn't normally be reachable from here;
+    /// it's still handled explicitly (rather than falling into the generic branch)
+    /// as a safety net for any transient UI-state race, with a clear, actionable
+    /// message rather than a vague "something went wrong".
     func completeActiveRide() {
         guard let trip = activeRide, !isCompleting else { return }
         isCompleting = true
@@ -191,6 +198,8 @@ final class DriverModeViewModel: ObservableObject {
                 _ = try await self.completeRideUseCase.execute(rideID: trip.id)
                 self.activeRide = nil
                 self.refreshPolling() // resumes browsing now that the ride ended
+            } catch let error as DriverError where error == .rideNotStarted {
+                self.actionErrorMessage = self.errorPresenter.message(for: error)
             } catch is CancellationError {
             } catch {
                 self.actionErrorMessage = self.errorPresenter.message(for: error)
