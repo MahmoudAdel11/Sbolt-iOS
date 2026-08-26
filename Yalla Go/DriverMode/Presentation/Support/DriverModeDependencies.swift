@@ -26,6 +26,7 @@ struct DriverModeDependencies {
             setDriverStatusUseCase: SetDriverStatusUseCase(repository: repository),
             pollAvailableRidesUseCase: PollAvailableRidesUseCase(repository: repository, interval: pollInterval),
             acceptRideUseCase: AcceptRideUseCase(repository: repository),
+            startRideUseCase: StartRideUseCase(repository: repository),
             completeRideUseCase: CompleteRideUseCase(repository: repository)
         )
     }

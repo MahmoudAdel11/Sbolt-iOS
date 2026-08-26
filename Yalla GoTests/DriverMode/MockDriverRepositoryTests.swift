@@ -56,12 +56,45 @@ struct MockDriverRepositoryTests {
         }
     }
 
+    @Test func startRideSucceedsForAcceptedActiveRide() async throws {
+        let sut = MockDriverRepository(artificialDelay: 0)
+        _ = try await sut.setOnlineStatus(true)
+        let rides = try await sut.fetchAvailableRides(near: Coordinate(latitude: 0, longitude: 0))
+        let target = try #require(rides.first)
+        _ = try await sut.acceptRide(id: target.id)
+
+        let started = try await sut.startRide(id: target.id)
+
+        #expect(started.status == .ongoing)
+    }
+
+    @Test func startRideFailsWithoutAnActiveRide() async {
+        let sut = MockDriverRepository(artificialDelay: 0)
+
+        await #expect(throws: DriverError.rideNotStartable) {
+            _ = try await sut.startRide(id: "ride-1")
+        }
+    }
+
     @Test func completeRideSucceedsForActiveRide() async throws {
         let sut = MockDriverRepository(artificialDelay: 0)
         _ = try await sut.setOnlineStatus(true)
         let rides = try await sut.fetchAvailableRides(near: Coordinate(latitude: 0, longitude: 0))
         let target = try #require(rides.first)
         _ = try await sut.acceptRide(id: target.id)
+
+        let completed = try await sut.completeRide(id: target.id)
+
+        #expect(completed.status == .completed)
+    }
+
+    @Test func completeRideSucceedsForOngoingActiveRideWithoutStartHavingBeenCalled() async throws {
+        let sut = MockDriverRepository(artificialDelay: 0)
+        _ = try await sut.setOnlineStatus(true)
+        let rides = try await sut.fetchAvailableRides(near: Coordinate(latitude: 0, longitude: 0))
+        let target = try #require(rides.first)
+        _ = try await sut.acceptRide(id: target.id)
+        _ = try await sut.startRide(id: target.id)
 
         let completed = try await sut.completeRide(id: target.id)
 
