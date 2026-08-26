@@ -190,6 +190,16 @@ struct RemoteDriverRepositoryTests {
         }
     }
 
+    @Test func completeRideNotStartedConflictMapsToRideNotStarted() async {
+        let client = StubAPIClient()
+        client.result = .failure(NetworkError.conflict(errorCode: "ride_not_started"))
+        let sut = RemoteDriverRepository(client: client)
+
+        await #expect(throws: DriverError.rideNotStarted) {
+            _ = try await sut.completeRide(id: "ride-1")
+        }
+    }
+
     @Test func forbiddenMapsToNotAuthorizedAsDriver() async {
         let client = StubAPIClient()
         client.result = .failure(NetworkError.forbidden)

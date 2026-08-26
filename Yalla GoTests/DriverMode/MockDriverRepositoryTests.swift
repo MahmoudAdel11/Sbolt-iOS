@@ -76,19 +76,23 @@ struct MockDriverRepositoryTests {
         }
     }
 
-    @Test func completeRideSucceedsForActiveRide() async throws {
+    /// Reverses a previously-passing test's expected outcome: completing directly
+    /// from .accepted (skipping /start) used to succeed when start was advisory.
+    /// Per an explicit product decision, .ongoing is now required, so this must
+    /// now fail with the distinguishable .rideNotStarted error instead.
+    @Test func completeRideFailsWithRideNotStartedWhenStillAccepted() async throws {
         let sut = MockDriverRepository(artificialDelay: 0)
         _ = try await sut.setOnlineStatus(true)
         let rides = try await sut.fetchAvailableRides(near: Coordinate(latitude: 0, longitude: 0))
         let target = try #require(rides.first)
         _ = try await sut.acceptRide(id: target.id)
 
-        let completed = try await sut.completeRide(id: target.id)
-
-        #expect(completed.status == .completed)
+        await #expect(throws: DriverError.rideNotStarted) {
+            _ = try await sut.completeRide(id: target.id)
+        }
     }
 
-    @Test func completeRideSucceedsForOngoingActiveRideWithoutStartHavingBeenCalled() async throws {
+    @Test func completeRideSucceedsForOngoingActiveRide() async throws {
         let sut = MockDriverRepository(artificialDelay: 0)
         _ = try await sut.setOnlineStatus(true)
         let rides = try await sut.fetchAvailableRides(near: Coordinate(latitude: 0, longitude: 0))
