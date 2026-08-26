@@ -23,6 +23,15 @@ enum DriverError: Error, Equatable {
     /// `POST /rides/{id}/start` was called from a non-startable status (already
     /// ongoing/completed, or somehow still requested).
     case rideNotStartable
+    /// `POST /rides/{id}/complete` was called while still `.accepted` — the
+    /// backend now requires `.ongoing` (calling `/start` first) before a ride
+    /// can be completed. Distinct from `.rideNotCompletable` (backend
+    /// `error_code: "ride_not_started"` vs the generic `"conflict"`) so the UI
+    /// can point the driver at the actual fix ("start it first") rather than a
+    /// vague "can't complete right now". Structurally unreachable through
+    /// normal UI flow — `DriverHomeView` only shows "Complete Ride" once
+    /// `.ongoing` — this exists as a safety net for any race/edge case.
+    case rideNotStarted
     /// `POST /rides/{id}/complete` was called from a non-completable status.
     case rideNotCompletable
     /// The session token is missing, expired, or was rejected by the backend.
