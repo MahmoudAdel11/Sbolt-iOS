@@ -61,6 +61,14 @@ final class AppSessionStore: ObservableObject {
         currentMode = .customer
     }
 
+    /// Refreshes the session's user in place after an out-of-band update
+    /// (e.g. the vehicle/scooter-type settings screen) — unlike `signIn`,
+    /// this doesn't reset `currentMode`, since the user isn't newly
+    /// authenticating.
+    func updateCurrentUser(_ user: User) {
+        currentUser = user
+    }
+
     /// Transitions the app into the unauthenticated state and clears the
     /// persisted Keychain token, so a stale/expired token can never be
     /// reused on the next launch.

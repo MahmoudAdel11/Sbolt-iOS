@@ -112,4 +112,44 @@ struct MockDriverRepositoryTests {
             _ = try await sut.completeRide(id: "ride-1")
         }
     }
+
+    @Test func updateVehicleSetsAllProvidedFields() async throws {
+        let sut = MockDriverRepository(artificialDelay: 0)
+
+        let user = try await sut.updateVehicle(
+            vehicleType: "Vespa", vehicleColor: "Red", licensePlate: "XYZ-999", scooterType: .premium
+        )
+
+        #expect(user.driverProfile?.vehicleType == "Vespa")
+        #expect(user.driverProfile?.vehicleColor == "Red")
+        #expect(user.driverProfile?.licensePlate == "XYZ-999")
+        #expect(user.driverProfile?.scooterType == .premium)
+    }
+
+    @Test func updateVehicleOnlyTouchesProvidedFields() async throws {
+        let sut = MockDriverRepository(artificialDelay: 0)
+        _ = try await sut.updateVehicle(
+            vehicleType: "Vespa", vehicleColor: "Red", licensePlate: "XYZ-999", scooterType: .economy
+        )
+
+        let user = try await sut.updateVehicle(
+            vehicleType: nil, vehicleColor: "Black", licensePlate: nil, scooterType: nil
+        )
+
+        // Only vehicleColor was provided this time - everything else survives.
+        #expect(user.driverProfile?.vehicleType == "Vespa")
+        #expect(user.driverProfile?.vehicleColor == "Black")
+        #expect(user.driverProfile?.licensePlate == "XYZ-999")
+        #expect(user.driverProfile?.scooterType == .economy)
+    }
+
+    @Test func updateVehicleThrowsOnNetworkFailure() async {
+        let sut = MockDriverRepository(behavior: .networkFailure, artificialDelay: 0)
+
+        await #expect(throws: DriverError.networkUnavailable) {
+            _ = try await sut.updateVehicle(
+                vehicleType: nil, vehicleColor: nil, licensePlate: nil, scooterType: nil
+            )
+        }
+    }
 }

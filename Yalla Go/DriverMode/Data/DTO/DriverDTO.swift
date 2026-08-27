@@ -14,4 +14,14 @@ enum DriverDTO {
     struct StatusUpdateRequest: Encodable {
         let isOnline: Bool
     }
+
+    /// Request body for PATCH /drivers/me/vehicle — partial update, every
+    /// field optional, only provided (non-nil) ones change. Matches the
+    /// backend's DriverVehicleUpdateRequest exactly.
+    struct VehicleUpdateRequest: Encodable {
+        let vehicleType: String?
+        let vehicleColor: String?
+        let licensePlate: String?
+        let scooterType: String?  // → scooter_type via convertToSnakeCase
+    }
 }

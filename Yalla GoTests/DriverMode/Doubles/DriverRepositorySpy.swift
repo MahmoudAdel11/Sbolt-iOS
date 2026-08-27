@@ -17,23 +17,28 @@ actor DriverRepositorySpy: DriverRepository {
     private(set) var lastStartedRideID: String?
     private(set) var completeRideCallCount = 0
     private(set) var lastCompletedRideID: String?
+    private(set) var updateVehicleCallCount = 0
+    private(set) var lastUpdateVehicleArgs: (vehicleType: String?, vehicleColor: String?, licensePlate: String?, scooterType: RideType?)?
 
     private let setOnlineStatusResult: Result<User, Error>
     private let fetchAvailableRidesResult: Result<[Trip], Error>
     private let acceptRideResult: Result<Trip, Error>
     private let startRideResult: Result<Trip, Error>
     private let completeRideResult: Result<Trip, Error>
+    private let updateVehicleResult: Result<User, Error>
 
     init(setOnlineStatusResult: Result<User, Error> = .success(.driverStub),
          fetchAvailableRidesResult: Result<[Trip], Error> = .success([]),
          acceptRideResult: Result<Trip, Error> = .success(.driverStub),
          startRideResult: Result<Trip, Error> = .success(.driverStub),
-         completeRideResult: Result<Trip, Error> = .success(.driverStub)) {
+         completeRideResult: Result<Trip, Error> = .success(.driverStub),
+         updateVehicleResult: Result<User, Error> = .success(.driverStub)) {
         self.setOnlineStatusResult = setOnlineStatusResult
         self.fetchAvailableRidesResult = fetchAvailableRidesResult
         self.acceptRideResult = acceptRideResult
         self.startRideResult = startRideResult
         self.completeRideResult = completeRideResult
+        self.updateVehicleResult = updateVehicleResult
     }
 
     /// On success, mirrors the requested `isOnline` back in the returned
@@ -71,6 +76,14 @@ actor DriverRepositorySpy: DriverRepository {
         completeRideCallCount += 1
         lastCompletedRideID = id
         return try completeRideResult.get()
+    }
+
+    func updateVehicle(
+        vehicleType: String?, vehicleColor: String?, licensePlate: String?, scooterType: RideType?
+    ) async throws -> User {
+        updateVehicleCallCount += 1
+        lastUpdateVehicleArgs = (vehicleType, vehicleColor, licensePlate, scooterType)
+        return try updateVehicleResult.get()
     }
 }
 

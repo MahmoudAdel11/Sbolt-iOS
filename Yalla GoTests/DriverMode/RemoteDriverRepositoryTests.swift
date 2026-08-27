@@ -27,7 +27,11 @@ private final class StubAPIClient: APIClient {
     }
 }
 
-private func userJSON(isOnline: Bool) -> Data {
+private func userJSON(
+    isOnline: Bool, vehicleType: String? = nil, vehicleColor: String? = nil,
+    licensePlate: String? = nil, scooterType: String? = nil
+) -> Data {
+    func jsonString(_ value: String?) -> String { value.map { "\"\($0)\"" } ?? "null" }
     let json = """
     {
         "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
@@ -35,7 +39,13 @@ private func userJSON(isOnline: Bool) -> Data {
         "full_name": "Driver User",
         "phone_number": "+201234567890",
         "is_active": true,
-        "driver_profile": {"is_online": \(isOnline)},
+        "driver_profile": {
+            "is_online": \(isOnline),
+            "vehicle_type": \(jsonString(vehicleType)),
+            "vehicle_color": \(jsonString(vehicleColor)),
+            "license_plate": \(jsonString(licensePlate)),
+            "scooter_type": \(jsonString(scooterType))
+        },
         "created_at": "2026-01-01T00:00:00.000000Z"
     }
     """
@@ -217,6 +227,78 @@ struct RemoteDriverRepositoryTests {
 
         await #expect(throws: DriverError.sessionExpired) {
             _ = try await sut.setOnlineStatus(true)
+        }
+    }
+
+    // MARK: - updateVehicle
+
+    @Test func updateVehicleSendsAllProvidedFieldsAndDecodesResult() async throws {
+        let client = StubAPIClient()
+        client.result = .success(userJSON(
+            isOnline: true, vehicleType: "Vespa", vehicleColor: "Red",
+            licensePlate: "XYZ-999", scooterType: "premium"
+        ))
+        let sut = RemoteDriverRepository(client: client)
+
+        let user = try await sut.updateVehicle(
+            vehicleType: "Vespa", vehicleColor: "Red", licensePlate: "XYZ-999", scooterType: .premium
+        )
+
+        #expect(client.capturedEndpoint?.path == "/drivers/me/vehicle")
+        #expect(client.capturedEndpoint?.method == .patch)
+        let body = try #require(client.capturedEndpoint?.body)
+        let json = try #require(try JSONSerialization.jsonObject(with: body) as? [String: Any])
+        #expect(json["vehicle_type"] as? String == "Vespa")
+        #expect(json["vehicle_color"] as? String == "Red")
+        #expect(json["license_plate"] as? String == "XYZ-999")
+        #expect(json["scooter_type"] as? String == "premium")
+
+        #expect(user.driverProfile?.vehicleType == "Vespa")
+        #expect(user.driverProfile?.vehicleColor == "Red")
+        #expect(user.driverProfile?.licensePlate == "XYZ-999")
+        #expect(user.driverProfile?.scooterType == .premium)
+    }
+
+    @Test func updateVehicleOmitsUnprovidedFieldsFromTheRequestBody() async throws {
+        let client = StubAPIClient()
+        client.result = .success(userJSON(isOnline: true, vehicleColor: "Black"))
+        let sut = RemoteDriverRepository(client: client)
+
+        _ = try await sut.updateVehicle(
+            vehicleType: nil, vehicleColor: "Black", licensePlate: nil, scooterType: nil
+        )
+
+        let body = try #require(client.capturedEndpoint?.body)
+        let json = try #require(try JSONSerialization.jsonObject(with: body) as? [String: Any])
+        // Swift's JSONEncoder omits nil Optional fields entirely rather than
+        // encoding an explicit null - only the provided field should appear.
+        #expect(json["vehicle_type"] == nil)
+        #expect(json["vehicle_color"] as? String == "Black")
+        #expect(json["license_plate"] == nil)
+        #expect(json["scooter_type"] == nil)
+    }
+
+    @Test func updateVehicleMapsUnauthorizedToSessionExpired() async {
+        let client = StubAPIClient()
+        client.result = .failure(NetworkError.unauthorized)
+        let sut = RemoteDriverRepository(client: client)
+
+        await #expect(throws: DriverError.sessionExpired) {
+            _ = try await sut.updateVehicle(
+                vehicleType: nil, vehicleColor: nil, licensePlate: nil, scooterType: nil
+            )
+        }
+    }
+
+    @Test func updateVehicleMapsForbiddenToNotAuthorizedAsDriver() async {
+        let client = StubAPIClient()
+        client.result = .failure(NetworkError.forbidden)
+        let sut = RemoteDriverRepository(client: client)
+
+        await #expect(throws: DriverError.notAuthorizedAsDriver) {
+            _ = try await sut.updateVehicle(
+                vehicleType: nil, vehicleColor: nil, licensePlate: nil, scooterType: nil
+            )
         }
     }
 }
