@@ -55,10 +55,10 @@ struct RecentTripsSection: View {
                 .frame(width: 28)
 
             VStack(alignment: .leading, spacing: 2) {
-                // The backend has no place-name field - see the destination
-                // coordinate formatted the same way TripCard/TripHistory show
-                // it, rather than inventing a fake address.
-                Text(formatter.coordinate(trip.destinationCoordinate))
+                // Prefers the resolved dropoff address; falls back to the
+                // coordinate (formatted the same way TripCard/TripHistory
+                // show it) for older rides or a failed geocoding lookup.
+                Text(formatter.placeName(trip.dropoffAddress, fallback: trip.destinationCoordinate))
                     .font(.body)
                     .foregroundStyle(AppColors.textPrimary)
                 Text(formatter.date(trip.requestedAt))

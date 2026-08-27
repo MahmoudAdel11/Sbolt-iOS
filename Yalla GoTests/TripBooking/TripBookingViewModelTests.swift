@@ -12,7 +12,10 @@ import Combine
 /// reacts to a specific typed error without widening `MockTripBookingRepository`.
 private struct FailingTripBookingRepository: TripBookingRepository {
     let error: Error
-    func requestRide(pickup: Coordinate, dropoff: Coordinate, tier: RideType) async throws -> Trip { throw error }
+    func requestRide(
+        pickup: Coordinate, dropoff: Coordinate, tier: RideType,
+        pickupAddress: String?, dropoffAddress: String?
+    ) async throws -> Trip { throw error }
     func cancelRide(id: String) async throws -> Trip { throw error }
     func getRideDetails(id: String) async throws -> Trip { throw error }
     func getActiveRide() async throws -> Trip? { throw error }
@@ -26,7 +29,8 @@ struct TripBookingViewModelTests {
     private let dropoff = Coordinate(latitude: 30.06, longitude: 31.24)
 
     private func makeSUT(behavior: MockTripBookingRepository.Behavior = .success,
-                         statusProgression: [TripStatus] = [.requested, .accepted, .completed])
+                         statusProgression: [TripStatus] = [.requested, .accepted, .completed],
+                         reverseGeocoding: ReverseGeocoding = StubReverseGeocoding())
     -> (TripBookingViewModel, MockTripBookingRepository) {
         let repository = MockTripBookingRepository(behavior: behavior, statusProgression: statusProgression)
         let sut = TripBookingViewModel(
@@ -34,7 +38,8 @@ struct TripBookingViewModelTests {
             cancelRideUseCase: CancelRideUseCase(repository: repository),
             pollRideStatusUseCase: PollRideStatusUseCase(repository: repository, interval: 0),
             getActiveRideUseCase: GetActiveRideUseCase(repository: repository),
-            timings: .immediate
+            timings: .immediate,
+            reverseGeocoding: reverseGeocoding
         )
         return (sut, repository)
     }
@@ -49,6 +54,47 @@ struct TripBookingViewModelTests {
         let (sut, _) = makeSUT()
         sut.confirmTrip(pickup: pickup, dropoff: dropoff, tier: .economy)
         #expect(sut.phase == .requesting)
+    }
+
+    @Test func confirmTripResolvesAndSendsPickupAndDropoffAddresses() async throws {
+        let geocoding = StubReverseGeocoding(behavior: .success("New Cairo"))
+        // Never auto-advances to terminal - same reasoning as
+        // `checkForActiveRideRehydratesPhaseWhenAnActiveRideExists` above:
+        // awaiting `bookingTask?.value` to completion would also wait out the
+        // rating-decision gate after `.completed`, which nothing here resolves.
+        let (sut, _) = makeSUT(statusProgression: [.requested], reverseGeocoding: geocoding)
+
+        sut.confirmTrip(pickup: pickup, dropoff: dropoff, tier: .economy)
+        try await Task.sleep(nanoseconds: 50_000_000)
+
+        guard case let .active(trip) = sut.phase else {
+            Issue.record("Expected .active phase after a successful request")
+            return
+        }
+        #expect(trip.pickupAddress == "New Cairo")
+        #expect(trip.dropoffAddress == "New Cairo")
+        // Both coordinates resolved - confirms both pickup and dropoff are
+        // geocoded (concurrently, not just one of them).
+        #expect(geocoding.requestedCoordinates.count == 2)
+        #expect(geocoding.requestedCoordinates.contains(pickup))
+        #expect(geocoding.requestedCoordinates.contains(dropoff))
+    }
+
+    /// Per the confirmed decision, a geocoding failure must never block ride
+    /// creation - the request still goes out, just with nil addresses.
+    @Test func confirmTripStillSucceedsWhenGeocodingFails() async throws {
+        let (sut, _) = makeSUT(statusProgression: [.requested],
+                               reverseGeocoding: StubReverseGeocoding(behavior: .failure))
+
+        sut.confirmTrip(pickup: pickup, dropoff: dropoff, tier: .economy)
+        try await Task.sleep(nanoseconds: 50_000_000)
+
+        guard case let .active(trip) = sut.phase else {
+            Issue.record("Expected .active phase even when geocoding fails")
+            return
+        }
+        #expect(trip.pickupAddress == nil)
+        #expect(trip.dropoffAddress == nil)
     }
 
     @Test func successfulFlowTransitionsThroughStatusesToIdle() async {
