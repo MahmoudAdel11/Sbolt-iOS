@@ -32,9 +32,14 @@ struct TripFormatter {
         timeFormatter.string(from: value)
     }
 
-    /// e.g. "30.0444, 31.2357" — the backend has no address/location-name
-    /// field, only coordinates.
+    /// e.g. "30.0444, 31.2357" — used when no resolved address is available.
     func coordinate(_ value: Coordinate) -> String {
         String(format: "%.4f, %.4f", value.latitude, value.longitude)
+    }
+
+    /// Prefers the resolved place name; falls back to the raw coordinate for
+    /// rides created before reverse geocoding existed, or where it failed.
+    func placeName(_ address: String?, fallback: Coordinate) -> String {
+        address ?? coordinate(fallback)
     }
 }

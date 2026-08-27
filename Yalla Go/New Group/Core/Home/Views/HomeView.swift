@@ -106,7 +106,7 @@ struct HomeView: View {
                 RecentTripsSection(viewModel: recentTripsViewModel) { trip in
                     let formatter = TripFormatter()
                     locationViewModel.selectDestination(
-                        title: formatter.coordinate(trip.destinationCoordinate),
+                        title: formatter.placeName(trip.dropoffAddress, fallback: trip.destinationCoordinate),
                         coordinate: trip.destinationCoordinate
                     )
                     withAnimation(.spring()) {

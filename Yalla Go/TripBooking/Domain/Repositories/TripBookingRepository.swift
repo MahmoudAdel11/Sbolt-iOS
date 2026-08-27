@@ -14,7 +14,19 @@ import Foundation
 /// only observable by re-fetching ride details.
 protocol TripBookingRepository {
     /// Requests a new ride for the given pickup/dropoff coordinates and tier.
-    func requestRide(pickup: Coordinate, dropoff: Coordinate, tier: RideType) async throws -> Trip
+    /// `pickupAddress`/`dropoffAddress` are resolved client-side (reverse
+    /// geocoding) before this call — `nil` when resolution failed or wasn't
+    /// available; the backend stores whatever it's given, no server-side
+    /// geocoding. Protocol requirements can't carry default argument values,
+    /// so the address-free 3-arg convenience overload lives in the extension
+    /// below — existing call sites that don't care about addresses need no changes.
+    func requestRide(
+        pickup: Coordinate,
+        dropoff: Coordinate,
+        tier: RideType,
+        pickupAddress: String?,
+        dropoffAddress: String?
+    ) async throws -> Trip
     /// Cancels an in-progress ride. Valid from any non-terminal status.
     func cancelRide(id: String) async throws -> Trip
     /// Fetches the current state of a ride — the polling target.
@@ -26,4 +38,14 @@ protocol TripBookingRepository {
     /// Submits a 1-5 star rating for a completed ride. Optional from the
     /// rider's perspective — callers should treat failure as non-blocking.
     func submitRating(rideID: String, score: Int) async throws
+}
+
+extension TripBookingRepository {
+    /// Convenience overload for callers that don't have resolved addresses
+    /// (or don't care) — every existing call site keeps working unchanged.
+    func requestRide(pickup: Coordinate, dropoff: Coordinate, tier: RideType) async throws -> Trip {
+        try await requestRide(
+            pickup: pickup, dropoff: dropoff, tier: tier, pickupAddress: nil, dropoffAddress: nil
+        )
+    }
 }

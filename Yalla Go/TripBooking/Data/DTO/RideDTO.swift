@@ -23,6 +23,11 @@ enum RideDTO {
         let pickupLongitude: Double
         let dropoffLatitude: Double
         let dropoffLongitude: Double
+        /// Resolved client-side (reverse geocoding) right before this request
+        /// is sent — `nil` when resolution failed or wasn't available; the
+        /// backend accepts and stores that as-is, no server-side geocoding.
+        let pickupAddress: String?
+        let dropoffAddress: String?
         let tier: String
     }
 
@@ -56,6 +61,8 @@ enum RideDTO {
         let pickupLongitude: Double
         let dropoffLatitude: Double
         let dropoffLongitude: Double
+        let pickupAddress: String?
+        let dropoffAddress: String?
         let requestedAt: Date
         let acceptedAt: Date?
         let completedAt: Date?
@@ -69,6 +76,8 @@ enum RideDTO {
                 status: TripStatus(rawValue: status) ?? .requested,
                 pickupCoordinate: Coordinate(latitude: pickupLatitude, longitude: pickupLongitude),
                 destinationCoordinate: Coordinate(latitude: dropoffLatitude, longitude: dropoffLongitude),
+                pickupAddress: pickupAddress,
+                dropoffAddress: dropoffAddress,
                 tier: RideType(rawValue: tier) ?? .economy,
                 fare: fare,
                 requestedAt: requestedAt,

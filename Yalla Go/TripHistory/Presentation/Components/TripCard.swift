@@ -9,8 +9,9 @@ import SwiftUI
 /// pre-accept (driver's available-ride card), post-accept (driver's active-ride
 /// card), and in trip history, uniformly. `tier`/`fare` are real, frozen
 /// backend fields (not client-side estimates) and are shown in all three
-/// contexts; the backend still has no distance/duration/location-name fields,
-/// so pickup/dropoff render as coordinates, not place names.
+/// contexts; pickup/dropoff show the resolved place name when the backend
+/// has one, falling back to coordinates otherwise (older rides, or a failed
+/// client-side geocoding lookup at request time).
 struct TripCard: View {
     let trip: Trip
     var formatter = TripFormatter()
@@ -73,8 +74,8 @@ struct TripCard: View {
             .padding(.top, 2)
 
             VStack(alignment: .leading, spacing: 10) {
-                Text(formatter.coordinate(trip.pickupCoordinate)).font(.subheadline)
-                Text(formatter.coordinate(trip.destinationCoordinate)).font(.subheadline)
+                Text(formatter.placeName(trip.pickupAddress, fallback: trip.pickupCoordinate)).font(.subheadline)
+                Text(formatter.placeName(trip.dropoffAddress, fallback: trip.destinationCoordinate)).font(.subheadline)
             }
             Spacer(minLength: 0)
         }
@@ -97,8 +98,8 @@ struct TripCard: View {
     }
 
     private var accessibilitySummary: String {
-        "Ride from \(formatter.coordinate(trip.pickupCoordinate)) to "
-            + "\(formatter.coordinate(trip.destinationCoordinate)), "
+        "Ride from \(formatter.placeName(trip.pickupAddress, fallback: trip.pickupCoordinate)) to "
+            + "\(formatter.placeName(trip.dropoffAddress, fallback: trip.destinationCoordinate)), "
             + "\(formatter.date(trip.requestedAt)), \(trip.status.displayName)"
     }
 }
