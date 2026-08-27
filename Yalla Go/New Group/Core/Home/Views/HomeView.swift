@@ -81,7 +81,17 @@ struct HomeView: View {
         // own guard).
         .onAppear {
             bookingViewModel.checkForActiveRide()
-            if recentTripsViewModel.trips.isEmpty { recentTripsViewModel.loadTripHistory() }
+            // Unconditional, unlike the old `if trips.isEmpty` guard this
+            // replaced: `recentTripsViewModel` is a `@StateObject` that
+            // outlives tab switches (HomeView stays alive inside the
+            // TabView), so once `trips` was non-empty from a first load, that
+            // guard silently skipped every later refetch - a completed ride
+            // never showed here until a cold relaunch recreated the view
+            // model. `loadTripHistory()` itself already no-ops while a load
+            // is in flight and replaces `trips` only once the new page
+            // arrives, so calling it on every appearance is safe and doesn't
+            // flash an empty state.
+            recentTripsViewModel.loadTripHistory()
         }
     }
 
