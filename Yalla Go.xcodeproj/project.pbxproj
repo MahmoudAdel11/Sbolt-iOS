@@ -31,7 +31,7 @@
 		1EA2B90B2D4BFFFD00440D86 /* MapActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA2B90A2D4BFFFD00440D86 /* MapActionButton.swift */; };
 		1EA6E3B02D9CAF6D00F8E47A /* YallaGoLocation .swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA6E3AF2D9CAF6D00F8E47A /* YallaGoLocation .swift */; };
 		1EBCD6AA2D7D2078002D1B8D /* RideRequestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBCD6A92D7D2078002D1B8D /* RideRequestView.swift */; };
-		3D542853510D65AD7F0C3ABC /* RideTierCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8729BB43BDF39FC8F95C5827 /* RideTierCard.swift */; };
+		F39D55A952D61330D6FBA7D6 /* RideTierCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82F9A5C863BDB7AB80B53B5B /* RideTierCard.swift */; };
 		1EBCD6AC2D85A137002D1B8D /* RideType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBCD6AB2D85A137002D1B8D /* RideType.swift */; };
 		1EBCF7DF2D4BC11F00BDFBE8 /* LocationSearchActivationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBCF7DE2D4BC11F00BDFBE8 /* LocationSearchActivationView.swift */; };
 		1F07A72283809F17A746A4ED /* NetworkReachabilityMonitoring.swift in Sources */ = {isa = PBXBuildFile; fileRef = E714B4C0B4F165509A47949D /* NetworkReachabilityMonitoring.swift */; };
@@ -177,9 +177,9 @@
 		B1329D2C301AA871007D8AA6 /* TripBookingDependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329D2B301AA871007D8AA6 /* TripBookingDependencies.swift */; };
 		B1329D2E301AA885007D8AA6 /* TripBookingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329D2D301AA885007D8AA6 /* TripBookingViewModel.swift */; };
 		B1329D30301AA892007D8AA6 /* DriverCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329D2F301AA892007D8AA6 /* DriverCard.swift */; };
-		51CDD980F35B57D473282BF7 /* TripProgressIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 406F5CE305694645C3761C0D /* TripProgressIndicator.swift */; };
-		351BE666C6A01B966A7A0192 /* TripTrackingStatusBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54C55EE8D0D93096284F1F9C /* TripTrackingStatusBar.swift */; };
-		7D5C3D72F050D82B42FC67F5 /* ActiveTripSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72D5B1CA866879FAD8D392E1 /* ActiveTripSheet.swift */; };
+		F287B403C0E610EBA585A504 /* TripProgressIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6BAA8D47D0CA64B9EBA511F /* TripProgressIndicator.swift */; };
+		00A25D3A478A2A8BD78515BB /* TripTrackingStatusBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEAC0B4A5557B760EFE12CE5 /* TripTrackingStatusBar.swift */; };
+		C259D0CD65CF7A8B27B67D2F /* ActiveTripSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 039FBEFD068376BEB2319566 /* ActiveTripSheet.swift */; };
 		B1329D32301AA8A1007D8AA6 /* TripBookingStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329D31301AA8A1007D8AA6 /* TripBookingStatusView.swift */; };
 		B1499B277C48B38F182A5F72 /* RideAnnotationDiff.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD64C192B7ACCC2577C830B5 /* RideAnnotationDiff.swift */; };
 		B14C116D301C4BAE002C0A0A /* Coordinate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B14C116C301C4BAE002C0A0A /* Coordinate.swift */; };
@@ -277,7 +277,7 @@
 		1EA2B90A2D4BFFFD00440D86 /* MapActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapActionButton.swift; sourceTree = "<group>"; };
 		1EA6E3AF2D9CAF6D00F8E47A /* YallaGoLocation .swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "YallaGoLocation .swift"; sourceTree = "<group>"; };
 		1EBCD6A92D7D2078002D1B8D /* RideRequestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RideRequestView.swift; sourceTree = "<group>"; };
-		8729BB43BDF39FC8F95C5827 /* RideTierCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RideTierCard.swift; sourceTree = "<group>"; };
+		82F9A5C863BDB7AB80B53B5B /* RideTierCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RideTierCard.swift; sourceTree = "<group>"; };
 		1EBCD6AB2D85A137002D1B8D /* RideType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RideType.swift; sourceTree = "<group>"; };
 		1EBCD6AD2D85C30D002D1B8D /* Yalla-Go-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Yalla-Go-Info.plist"; sourceTree = SOURCE_ROOT; };
 		1EBCF7DE2D4BC11F00BDFBE8 /* LocationSearchActivationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchActivationView.swift; sourceTree = "<group>"; };
@@ -418,9 +418,9 @@
 		B1329D2B301AA871007D8AA6 /* TripBookingDependencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripBookingDependencies.swift; sourceTree = "<group>"; };
 		B1329D2D301AA885007D8AA6 /* TripBookingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripBookingViewModel.swift; sourceTree = "<group>"; };
 		B1329D2F301AA892007D8AA6 /* DriverCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriverCard.swift; sourceTree = "<group>"; };
-		406F5CE305694645C3761C0D /* TripProgressIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripProgressIndicator.swift; sourceTree = "<group>"; };
-		54C55EE8D0D93096284F1F9C /* TripTrackingStatusBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripTrackingStatusBar.swift; sourceTree = "<group>"; };
-		72D5B1CA866879FAD8D392E1 /* ActiveTripSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveTripSheet.swift; sourceTree = "<group>"; };
+		D6BAA8D47D0CA64B9EBA511F /* TripProgressIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripProgressIndicator.swift; sourceTree = "<group>"; };
+		FEAC0B4A5557B760EFE12CE5 /* TripTrackingStatusBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripTrackingStatusBar.swift; sourceTree = "<group>"; };
+		039FBEFD068376BEB2319566 /* ActiveTripSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveTripSheet.swift; sourceTree = "<group>"; };
 		B1329D31301AA8A1007D8AA6 /* TripBookingStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripBookingStatusView.swift; sourceTree = "<group>"; };
 		B14C116C301C4BAE002C0A0A /* Coordinate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinate.swift; sourceTree = "<group>"; };
 		B152BF9E301D52E9004C677C /* HTTPMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPMethod.swift; sourceTree = "<group>"; };
@@ -664,7 +664,7 @@
 			isa = PBXGroup;
 			children = (
 				1EBCD6A92D7D2078002D1B8D /* RideRequestView.swift */,
-				8729BB43BDF39FC8F95C5827 /* RideTierCard.swift */,
+				82F9A5C863BDB7AB80B53B5B /* RideTierCard.swift */,
 			);
 			path = Trips;
 			sourceTree = "<group>";
@@ -1611,9 +1611,9 @@
 			isa = PBXGroup;
 			children = (
 				B1329D2F301AA892007D8AA6 /* DriverCard.swift */,
-				406F5CE305694645C3761C0D /* TripProgressIndicator.swift */,
-				54C55EE8D0D93096284F1F9C /* TripTrackingStatusBar.swift */,
-				72D5B1CA866879FAD8D392E1 /* ActiveTripSheet.swift */,
+				D6BAA8D47D0CA64B9EBA511F /* TripProgressIndicator.swift */,
+				FEAC0B4A5557B760EFE12CE5 /* TripTrackingStatusBar.swift */,
+				039FBEFD068376BEB2319566 /* ActiveTripSheet.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -2036,7 +2036,7 @@
 				1E4C386F2C93C37C006AB83B /* LocationManager.swift in Sources */,
 				B1329C88301983CE007D8AA6 /* ProfileErrorPresenter.swift in Sources */,
 				1EBCD6AA2D7D2078002D1B8D /* RideRequestView.swift in Sources */,
-				3D542853510D65AD7F0C3ABC /* RideTierCard.swift in Sources */,
+				F39D55A952D61330D6FBA7D6 /* RideTierCard.swift in Sources */,
 				B152BFA7301D52FE004C677C /* APIConfiguration.swift in Sources */,
 				B1329C6F3019830F007D8AA6 /* AuthenticationRootView.swift in Sources */,
 				B1329CDE301A97FB007D8AA6 /* FavoritePlacesViewModel.swift in Sources */,
@@ -2066,9 +2066,9 @@
 				B1329C513019804F007D8AA6 /* MockAuthenticationRepository.swift in Sources */,
 				1E4C38552C91E90C006AB83B /* Yalla_GoApp.swift in Sources */,
 				B1329D30301AA892007D8AA6 /* DriverCard.swift in Sources */,
-				51CDD980F35B57D473282BF7 /* TripProgressIndicator.swift in Sources */,
-				351BE666C6A01B966A7A0192 /* TripTrackingStatusBar.swift in Sources */,
-				7D5C3D72F050D82B42FC67F5 /* ActiveTripSheet.swift in Sources */,
+				F287B403C0E610EBA585A504 /* TripProgressIndicator.swift in Sources */,
+				00A25D3A478A2A8BD78515BB /* TripTrackingStatusBar.swift in Sources */,
+				C259D0CD65CF7A8B27B67D2F /* ActiveTripSheet.swift in Sources */,
 				B152BFA5301D52FC004C677C /* APIClient.swift in Sources */,
 				B15639C530239F1E001EB8C7 /* NetworkLogger.swift in Sources */,
 				B1329D05301AA53B007D8AA6 /* MainTabView.swift in Sources */,
