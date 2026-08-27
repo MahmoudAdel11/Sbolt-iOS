@@ -41,7 +41,7 @@ struct RideTierCard: View {
                 .foregroundStyle(AppColors.textMuted)
         }
         .padding(AppSpacing.sm)
-        .frame(width: 92)
+        .frame(maxWidth: .infinity)
         .background(
             isSelected ? AppColors.accentTint : AppColors.backgroundSecondary,
             in: RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous)

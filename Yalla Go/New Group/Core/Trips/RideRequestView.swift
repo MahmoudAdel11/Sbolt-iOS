@@ -144,20 +144,24 @@ struct RideRequestView: View {
 
     // MARK: - Collapsed state
 
+    /// A plain (non-scrolling) `HStack`, not `ScrollView(.horizontal)` — the
+    /// tier count is fixed at exactly 3 (`RideType.allCases`), so there's
+    /// nothing to scroll to, and a `ScrollView` gives its content unbounded
+    /// width, which is exactly what was preventing the cards' own
+    /// `.frame(maxWidth: .infinity)` from having anything to expand against
+    /// (leftover empty space to the right of the last card).
     private var collapsedContent: some View {
         VStack(spacing: AppSpacing.md) {
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: AppSpacing.sm) {
-                    ForEach(RideType.allCases) { type in
-                        RideTierCard(
-                            tier: type,
-                            price: price(for: type),
-                            isSelected: selectedRideType == type,
-                            style: .compact
-                        )
-                        .onTapGesture { selectedRideType = type }
-                        .accessibilityIdentifier("ride_tier_\(type.rawValue)_button")
-                    }
+            HStack(spacing: AppSpacing.sm) {
+                ForEach(RideType.allCases) { type in
+                    RideTierCard(
+                        tier: type,
+                        price: price(for: type),
+                        isSelected: selectedRideType == type,
+                        style: .compact
+                    )
+                    .onTapGesture { selectedRideType = type }
+                    .accessibilityIdentifier("ride_tier_\(type.rawValue)_button")
                 }
             }
 
