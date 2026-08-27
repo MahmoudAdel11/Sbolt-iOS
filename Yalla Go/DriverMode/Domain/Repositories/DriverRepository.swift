@@ -23,4 +23,11 @@ protocol DriverRepository {
     func startRide(id: String) async throws -> Trip
     /// Completes the driver's active ride.
     func completeRide(id: String) async throws -> Trip
+    /// Partial update of vehicle/scooter details — only non-nil parameters
+    /// change, matching the backend's optional-field PATCH semantics exactly.
+    /// Returns the updated `User` (with a fresh `driverProfile`), same
+    /// convention as `setOnlineStatus`.
+    func updateVehicle(
+        vehicleType: String?, vehicleColor: String?, licensePlate: String?, scooterType: RideType?
+    ) async throws -> User
 }
