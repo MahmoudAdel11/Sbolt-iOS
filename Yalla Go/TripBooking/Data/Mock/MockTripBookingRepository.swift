@@ -109,6 +109,12 @@ actor MockTripBookingRepository: TripBookingRepository {
         return updated
     }
 
+    func getActiveRide() async throws -> Trip? {
+        if behavior == .networkFailure { throw RideError.networkUnavailable }
+        guard let current = ride, !current.status.isTerminal else { return nil }
+        return current
+    }
+
     func submitRating(rideID: String, score: Int) async throws {
         guard behavior != .networkFailure else { throw RideError.networkUnavailable }
         guard let current = ride, current.id == rideID else { throw RideError.rideNotFound }
