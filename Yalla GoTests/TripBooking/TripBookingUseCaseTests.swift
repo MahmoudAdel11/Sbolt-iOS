@@ -58,6 +58,24 @@ struct TripBookingUseCaseTests {
         }
     }
 
+    @Test func getActiveRideReturnsTripWhenOneExists() async throws {
+        let repository = MockTripBookingRepository(statusProgression: [.requested])
+        let requested = try await repository.requestRide(pickup: pickup, dropoff: dropoff, tier: .economy)
+        let sut = GetActiveRideUseCase(repository: repository)
+
+        let active = try await sut.execute()
+
+        #expect(active?.id == requested.id)
+    }
+
+    @Test func getActiveRideReturnsNilWhenNoneExists() async throws {
+        let sut = GetActiveRideUseCase(repository: MockTripBookingRepository())
+
+        let active = try await sut.execute()
+
+        #expect(active == nil)
+    }
+
     @Test func pollRideStatusYieldsUntilTerminal() async throws {
         let repository = MockTripBookingRepository(statusProgression: [.requested, .accepted, .completed])
         let requested = try await repository.requestRide(pickup: pickup, dropoff: dropoff, tier: .economy)

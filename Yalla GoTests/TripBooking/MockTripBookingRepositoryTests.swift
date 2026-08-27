@@ -82,4 +82,36 @@ struct MockTripBookingRepositoryTests {
             _ = try await sut.cancelRide(id: trip.id)
         }
     }
+
+    @Test func getActiveRideReturnsNilWhenNoRideExists() async throws {
+        let sut = MockTripBookingRepository()
+        let active = try await sut.getActiveRide()
+        #expect(active == nil)
+    }
+
+    @Test func getActiveRideReturnsTripWhileNonTerminal() async throws {
+        let sut = MockTripBookingRepository(statusProgression: [.requested])
+        let trip = try await sut.requestRide(pickup: pickup, dropoff: dropoff, tier: .economy)
+
+        let active = try await sut.getActiveRide()
+
+        #expect(active?.id == trip.id)
+    }
+
+    @Test func getActiveRideReturnsNilOnceTerminal() async throws {
+        let sut = MockTripBookingRepository(statusProgression: [.completed])
+        let trip = try await sut.requestRide(pickup: pickup, dropoff: dropoff, tier: .economy)
+        _ = try await sut.getRideDetails(id: trip.id) // advances to .completed
+
+        let active = try await sut.getActiveRide()
+
+        #expect(active == nil)
+    }
+
+    @Test func getActiveRideThrowsOnNetworkFailure() async {
+        let sut = MockTripBookingRepository(behavior: .networkFailure)
+        await #expect(throws: RideError.networkUnavailable) {
+            _ = try await sut.getActiveRide()
+        }
+    }
 }

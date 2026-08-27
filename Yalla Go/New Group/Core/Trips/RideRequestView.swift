@@ -14,7 +14,11 @@ struct RideRequestView: View {
     @State private var selectedRideType: RideType = .economy
     @EnvironmentObject var locationViewModel:LocationSearchViewModel
     @EnvironmentObject private var session: AppSessionStore
-    @StateObject private var bookingViewModel = TripBookingDependencies().makeTripBookingViewModel()
+    /// Injected (not owned via `@StateObject`) so `HomeView` can hold a single
+    /// persistent instance across this view's presence/absence — recovering a
+    /// pending ride (see `checkForActiveRide()`) needs the same view model
+    /// instance to still exist even before this view is first shown.
+    @ObservedObject var bookingViewModel: TripBookingViewModel
     @StateObject private var favoritePlacesViewModel = FavoritePlacesDependencies().makeFavoritePlacesViewModel()
     @State private var isChoosingSavedPlace = false
     @State private var isSavingDestinationAsPlace = false
@@ -257,6 +261,6 @@ private struct BottomSheetShape: Shape {
 
 struct RideRequestView_Previews: PreviewProvider {
     static var previews: some View {
-        RideRequestView()
+        RideRequestView(bookingViewModel: TripBookingDependencies().makeTripBookingViewModel())
     }
 }

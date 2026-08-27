@@ -15,6 +15,7 @@ private struct FailingTripBookingRepository: TripBookingRepository {
     func requestRide(pickup: Coordinate, dropoff: Coordinate, tier: RideType) async throws -> Trip { throw error }
     func cancelRide(id: String) async throws -> Trip { throw error }
     func getRideDetails(id: String) async throws -> Trip { throw error }
+    func getActiveRide() async throws -> Trip? { throw error }
     func submitRating(rideID: String, score: Int) async throws { throw error }
 }
 
@@ -32,6 +33,7 @@ struct TripBookingViewModelTests {
             requestRideUseCase: RequestRideUseCase(repository: repository),
             cancelRideUseCase: CancelRideUseCase(repository: repository),
             pollRideStatusUseCase: PollRideStatusUseCase(repository: repository, interval: 0),
+            getActiveRideUseCase: GetActiveRideUseCase(repository: repository),
             timings: .immediate
         )
         return (sut, repository)
@@ -164,6 +166,7 @@ struct TripBookingViewModelTests {
             requestRideUseCase: RequestRideUseCase(repository: repository),
             cancelRideUseCase: CancelRideUseCase(repository: repository),
             pollRideStatusUseCase: PollRideStatusUseCase(repository: repository, interval: 0),
+            getActiveRideUseCase: GetActiveRideUseCase(repository: repository),
             timings: .immediate
         )
 
@@ -181,5 +184,67 @@ struct TripBookingViewModelTests {
         await sut.bookingTask?.value
 
         #expect(sut.isSessionExpired == false)
+    }
+
+    // MARK: - checkForActiveRide
+
+    @Test func checkForActiveRideRehydratesPhaseWhenAnActiveRideExists() async throws {
+        let (sut, repository) = makeSUT(statusProgression: [.requested]) // never auto-advances
+        // Seed the backend/mock with a pending ride WITHOUT going through the
+        // view model - simulates a ride that exists server-side but whose
+        // in-memory `phase` was never set in this app session (relaunch).
+        _ = try await repository.requestRide(pickup: pickup, dropoff: dropoff, tier: .economy)
+        #expect(sut.phase == .idle) // confirms the seed above didn't touch phase
+
+        sut.checkForActiveRide()
+        // Never awaits `bookingTask?.value` to completion here: with
+        // `statusProgression: [.requested]` the poll loop (interval 0) never
+        // reaches a terminal status, so the task never finishes - same reason
+        // `cancelWhileActiveReturnsToIdle` above uses a short sleep instead.
+        try await Task.sleep(nanoseconds: 50_000_000)
+
+        #expect(sut.isCancellable == true)
+        if case let .active(trip) = sut.phase {
+            #expect(trip.status == .requested)
+        } else {
+            Issue.record("Expected .active, got \(sut.phase)")
+        }
+    }
+
+    @Test func checkForActiveRideIsANoOpWhenThereIsNoActiveRide() async {
+        let (sut, _) = makeSUT()
+
+        sut.checkForActiveRide()
+        await sut.bookingTask?.value
+
+        #expect(sut.phase == .idle)
+    }
+
+    @Test func checkForActiveRideDoesNotClobberARequestingFlowAlreadyInProgress() {
+        let (sut, _) = makeSUT()
+
+        sut.confirmTrip(pickup: pickup, dropoff: dropoff, tier: .economy)
+        #expect(sut.phase == .requesting)
+
+        sut.checkForActiveRide() // must be a no-op - a flow is already in progress
+        #expect(sut.phase == .requesting)
+    }
+
+    @Test func checkForActiveRideDoesNotClobberAnAlreadyActiveTrip() async throws {
+        let (sut, _) = makeSUT(statusProgression: [.requested]) // never auto-advances
+
+        sut.confirmTrip(pickup: pickup, dropoff: dropoff, tier: .economy)
+        try await Task.sleep(nanoseconds: 50_000_000) // let the first poll publish .active
+        guard case let .active(before) = sut.phase else {
+            Issue.record("Expected .active before exercising the guard, got \(sut.phase)")
+            return
+        }
+
+        sut.checkForActiveRide() // must be a no-op - already tracking a live ride
+        guard case let .active(after) = sut.phase else {
+            Issue.record("Expected still .active, got \(sut.phase)")
+            return
+        }
+        #expect(after == before)
     }
 }
