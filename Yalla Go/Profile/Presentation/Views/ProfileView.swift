@@ -74,42 +74,85 @@ struct ProfileView: View {
             .accessibilityIdentifier("profile_loading")
     }
 
+    /// A `ScrollView` of custom cards, not a native `List` — matches the
+    /// card style (`AppColors.backgroundPrimary` + `AppRadius.card`) every
+    /// other redesigned screen already uses, which a native `List` Section
+    /// can't produce (its corner radius/background aren't customizable to
+    /// these tokens).
     private func loadedState(_ profile: User) -> some View {
-        List {
-            Section {
+        ScrollView {
+            VStack(spacing: AppSpacing.xl) {
                 headerView(profile)
-                    .frame(maxWidth: .infinity)
-                    .listRowBackground(Color.clear)
-            }
 
-            Section("Personal Information") {
-                ProfileInfoRow(systemImage: "person", title: "Full name", value: profile.username)
-                ProfileInfoRow(systemImage: "envelope", title: "Email address", value: profile.email)
-                ProfileInfoRow(systemImage: "phone", title: "Phone number", value: profile.phoneNumber)
-            }
+                VStack(alignment: .leading, spacing: AppSpacing.sm) {
+                    sectionLabel("Personal Information")
+                    VStack(spacing: AppSpacing.md) {
+                        ProfileInfoRow(systemImage: "person", title: "Full name", value: profile.username)
+                        Divider().background(AppColors.borderHairline)
+                        ProfileInfoRow(systemImage: "envelope", title: "Email address", value: profile.email)
+                        Divider().background(AppColors.borderHairline)
+                        ProfileInfoRow(systemImage: "phone", title: "Phone number", value: profile.phoneNumber)
+                    }
+                    .padding(AppSpacing.md)
+                    .background(AppColors.backgroundPrimary, in: RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous))
+                }
 
-            Section {
                 NavigationLink {
                     FavoritePlacesListView()
                 } label: {
-                    Label("Saved Places", systemImage: "star.fill")
+                    badgedRow(systemImage: "star.fill", title: "Saved Places")
                 }
                 .accessibilityIdentifier("profile_saved_places_link")
                 .accessibilityHint("Manage your saved places")
-            }
 
-            Section {
+                // Kept as a button-triggered sheet, same as before — only the
+                // visual treatment changed (icon badge + chevron, matching
+                // every other row on this screen), not the interaction
+                // (still opens EditProfileView as a sheet, not a push).
                 Button {
                     isEditing = true
                 } label: {
-                    Label("Edit Profile", systemImage: "square.and.pencil")
+                    badgedRow(systemImage: "square.and.pencil", title: "Edit Profile")
                 }
                 .disabled(viewModel.isLoading)
                 .accessibilityIdentifier("profile_edit_button")
                 .accessibilityHint("Opens a form to edit your profile")
             }
+            .padding(AppSpacing.lg)
         }
-        .listStyle(.insetGrouped)
+        .background(AppColors.backgroundSubtle)
+    }
+
+    private func sectionLabel(_ text: String) -> some View {
+        Text(text)
+            .font(.caption.weight(.semibold))
+            .foregroundStyle(AppColors.textMuted)
+            .padding(.horizontal, AppSpacing.xs)
+    }
+
+    /// Row style shared by Saved Places / Edit Profile: an accent icon in a
+    /// small tinted badge, a title, and a trailing chevron — matching the
+    /// row language established in Settings.
+    private func badgedRow(systemImage: String, title: String) -> some View {
+        HStack(spacing: AppSpacing.md) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    .fill(AppColors.accent)
+                    .frame(width: 32, height: 32)
+                Image(systemName: systemImage)
+                    .font(.subheadline)
+                    .foregroundStyle(AppColors.textOnAccent)
+            }
+            Text(title)
+                .font(.body)
+                .foregroundStyle(AppColors.textPrimary)
+            Spacer()
+            Image(systemName: "chevron.right")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(AppColors.textDisabled)
+        }
+        .padding(AppSpacing.md)
+        .background(AppColors.backgroundPrimary, in: RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous))
     }
 
     private func errorState(_ message: String) -> some View {
@@ -152,18 +195,19 @@ struct ProfileView: View {
     // MARK: - Pieces
 
     private func headerView(_ profile: User) -> some View {
-        VStack(spacing: 12) {
-            ProfileAvatarView(url: profile.profileImageURL)
+        VStack(spacing: AppSpacing.sm) {
+            ProfileAvatarView(url: profile.profileImageURL, name: profile.username)
             VStack(spacing: 4) {
                 Text(profile.username)
-                    .font(.title2).bold()
+                    .font(.title2.weight(.bold))
+                    .foregroundStyle(AppColors.textPrimary)
                 Text(profile.email)
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppColors.textMuted)
             }
         }
         .frame(maxWidth: .infinity)
-        .padding(.vertical, 8)
+        .padding(.vertical, AppSpacing.sm)
         .accessibilityElement(children: .combine)
     }
 
