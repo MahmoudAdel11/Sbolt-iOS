@@ -7,26 +7,23 @@
 
 import SwiftUI
 
+/// The "Where to go?" search bar on Home's idle state — tapping it starts
+/// the destination search flow (see `HomeView`'s `onTapGesture`).
 struct LocationSearchActivationView: View {
     var body: some View {
-        HStack {
-            Rectangle()
-                .fill(Color.black)
-                .frame(width: 8, height: 8)
-                .padding(.leading)
+        HStack(spacing: AppSpacing.sm) {
+            Image(systemName: "magnifyingglass")
+                .foregroundStyle(AppColors.accent)
 
-            Text("To Where?")
-                .foregroundColor(Color(.darkGray))
+            Text("Where to go?")
+                .foregroundStyle(AppColors.textMuted)
             Spacer()
         }
         .frame(maxWidth: .infinity)
         .frame(height: 50)
-        .background(
-            RoundedRectangle(cornerRadius: 8)
-                .fill(Color.white)
-                .shadow(color: .black.opacity(0.15), radius: 8, x: 0, y: 2)
-        )
-        .padding(.horizontal, 16)
+        .padding(.horizontal, AppSpacing.md)
+        .background(AppColors.backgroundSecondary, in: RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous))
+        .padding(.horizontal, AppSpacing.lg)
     }
 }
 

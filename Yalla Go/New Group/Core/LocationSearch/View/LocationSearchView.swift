@@ -8,50 +8,26 @@
 import SwiftUI
 
 struct LocationSearchView: View {
-    @State private var  startLocationText = ""
     @Binding var mapState: MapViewState
     @EnvironmentObject var viewModel : LocationSearchViewModel // CASTING OBJECT .............................
-    
+
     var body: some View {
-        VStack{
-            HStack{
-                VStack{
-                    Circle()
-                        .fill(Color(.systemGray))
-                        .frame(width: 6, height: 6)
-                    Rectangle()
-                        .fill(Color(.systemGray))
-                        .frame(width: 1, height: 24)
-                    Rectangle()
-                        .fill(Color(.black))
-                        .frame(width: 6, height: 6)
-                    
-                }
-                
-                VStack {
-                    TextField("Current location",text: $startLocationText)
-                        .frame(height: 30)
-                        .background(Color(.systemGroupedBackground))
-                        .padding(.trailing)
-                    TextField("Where to ?",text: $viewModel.queryFragment)
-                        .frame(height: 30)
-                        .background(Color(.systemGray3))
-                        .padding(.trailing)
-                    
-                }
+        VStack(spacing: AppSpacing.md) {
+            currentLocationRow
+
+            searchField
+
+            if !viewModel.results.isEmpty {
+                Text("Suggestions")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(AppColors.accent)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal, AppSpacing.lg)
             }
-            .padding(.horizontal)
-            .padding(.top,65)
-            
-            Divider()
-                .padding(.vertical)
-           
-            
-            ScrollView{
-                VStack(alignment: .leading){
-                    //////////////////////////////////////////////////////////////////////////////////////////////////////
-                    ForEach(viewModel.results, id: \.self) {
-                        result in
+
+            ScrollView {
+                VStack(spacing: AppSpacing.sm) {
+                    ForEach(viewModel.results, id: \.self) { result in
                         LocationSearchResultCell(title: result.title, subtitle: result.subtitle)
                             .onTapGesture {
                                 withAnimation(.spring()){
@@ -61,9 +37,46 @@ struct LocationSearchView: View {
                             }
                     }
                 }
+                .padding(.horizontal, AppSpacing.lg)
             }
         }
-        .background(.white)
+        .padding(.top, 65)
+        .background(AppColors.backgroundPrimary)
+    }
+
+    /// A small accent dot rather than an editable field — the app already
+    /// tracks the rider's real current location (`LocationManager`); this
+    /// row is a display, not a second location input.
+    private var currentLocationRow: some View {
+        HStack(spacing: AppSpacing.md) {
+            Circle()
+                .fill(AppColors.accent)
+                .frame(width: 8, height: 8)
+            Text("Current location")
+                .foregroundStyle(AppColors.textPrimary)
+            Spacer()
+        }
+        .padding(.horizontal, AppSpacing.md)
+        .frame(height: 44)
+        .background(AppColors.backgroundSecondary, in: RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous))
+        .padding(.horizontal, AppSpacing.lg)
+    }
+
+    private var searchField: some View {
+        HStack(spacing: AppSpacing.sm) {
+            Image(systemName: "magnifyingglass")
+                .foregroundStyle(AppColors.accent)
+            TextField("Search destination", text: $viewModel.queryFragment)
+                .foregroundStyle(AppColors.textPrimary)
+        }
+        .padding(.horizontal, AppSpacing.md)
+        .frame(height: 40) // compact — smaller than a standard 50pt control
+        .background(AppColors.accentTint, in: RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous)
+                .stroke(AppColors.accent, lineWidth: 1.5)
+        )
+        .padding(.horizontal, AppSpacing.lg)
     }
 }
 

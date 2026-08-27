@@ -61,41 +61,86 @@ struct SavedPlacePickerView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         } else {
-            List {
-                Section {
-                    ForEach(viewModel.favoritePlaces) { place in
-                        Button {
-                            onSelect(place)
-                        } label: {
-                            HStack(spacing: 14) {
-                                Image(systemName: place.icon)
-                                    .foregroundStyle(Color.accentColor)
-                                    .frame(width: 28)
-                                VStack(alignment: .leading, spacing: 2) {
-                                    Text(place.title).font(.body).foregroundStyle(.primary)
-                                    Text(place.address).font(.caption).foregroundStyle(.secondary)
-                                }
+            ScrollView {
+                VStack(alignment: .leading, spacing: AppSpacing.lg) {
+                    // Always visible — not just an empty-state action — so a
+                    // user with existing places can still add another without
+                    // leaving the picker.
+                    addPlaceButton
+
+                    Text("Your places")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(AppColors.accent)
+
+                    VStack(spacing: AppSpacing.sm) {
+                        ForEach(viewModel.favoritePlaces) { place in
+                            Button {
+                                onSelect(place)
+                            } label: {
+                                placeRow(place)
                             }
+                            .accessibilityIdentifier("saved_place_row_\(place.id)")
                         }
-                        .accessibilityIdentifier("saved_place_row_\(place.id)")
                     }
                 }
-                // Always visible — not just an empty-state action — so a
-                // user with existing places can still add another without
-                // leaving the picker.
-                Section {
-                    addPlaceButton
-                }
+                .padding(AppSpacing.lg)
             }
-            .listStyle(.plain)
+            .background(AppColors.backgroundPrimary)
         }
     }
 
+    private func placeRow(_ place: FavoritePlace) -> some View {
+        HStack(spacing: AppSpacing.md) {
+            ZStack {
+                Circle()
+                    .fill(AppColors.accent)
+                    .frame(width: 36, height: 36)
+                Image(systemName: place.icon)
+                    .foregroundStyle(.white)
+            }
+            VStack(alignment: .leading, spacing: 2) {
+                Text(place.title).font(.body).foregroundStyle(AppColors.textPrimary)
+                Text(place.address).font(.caption).foregroundStyle(AppColors.textMuted)
+            }
+            Spacer()
+            Image(systemName: "chevron.right")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(AppColors.textDisabled)
+        }
+        .padding(AppSpacing.md)
+        .background(AppColors.backgroundSecondary, in: RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous))
+    }
+
+    // NOTE: the design spec for this button describes a subtitle showing
+    // "the destination address" — but this picker has no destination/address
+    // in context (it exists to CHOOSE a destination, not save one already
+    // selected; that flow already exists separately as RideRequestView's
+    // star button -> FavoritePlaceFormView(lockedCoordinate:)). Restyled per
+    // spec without fabricating an address subtitle with no backing data —
+    // see this task's summary for the full flag.
     private var addPlaceButton: some View {
         Button {
             isAdding = true
         } label: {
-            Label("Add a Place", systemImage: "plus")
+            HStack(spacing: AppSpacing.md) {
+                ZStack {
+                    Circle()
+                        .fill(AppColors.accent)
+                        .frame(width: 36, height: 36)
+                    Image(systemName: "plus")
+                        .foregroundStyle(.white)
+                }
+                Text("Add a Place")
+                    .font(.body)
+                    .foregroundStyle(AppColors.accentTextDark)
+                Spacer()
+            }
+            .padding(AppSpacing.md)
+            .background(AppColors.accentTint, in: RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous)
+                    .stroke(AppColors.accent, lineWidth: 1.5)
+            )
         }
         .accessibilityIdentifier("saved_place_picker_add_button")
     }
