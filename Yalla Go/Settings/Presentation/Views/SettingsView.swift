@@ -14,6 +14,12 @@ struct SettingsView: View {
     @StateObject private var viewModel: SettingsViewModel
     @EnvironmentObject private var session: AppSessionStore
     @State private var showLogoutConfirmation = false
+    /// Same key `Yalla_GoApp` reads via `.preferredColorScheme` — a local,
+    /// device-only preference, not routed through `SettingsViewModel`/
+    /// `SettingsRepository` (unlike Push Notifications/Language, this has no
+    /// backend concept to sync and needs to be readable from the app root,
+    /// which doesn't have a `SettingsViewModel` instance).
+    @AppStorage(AppearanceMode.storageKey) private var appearanceModeRawValue = AppearanceMode.system.rawValue
 
     init(dependencies: SettingsDependencies = SettingsDependencies()) {
         _viewModel = StateObject(wrappedValue: dependencies.makeSettingsViewModel())
@@ -58,23 +64,26 @@ struct SettingsView: View {
 
     // MARK: - Sections
 
-    /// LOGIC GAP (flagged, not implemented): this toggle persists
-    /// `AppSettings.isDarkModeEnabled` but nothing in the app ever reads it —
-    /// no `.preferredColorScheme(...)` is applied anywhere in the real view
-    /// hierarchy (confirmed by a repo-wide search; the only two call sites
-    /// are in `DesignSystemPreview.swift`, Xcode-canvas-only code). The app
-    /// already follows the system's Dark Mode setting correctly on its own,
-    /// via `AppColors`' `Color(light:dark:)` tokens tracking
-    /// `UITraitCollection.userInterfaceStyle`. Toggling this control changes
-    /// nothing visible today. See this task's summary for the recommendation
-    /// — left un-wired here since forcing an app-wide appearance override is
-    /// a real product decision, not something to silently implement.
+    /// A genuine 3-state control (System/Light/Dark), not the previous
+    /// on/off toggle that had no way to express "follow the system" — see
+    /// `AppearanceMode`'s own doc comment. Reads/writes the same
+    /// `@AppStorage` key `Yalla_GoApp` applies via `.preferredColorScheme`,
+    /// so picking a value here changes the whole app's appearance live.
     private var appearanceSection: some View {
         Section("Appearance") {
-            Toggle(isOn: darkModeBinding) {
-                SettingsRow(systemImage: "moon.fill", title: "Dark Mode")
+            VStack(alignment: .leading, spacing: AppSpacing.sm) {
+                SettingsRow(systemImage: "moon.fill", title: "Appearance")
+
+                Picker("Appearance", selection: appearanceModeBinding) {
+                    ForEach(AppearanceMode.allCases) { mode in
+                        Text(mode.displayName).tag(mode)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .labelsHidden()
             }
-            .accessibilityIdentifier("settings_dark_mode_toggle")
+            .padding(.vertical, AppSpacing.xs)
+            .accessibilityIdentifier("settings_appearance_picker")
         }
     }
 
@@ -200,9 +209,9 @@ struct SettingsView: View {
 
     // MARK: - Bindings
 
-    private var darkModeBinding: Binding<Bool> {
-        Binding(get: { viewModel.settings.isDarkModeEnabled },
-                set: { viewModel.setDarkMode($0) })
+    private var appearanceModeBinding: Binding<AppearanceMode> {
+        Binding(get: { AppearanceMode(rawValue: appearanceModeRawValue) ?? .system },
+                set: { appearanceModeRawValue = $0.rawValue })
     }
 
     private var notificationsBinding: Binding<Bool> {
