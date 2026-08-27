@@ -114,22 +114,40 @@ struct TripHistoryView: View {
         .accessibilityIdentifier("trip_history_error_state")
     }
 
+    /// Mirrors the accent-tint circle empty-state treatment established in
+    /// Phase 2a (`RecentTripsSection.emptyState`) — same icon-badge
+    /// language, warmer copy than the previous plain "No trips yet."
     private var emptyState: some View {
-        VStack(spacing: 16) {
-            Image(systemName: "clock.arrow.circlepath")
-                .font(.system(size: 56))
-                .foregroundStyle(.secondary)
-                .accessibilityHidden(true)
-            Text("No trips yet")
-                .font(.title2).bold()
-            Text("Your completed trips will appear here.")
+        VStack(spacing: AppSpacing.md) {
+            ZStack {
+                Circle()
+                    .fill(AppColors.accentTint)
+                    .frame(width: 72, height: 72)
+                Image(systemName: "clock.arrow.circlepath")
+                    .font(.system(size: 28))
+                    .foregroundStyle(AppColors.accent)
+            }
+            Text("Ready for your first ride?")
+                .font(.headline)
+                .foregroundStyle(AppColors.textPrimary)
+            Text("Trips you take will show up here.")
+                .font(.subheadline)
+                .foregroundStyle(AppColors.textMuted)
                 .multilineTextAlignment(.center)
-                .foregroundStyle(.secondary)
+
+            // Pre-existing no-op (empty action closure) — unchanged; this
+            // task is a visual pass on the shape/color only, per its own
+            // "confirm existing functionality unchanged" scope.
             Button("Book Your First Trip") { }
-                .buttonStyle(.borderedProminent)
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(AppColors.textOnAccent)
+                .frame(maxWidth: .infinity, minHeight: 52)
+                .background(AppColors.accent, in: Capsule())
+                .padding(.horizontal, AppSpacing.xl)
+                .padding(.top, AppSpacing.sm)
                 .accessibilityIdentifier("trip_history_book_button")
         }
-        .padding(24)
+        .padding(AppSpacing.xl)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .accessibilityIdentifier("trip_history_empty_state")
     }
