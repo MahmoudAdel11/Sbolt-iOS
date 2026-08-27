@@ -10,6 +10,10 @@ import SwiftUI
 struct HomeView: View {
     @State private var mapState = MapViewState.noInput
     @EnvironmentObject var locationViewModel:LocationSearchViewModel
+    /// Source for the idle-state greeting header's username — injected at
+    /// the app root (`Yalla_GoApp`), so it's already available here without
+    /// any new wiring.
+    @EnvironmentObject var session: AppSessionStore
     /// Owned here (not inside `RideRequestView`) so it persists across this
     /// screen's own `mapState`-driven show/hide of `RideRequestView`, and is
     /// available to check for a recovered ride even before the rider has
@@ -89,6 +93,8 @@ struct HomeView: View {
         VStack(spacing: AppSpacing.lg) {
             Color.clear.frame(height: 60 + mapPreviewHeight + AppSpacing.lg)
 
+            greetingHeader
+
             LocationSearchActivationView()
                 .onTapGesture {
                     withAnimation(.spring()) {
@@ -111,11 +117,39 @@ struct HomeView: View {
         }
     }
 
+    /// "Good morning / afternoon / evening, [username]" — new for this task;
+    /// no such header existed anywhere in the codebase before (confirmed by
+    /// a repo-wide search), so this isn't restoring dropped functionality.
+    /// Falls back to no name (rather than hiding the row) if `currentUser`
+    /// hasn't loaded yet, since Home can appear before the session finishes
+    /// resolving.
+    private var greetingHeader: some View {
+        Text(greetingText)
+            .font(.title2.weight(.semibold))
+            .foregroundStyle(AppColors.textPrimary)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, AppSpacing.lg)
+    }
+
+    private var greetingText: String {
+        let hour = Calendar.current.component(.hour, from: Date())
+        let timeOfDay: String
+        switch hour {
+        case 5..<12: timeOfDay = "Good morning"
+        case 12..<17: timeOfDay = "Good afternoon"
+        default: timeOfDay = "Good evening"
+        }
+        guard let username = session.currentUser?.username else { return timeOfDay }
+        return "\(timeOfDay), \(username)"
+    }
+
 }
 
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
         HomeView()
+            .environmentObject(LocationSearchViewModel())
+            .environmentObject(AppSessionStore())
     }
 }
