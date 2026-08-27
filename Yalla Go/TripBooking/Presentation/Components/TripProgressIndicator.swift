@@ -7,16 +7,15 @@ import SwiftUI
 
 /// Segmented progress bar for the active-trip status bar.
 ///
-/// DESIGN NOTE (flagged per this task's request): the mockup described an
-/// example with an "arriving" step, but `TripStatus` has exactly three
-/// non-terminal states a trip actually passes through while active —
-/// `.requested`, `.accepted`, `.ongoing` (`.completed`/`.cancelled` are
-/// terminal and exit this screen entirely). There is no real "arriving"
-/// state anywhere in the domain model. Rather than fabricate a 4th segment
-/// with nothing backing it, or collapse to an uninformative 2-segment
-/// "in-progress vs arriving" bar that can't actually distinguish those,
-/// this renders 3 segments mapped directly to the 3 real states — honest to
-/// what the app can actually observe.
+/// DESIGN NOTE: the mockup described an example with an "arriving" step, but
+/// `TripStatus` has exactly three non-terminal states a trip actually passes
+/// through while active — `.requested`, `.accepted`, `.ongoing`
+/// (`.completed`/`.cancelled` are terminal and exit this screen entirely).
+/// There is no real "arriving" state anywhere in the domain model. Rather
+/// than fabricate a 4th segment with nothing backing it, or collapse to an
+/// uninformative 2-segment "in-progress vs arriving" bar that can't actually
+/// distinguish those, this renders 3 segments mapped directly to the 3 real
+/// states — honest to what the app can actually observe.
 struct TripProgressIndicator: View {
     let status: TripStatus
 
@@ -24,7 +23,7 @@ struct TripProgressIndicator: View {
 
     var body: some View {
         HStack(spacing: AppSpacing.xs) {
-            ForEach(Array(Self.segments.enumerated()), id: \.offset) { index, segment in
+            ForEach(Array(Self.segments.enumerated()), id: \.offset) { index, _ in
                 Capsule()
                     .fill(isFilled(index) ? AppColors.accentTint : AppColors.textOnAccent.opacity(0.25))
                     .frame(height: 4)

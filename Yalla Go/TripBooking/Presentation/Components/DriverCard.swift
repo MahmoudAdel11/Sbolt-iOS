@@ -70,8 +70,8 @@ struct DriverCard: View {
         .accessibilityHidden(true)
     }
 
-    /// Up to 2 letters from the driver's first/last name; a generic person
-    /// glyph substitute ("?") when no name is known yet.
+    /// Up to 2 letters from the driver's first/last name; a generic "?"
+    /// substitute when no name is known yet.
     private var initials: String {
         guard let name = driver.name, !name.isEmpty else { return "?" }
         let parts = name.split(separator: " ")

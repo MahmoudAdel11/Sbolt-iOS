@@ -110,36 +110,58 @@ struct RideRequestView: View {
 
     /// "Current location → [destination]" — the same underlying selection
     /// (`selectedYallaGoLocation`) the old pickup/dropoff rows already read,
-    /// just condensed to a single line per the confirmed design.
+    /// just condensed to a single line per the confirmed design. The inline
+    /// save-star only appears here in the collapsed state — the expanded
+    /// state has its own dedicated "Choose from Saved Places" row instead.
     private var routeSummary: some View {
-        HStack(spacing: AppSpacing.xs) {
-            Text("Current location")
-            Image(systemName: "arrow.right")
-                .font(.caption.weight(.semibold))
-            Text(locationViewModel.selectedYallaGoLocation?.titel ?? "")
-                .lineLimit(1)
+        HStack(spacing: AppSpacing.sm) {
+            HStack(spacing: AppSpacing.xs) {
+                Text("Current location")
+                Image(systemName: "arrow.right")
+                    .font(.caption.weight(.semibold))
+                Text(locationViewModel.selectedYallaGoLocation?.titel ?? "")
+                    .lineLimit(1)
+            }
+            .font(.subheadline.weight(.semibold))
+            .foregroundStyle(AppColors.textPrimary)
+
+            Spacer()
+
+            if !isExpanded {
+                Button {
+                    isSavingDestinationAsPlace = true
+                } label: {
+                    Image(systemName: "star")
+                        .foregroundStyle(AppColors.accent)
+                        .padding(AppSpacing.xs)
+                        .background(AppColors.accentTint, in: Circle())
+                }
+                .accessibilityLabel("Save this place")
+                .accessibilityIdentifier("save_destination_as_place_button")
+            }
         }
-        .font(.subheadline.weight(.semibold))
-        .foregroundStyle(AppColors.textPrimary)
-        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     // MARK: - Collapsed state
 
+    /// A plain (non-scrolling) `HStack`, not `ScrollView(.horizontal)` — the
+    /// tier count is fixed at exactly 3 (`RideType.allCases`), so there's
+    /// nothing to scroll to, and a `ScrollView` gives its content unbounded
+    /// width, which is exactly what was preventing the cards' own
+    /// `.frame(maxWidth: .infinity)` from having anything to expand against
+    /// (leftover empty space to the right of the last card).
     private var collapsedContent: some View {
         VStack(spacing: AppSpacing.md) {
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: AppSpacing.sm) {
-                    ForEach(RideType.allCases) { type in
-                        RideTierCard(
-                            tier: type,
-                            price: price(for: type),
-                            isSelected: selectedRideType == type,
-                            style: .compact
-                        )
-                        .onTapGesture { selectedRideType = type }
-                        .accessibilityIdentifier("ride_tier_\(type.rawValue)_button")
-                    }
+            HStack(spacing: AppSpacing.sm) {
+                ForEach(RideType.allCases) { type in
+                    RideTierCard(
+                        tier: type,
+                        price: price(for: type),
+                        isSelected: selectedRideType == type,
+                        style: .compact
+                    )
+                    .onTapGesture { selectedRideType = type }
+                    .accessibilityIdentifier("ride_tier_\(type.rawValue)_button")
                 }
             }
 
@@ -153,7 +175,11 @@ struct RideRequestView: View {
         VStack(spacing: AppSpacing.lg) {
             savedPlacesRow
 
-            VStack(spacing: AppSpacing.sm) {
+            VStack(alignment: .leading, spacing: AppSpacing.sm) {
+                Text("Choose your ride")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(AppColors.textMuted)
+
                 ForEach(RideType.allCases) { type in
                     RideTierCard(
                         tier: type,
