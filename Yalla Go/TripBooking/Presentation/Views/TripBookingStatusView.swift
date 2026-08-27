@@ -12,17 +12,16 @@ struct TripBookingStatusView: View {
     @State private var isShowingRatingPrompt = false
 
     var body: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: AppSpacing.lg) {
             Capsule()
-                .foregroundColor(Color(.systemGray5))
+                .fill(AppColors.borderHairline)
                 .frame(width: 50, height: 6)
 
             content
 
             actions
         }
-        .padding()
-        .padding(.bottom, 12)
+        .padding(AppSpacing.lg)
         .frame(maxWidth: .infinity)
         .animation(.spring(response: 0.4, dampingFraction: 0.85), value: viewModel.phase)
         .onChange(of: viewModel.phase) { phase in
@@ -35,7 +34,7 @@ struct TripBookingStatusView: View {
             viewModel.proceedPastRatingPrompt()
         }) {
             if case let .completed(trip) = viewModel.phase {
-                RatingSubmissionView(rideID: trip.id)
+                RatingSubmissionView(rideID: trip.id, driverName: trip.driver?.name, fare: trip.fare)
             }
         }
     }
@@ -49,113 +48,72 @@ struct TripBookingStatusView: View {
             EmptyView()
 
         case .requesting:
-            VStack(spacing: 12) {
+            VStack(spacing: AppSpacing.md) {
                 ProgressView()
                 Text("Requesting your ride…")
                     .font(.headline)
+                    .foregroundStyle(AppColors.textPrimary)
                     .multilineTextAlignment(.center)
             }
             .accessibilityIdentifier("trip_requesting")
 
         case let .active(trip):
-            VStack(spacing: 10) {
-                statusHeader(activeStatusTitle(for: trip), systemImage: activeStatusIcon(for: trip), tint: .blue)
-                fareRow(for: trip)
-                if let driver = trip.driver {
-                    DriverCard(driver: driver, statusText: trip.status.displayName)
-                } else if let driverID = trip.driverID {
-                    // Assigned but the embedded summary didn't decode/arrive —
-                    // degrade to the bare-ID fallback rather than a blank gap.
-                    DriverCard(driver: Driver(id: driverID), statusText: trip.status.displayName)
-                } else {
-                    ProgressView()
-                }
-            }
-            .accessibilityIdentifier("trip_active_\(trip.status.rawValue)")
+            ActiveTripSheet(trip: trip, onCancel: { viewModel.cancelTrip() })
+                .accessibilityIdentifier("trip_active_\(trip.status.rawValue)")
 
         case let .completed(trip):
-            VStack(spacing: 10) {
-                statusHeader("Trip completed successfully", systemImage: "flag.checkered", tint: .green)
+            VStack(spacing: AppSpacing.md) {
+                statusHeader("Trip completed successfully", systemImage: "checkmark.circle.fill", tint: AppColors.successText)
                 fareRow(for: trip)
             }
             .accessibilityIdentifier("trip_completed")
 
         case .cancelled:
-            statusHeader("Trip cancelled", systemImage: "xmark.circle.fill", tint: .secondary)
+            statusHeader("Trip cancelled", systemImage: "xmark.circle.fill", tint: AppColors.textMuted)
                 .accessibilityIdentifier("trip_cancelled")
 
         case let .failed(message):
-            VStack(spacing: 8) {
-                statusHeader("Couldn't book your trip", systemImage: "exclamationmark.triangle.fill", tint: .orange)
+            VStack(spacing: AppSpacing.sm) {
+                statusHeader("Couldn't book your trip", systemImage: "exclamationmark.triangle.fill", tint: AppColors.warningText)
                 Text(message)
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppColors.textSecondary)
                     .multilineTextAlignment(.center)
             }
             .accessibilityIdentifier("trip_failed")
         }
     }
 
-    private func activeStatusTitle(for trip: Trip) -> String {
-        switch trip.status {
-        case .requested: return "Looking for a nearby driver…"
-        case .accepted:  return "Your driver is on the way"
-        case .ongoing:   return "Your trip has started"
-        case .completed, .cancelled: return trip.status.displayName
-        }
-    }
-
-    private func activeStatusIcon(for trip: Trip) -> String {
-        switch trip.status {
-        case .requested: return "magnifyingglass"
-        case .accepted:  return "car.fill"
-        case .ongoing:   return "location.fill"
-        case .completed: return "flag.checkered"
-        case .cancelled: return "xmark.circle.fill"
-        }
-    }
-
     // MARK: - Actions
 
+    /// Cancel now lives inside `ActiveTripSheet` (styled per the confirmed
+    /// spec — full-width danger button, bottom of that sheet), so this only
+    /// ever renders Retry for a failed request.
     @ViewBuilder
     private var actions: some View {
-        if viewModel.isCancellable {
-            Button(role: .destructive) {
-                viewModel.cancelTrip()
-            } label: {
-                Text("Cancel Trip")
-                    .fontWeight(.semibold)
-                    .frame(maxWidth: .infinity, minHeight: 48)
-            }
-            .accessibilityIdentifier("trip_cancel_button")
-        } else if case .failed = viewModel.phase {
+        if case .failed = viewModel.phase {
             Button {
                 viewModel.retry()
             } label: {
                 Text("Try Again")
-                    .fontWeight(.semibold)
+                    .font(.subheadline.weight(.semibold))
                     .frame(maxWidth: .infinity, minHeight: 48)
-                    .background(Color.accentColor, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
-                    .foregroundStyle(.white)
             }
+            .foregroundStyle(AppColors.textOnAccent)
+            .background(AppColors.accent, in: RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous))
             .accessibilityIdentifier("trip_retry_button")
         }
     }
 
-    /// The real, server-computed fare — shown as soon as the ride exists
-    /// (fare is frozen at request time, so it's already final in `.active`,
-    /// not just at `.completed`). This is new UI: neither phase showed any
-    /// fare before, since the old client-side estimate was never surfaced
-    /// past the request form.
     private func fareRow(for trip: Trip) -> some View {
-        HStack(spacing: 6) {
+        HStack(spacing: AppSpacing.xs) {
             Text(trip.tier.description)
             Text("·")
             Text(trip.fare.toCurrency())
                 .fontWeight(.semibold)
         }
         .font(.subheadline)
-        .foregroundStyle(.secondary)
+        .foregroundStyle(AppColors.textSecondary)
         .accessibilityIdentifier("trip_fare")
     }
 

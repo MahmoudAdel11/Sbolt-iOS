@@ -6,60 +6,77 @@
 import SwiftUI
 
 /// Reusable card showing whatever driver details are actually available.
-/// The backend only ever exposes a bare `driver_id` — every rich field is
-/// optional, so this renders a graceful fallback ("Driver assigned") instead
-/// of leaving gaps where a name/rating/vehicle would go.
+/// The backend only ever exposes a bare `driver_id`— every rich field is
+/// optional, so this renders graceful fallbacks ("Driver assigned", an
+/// initials-less circle) instead of leaving gaps where a name/rating/vehicle
+/// would go.
 struct DriverCard: View {
     let driver: Driver
-    /// Optional status line (e.g. "Arriving in 4 min").
-    var statusText: String?
+    let tier: RideType
 
     var body: some View {
-        HStack(spacing: 14) {
-            Image(systemName: driver.profileImage ?? "person.crop.circle.fill")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 52, height: 52)
-                .foregroundStyle(.secondary)
-                .accessibilityHidden(true)
+        HStack(spacing: AppSpacing.md) {
+            avatar
 
-            VStack(alignment: .leading, spacing: 4) {
-                HStack {
-                    Text(driver.name ?? "Driver assigned").font(.headline)
-                    Spacer()
+            VStack(alignment: .leading, spacing: 2) {
+                HStack(spacing: AppSpacing.xs) {
+                    Text(driver.name ?? "Driver assigned")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(AppColors.textPrimary)
                     if let rating = driver.rating {
-                        Label(ratingText(rating), systemImage: "star.fill")
-                            .font(.subheadline)
-                            .foregroundStyle(.orange)
+                        Image(systemName: "star.fill")
+                            .font(.caption2)
+                            .foregroundStyle(AppColors.ratingGold)
+                        Text(ratingText(rating))
+                            .font(.caption)
+                            .foregroundStyle(AppColors.textSecondary)
                     }
                 }
-                if let vehicleName = driver.vehicleName {
-                    Text([driver.vehicleColor, vehicleName].compactMap { $0 }.joined(separator: " "))
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                }
-                HStack {
+                Text(tier.description)
+                    .font(.caption)
+                    .foregroundStyle(AppColors.accentTextSecondary)
+            }
+
+            Spacer()
+
+            if driver.vehicleColor != nil || driver.plateNumber != nil {
+                VStack(alignment: .trailing, spacing: 2) {
+                    if let vehicleColor = driver.vehicleColor {
+                        Text(vehicleColor)
+                            .font(.caption)
+                            .foregroundStyle(AppColors.textSecondary)
+                    }
                     if let plateNumber = driver.plateNumber {
                         Text(plateNumber)
                             .font(.caption.weight(.semibold))
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 4)
-                            .background(Color(.secondarySystemBackground),
-                                        in: RoundedRectangle(cornerRadius: 6, style: .continuous))
-                    }
-                    Spacer()
-                    if let statusText {
-                        Text(statusText)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(AppColors.accentTextDark)
                     }
                 }
             }
         }
-        .padding()
-        .background(Color(.secondarySystemGroupedBackground),
-                    in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .padding(AppSpacing.md)
+        .background(AppColors.accentTint, in: RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous))
         .accessibilityElement(children: .combine)
+    }
+
+    private var avatar: some View {
+        ZStack {
+            Circle().fill(AppColors.accent)
+            Text(initials)
+                .font(.subheadline.weight(.bold))
+                .foregroundStyle(AppColors.textOnAccent)
+        }
+        .frame(width: 44, height: 44)
+        .accessibilityHidden(true)
+    }
+
+    /// Up to 2 letters from the driver's first/last name; a generic "?"
+    /// substitute when no name is known yet.
+    private var initials: String {
+        guard let name = driver.name, !name.isEmpty else { return "?" }
+        let parts = name.split(separator: " ")
+        let letters = parts.prefix(2).compactMap { $0.first }
+        return letters.isEmpty ? "?" : String(letters).uppercased()
     }
 
     /// "4.8 (12 rides)" when a count is known and non-zero; a bare "4.8"
@@ -75,9 +92,13 @@ struct DriverCard: View {
 #if DEBUG
 struct DriverCard_Previews: PreviewProvider {
     static var previews: some View {
-        DriverCard(driver: Driver(id: "driver-1"), statusText: "Driver on the way")
-            .padding()
-            .previewLayout(.sizeThatFits)
+        DriverCard(
+            driver: Driver(id: "driver-1", name: "Jane Driver", rating: 4.8, ratingCount: 12,
+                          vehicleColor: "White", plateNumber: "ABC-123"),
+            tier: .comfort
+        )
+        .padding()
+        .previewLayout(.sizeThatFits)
     }
 }
 #endif
