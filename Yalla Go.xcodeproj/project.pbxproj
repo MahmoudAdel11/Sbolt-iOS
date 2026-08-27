@@ -52,6 +52,7 @@
 		3B27F9B48F3EFA310C0F59F7 /* CancelRideUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC0000B0511ACBE9B0CCAE4 /* CancelRideUseCase.swift */; };
 		3DA86A276C77D2F27068FEE2 /* RemoteTripBookingRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C2CF5944595FF7C51801A94 /* RemoteTripBookingRepositoryTests.swift */; };
 		4020D89812AC50CA22B0A428 /* RequestRideUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037E7A8FBBEE405C1868A017 /* RequestRideUseCase.swift */; };
+		454946B9F6DDE381924F0836 /* AppColorsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2400FD4F511CE552C9503BDF /* AppColorsTests.swift */; };
 		4D76DF70805C8A03E5F97C50 /* MockURLProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25DEBE68354FB9EAE0505F9A /* MockURLProtocol.swift */; };
 		4F290F0997CA2A424E9049EB /* DriverRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D00AD53C85EE08E7FB3329C /* DriverRepository.swift */; };
 		4F688965A3C91AA19E75B1CE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D49101571FAFE30C837E6EE /* Foundation.framework */; };
@@ -63,6 +64,8 @@
 		630441F3D19AB069D76F05BF /* RemoteFavoritePlaceRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C47711104C046D1AEFFB293F /* RemoteFavoritePlaceRepositoryTests.swift */; };
 		677566F94F2403050AD702B9 /* MockAuthenticationRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7376718315D9A099C77C7939 /* MockAuthenticationRepositoryTests.swift */; };
 		6A246116BCFE50A06FDF2C16 /* TripHistoryPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FC0E496C38D5F38B78D7E7B /* TripHistoryPage.swift */; };
+		6AB62BC6AE5A0ED96D2EBEC9 /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D66FE2F5CEFDA4FD59DC45 /* AppTheme.swift */; };
+		6B2BA7BFC955763DB6691BE6 /* DesignSystemPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2C182868E4B4B1152C1812B /* DesignSystemPreview.swift */; };
 		6E5B91BCEAA3625769FA4658 /* RetryingAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4289C581C400C0FA554FD4F /* RetryingAPIClient.swift */; };
 		7321BB977DD232CFD1AB455A /* AutoZoomTrigger.swift in Sources */ = {isa = PBXBuildFile; fileRef = E627D9E9503DDF1CEB38D655 /* AutoZoomTrigger.swift */; };
 		76374AFF7E56DA0F6AFEFE8A /* AvailableRidesPollingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E460DAC0D089A78CB8CAB368 /* AvailableRidesPollingService.swift */; };
@@ -219,6 +222,7 @@
 		E0DECBF449FC8F89D9DD22A8 /* DriverDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFF5C897647A0FCEFD921511 /* DriverDTO.swift */; };
 		E36EF280F19FCD5403983F14 /* KeychainTokenRefresher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61EDCD27642F2B38CA257E88 /* KeychainTokenRefresher.swift */; };
 		EACEBCB8CCBC7D233D000403 /* RatingDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F7669993CA09DF6F19627B3 /* RatingDTO.swift */; };
+		EC2CA9E025A2BDA280477AB5 /* AppColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF86FDDAB8E9F99C36F2F206 /* AppColors.swift */; };
 		EE19143E1065E9950BD94B00 /* AuthenticationUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF6A51A4309665F722F6FA50 /* AuthenticationUseCaseTests.swift */; };
 		F4FC3BFF274CB2021059D958 /* GetTripHistoryUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 350D39ADE19B72101B2049B6 /* GetTripHistoryUseCaseTests.swift */; };
 		FEF356C67FF315F14A43733D /* PollAvailableRidesUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2192B834B86DBFFF40AE1FFE /* PollAvailableRidesUseCase.swift */; };
@@ -271,6 +275,7 @@
 		2192B834B86DBFFF40AE1FFE /* PollAvailableRidesUseCase.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PollAvailableRidesUseCase.swift; path = DriverMode/Domain/UseCases/PollAvailableRidesUseCase.swift; sourceTree = "<group>"; };
 		21AE469295E5C761A0B96431 /* RemoteTripRepositoryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RemoteTripRepositoryTests.swift; sourceTree = "<group>"; };
 		22582CBAE1F7B00C0C1C3DDD /* GetActiveRideUseCase.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GetActiveRideUseCase.swift; sourceTree = "<group>"; };
+		2400FD4F511CE552C9503BDF /* AppColorsTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppColorsTests.swift; sourceTree = "<group>"; };
 		2464F4C152791060F60FB1F1 /* DriverHomeView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DriverHomeView.swift; path = DriverMode/Presentation/Views/DriverHomeView.swift; sourceTree = "<group>"; };
 		25630CE1D59968E97EE31D5E /* FavoritePlaceIconTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FavoritePlaceIconTests.swift; sourceTree = "<group>"; };
 		25DEBE68354FB9EAE0505F9A /* MockURLProtocol.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MockURLProtocol.swift; sourceTree = "<group>"; };
@@ -432,6 +437,7 @@
 		BF24A9EBB16A58F7CC54EA35 /* SubmitRatingUseCase.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SubmitRatingUseCase.swift; sourceTree = "<group>"; };
 		C126EB3101A815D73755C064 /* DriverModeViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DriverModeViewModel.swift; path = DriverMode/Presentation/ViewModels/DriverModeViewModel.swift; sourceTree = "<group>"; };
 		C16D747E146BF7DDB0C0FB3F /* MockFavoritePlaceRepositoryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MockFavoritePlaceRepositoryTests.swift; sourceTree = "<group>"; };
+		C2C182868E4B4B1152C1812B /* DesignSystemPreview.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DesignSystemPreview.swift; sourceTree = "<group>"; };
 		C4289C581C400C0FA554FD4F /* RetryingAPIClient.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RetryingAPIClient.swift; path = "New Group/Core/Networking/RetryingAPIClient.swift"; sourceTree = "<group>"; };
 		C47711104C046D1AEFFB293F /* RemoteFavoritePlaceRepositoryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RemoteFavoritePlaceRepositoryTests.swift; sourceTree = "<group>"; };
 		C6617BAB4E1356D06E5F1C2B /* DriverErrorPresenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DriverErrorPresenter.swift; path = DriverMode/Presentation/Support/DriverErrorPresenter.swift; sourceTree = "<group>"; };
@@ -454,8 +460,10 @@
 		EEE032FF5FAD11F888C5D3B1 /* RegisterViewModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RegisterViewModelTests.swift; sourceTree = "<group>"; };
 		EFD5C8F4448F23111B8098EA /* FavoritePlacesViewModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FavoritePlacesViewModelTests.swift; sourceTree = "<group>"; };
 		F24C441C484763BC7919F12A /* UpdateDriverVehicleUseCase.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UpdateDriverVehicleUseCase.swift; path = DriverMode/Domain/UseCases/UpdateDriverVehicleUseCase.swift; sourceTree = "<group>"; };
+		F5D66FE2F5CEFDA4FD59DC45 /* AppTheme.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; };
 		F62A9DC8CFD7D79AA329EEAF /* FavoritePlacesListView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FavoritePlacesListView.swift; path = Views/FavoritePlacesListView.swift; sourceTree = "<group>"; };
 		FD64C192B7ACCC2577C830B5 /* RideAnnotationDiff.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RideAnnotationDiff.swift; path = DriverMode/Domain/Support/RideAnnotationDiff.swift; sourceTree = "<group>"; };
+		FF86FDDAB8E9F99C36F2F206 /* AppColors.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppColors.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -803,6 +811,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		8B3456366D7C41CC48193757 /* DesignSystem */ = {
+			isa = PBXGroup;
+			children = (
+				2400FD4F511CE552C9503BDF /* AppColorsTests.swift */,
+			);
+			name = DesignSystem;
+			path = DesignSystem;
+			sourceTree = "<group>";
+		};
 		937D3DBF63971D3E38B389D6 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -844,6 +861,7 @@
 				1BB671F152B0A73CB887F935 /* Networking */,
 				43A012CF97C0CD4E213A6F1B /* DriverMode */,
 				609509808A855321E2442E04 /* Models */,
+				8B3456366D7C41CC48193757 /* DesignSystem */,
 			);
 			path = "Yalla GoTests";
 			sourceTree = "<group>";
@@ -1592,6 +1610,7 @@
 			children = (
 				1E4C38582C91E90E006AB83B /* Assets.xcassets */,
 				B14C116C301C4BAE002C0A0A /* Coordinate.swift */,
+				DA12CF2710E909863529CED5 /* DesignSystem */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -1810,6 +1829,17 @@
 				E627D9E9503DDF1CEB38D655 /* AutoZoomTrigger.swift */,
 			);
 			name = Support;
+			sourceTree = "<group>";
+		};
+		DA12CF2710E909863529CED5 /* DesignSystem */ = {
+			isa = PBXGroup;
+			children = (
+				FF86FDDAB8E9F99C36F2F206 /* AppColors.swift */,
+				F5D66FE2F5CEFDA4FD59DC45 /* AppTheme.swift */,
+				C2C182868E4B4B1152C1812B /* DesignSystemPreview.swift */,
+			);
+			name = DesignSystem;
+			path = DesignSystem;
 			sourceTree = "<group>";
 		};
 		DFD4E184233440AED29F75BA /* Errors */ = {
@@ -2130,6 +2160,9 @@
 				C4E6658FAEB6B18C5FC68C26 /* VehicleSettingsViewModel.swift in Sources */,
 				C5390262A29381AC7702F499 /* VehicleSettingsView.swift in Sources */,
 				B028A963DC6F26976B900BAD /* UpdateDriverVehicleUseCase.swift in Sources */,
+				EC2CA9E025A2BDA280477AB5 /* AppColors.swift in Sources */,
+				6AB62BC6AE5A0ED96D2EBEC9 /* AppTheme.swift in Sources */,
+				6B2BA7BFC955763DB6691BE6 /* DesignSystemPreview.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2181,6 +2214,7 @@
 				3934FDE3BE1A623BC2069C3C /* RideTypeTests.swift in Sources */,
 				2A281804FB13406C38F2337D /* UpdateDriverVehicleUseCaseTests.swift in Sources */,
 				8EC7154EB24963BDFEEF661C /* VehicleSettingsViewModelTests.swift in Sources */,
+				454946B9F6DDE381924F0836 /* AppColorsTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
