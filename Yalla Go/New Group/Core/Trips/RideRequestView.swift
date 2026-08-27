@@ -12,7 +12,7 @@ struct RideRequestView: View {
     /// and there's no way to deselect, so the request body always has a
     /// valid, non-optional tier to send.
     @State private var selectedRideType: RideType = .economy
-    @EnvironmentObject var locationViewModel:LocationSearchViewModel
+    @EnvironmentObject var locationViewModel: LocationSearchViewModel
     @EnvironmentObject private var session: AppSessionStore
     /// Injected (not owned via `@StateObject`) so `HomeView` can hold a single
     /// persistent instance across this view's presence/absence — recovering a
@@ -22,6 +22,9 @@ struct RideRequestView: View {
     @StateObject private var favoritePlacesViewModel = FavoritePlacesDependencies().makeFavoritePlacesViewModel()
     @State private var isChoosingSavedPlace = false
     @State private var isSavingDestinationAsPlace = false
+    /// Drag-to-expand state for the collapsed/expanded bottom sheet — purely
+    /// visual (which layout renders), no business logic attached.
+    @State private var isExpanded = false
 
     var body: some View {
         Group {
@@ -31,10 +34,10 @@ struct RideRequestView: View {
                 TripBookingStatusView(viewModel: bookingViewModel)
                     .background(
                         BottomSheetShape(radius: 20)
-                            .fill(Color.white)
+                            .fill(AppColors.backgroundPrimary)
                     )
                     .background(
-                        Color.white
+                        AppColors.backgroundPrimary
                             .ignoresSafeArea(.container, edges: .bottom)
                     )
                     .shadow(color: .black.opacity(0.12), radius: 12, x: 0, y: -4)
@@ -61,168 +64,226 @@ struct RideRequestView: View {
         }
     }
 
-    // The original ride-request card. Shown while no booking is in progress.
+    // MARK: - Booking form (destination + tier selection)
+
     private var bookingForm: some View {
-        VStack{
-            Capsule()
-                .foregroundColor(Color(.systemGray5))
-                .frame(width: 50, height: 6)
-                .padding(.top,8)
-            // trip info
-            HStack{
-                VStack{
-                    Circle()
-                        .fill(Color(.systemGray))
-                        .frame(width: 8, height: 8)
-                    Rectangle()
-                        .fill(Color(.systemGray))
-                        .frame(width: 1, height: 32)
-                    Rectangle()
-                        .fill(Color(.black))
-                        .frame(width: 8, height: 8)
-                }
-                
-                VStack(alignment: .leading, spacing: 24){
-                    HStack{
-                        Text("Current location" )
-                            .font(.system(size: 16, weight: .semibold ))
-                            .foregroundColor(Color(.gray))
-                        Spacer()
-                        Text(locationViewModel.pickupTime ?? "")
-                            .font(.system(size: 14, weight: .semibold))
-                            .foregroundColor(Color(.gray))
-                    }.padding(.bottom,10)
-                                            
-                    HStack{
-                        if let location = locationViewModel.selectedYallaGoLocation {
-                            Text(location.titel)
-                                .font(.system(size: 16, weight: .semibold  ))
-                            Button {
-                                isSavingDestinationAsPlace = true
-                            } label: {
-                                Image(systemName: "star")
-                                    .foregroundColor(.gray)
-                            }
-                            .accessibilityLabel("Save this place")
-                            .accessibilityIdentifier("save_destination_as_place_button")
-                        }
-                        Spacer()
-                        Text(locationViewModel.dropoffTime ?? "")
-                            .font(.system(size: 14, weight: .semibold))
-                            .foregroundColor(Color(.gray))
-                    }
-                }
-                .padding(.leading,8)
-                                            
-            } .padding()
+        VStack(spacing: AppSpacing.lg) {
+            dragHandle
+            routeSummary
 
-            Button {
-                isChoosingSavedPlace = true
-            } label: {
-                Label("Choose from Saved Places", systemImage: "star.fill")
-                    .font(.system(size: 14, weight: .semibold))
+            if isExpanded {
+                expandedContent
+            } else {
+                collapsedContent
             }
-            .padding(.horizontal)
-            .padding(.bottom, 8)
-
-            Divider()
-                .padding(.vertical, 8)
-
-            tierPicker
-
-            // Pre-request-only estimate, client-side, never sent to the
-            // backend — the real, authoritative fare comes back on
-            // `Trip.fare` once the ride actually exists
-            // (see TripBookingStatusView) and is what's shown from then on.
-            VStack(alignment: .leading, spacing: 4) {
-                HStack {
-                    Text("Estimated fare")
-                        .font(.system(size: 16, weight: .semibold))
-                    Spacer()
-                    Text(estimatedFare.toCurrency())
-                        .font(.system(size: 16, weight: .bold))
-                }
-                Text("Estimate only — final fare may vary.")
-                    .font(.caption)
-                    .foregroundColor(.gray)
-            }
-            .padding(.horizontal)
-            .padding(.vertical, 8)
-
-            Divider()
-                .padding(.vertical, 8)
-            
-        // payment
-            HStack( spacing: 12){
-            Text("visa")
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
-                    .padding(6)
-                    .background(.blue)
-                    .cornerRadius(4)
-                    .foregroundColor(.white)
-                    .padding(.horizontal)
-                Text("*****  123").fontWeight(.bold)
-                Spacer()
-                Image(systemName: "chevron.right")
-                    .imageScale(.medium)
-                    .padding()
-            }
-            .frame(height: 50)
-            .background(Color(.systemGroupedBackground))
-            .cornerRadius(10)
-            .padding(.horizontal)
-        
-                        // confirm trip
-            Button {
-                confirmRide()
-            } label: {
-                Text("CONFIRM RIDE")
-                    .fontWeight(.bold)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 50)
-                    .background(Color.blue)
-                    .cornerRadius(10)
-                    .foregroundColor(.white)
-            }
-            .disabled(locationViewModel.userLocation == nil || locationViewModel.selectedYallaGoLocation == nil)
-            .padding(.horizontal, 16)
-            .padding(.bottom, 16)
         }
+        .padding(.top, AppSpacing.sm)
+        .padding(.horizontal, AppSpacing.lg)
+        .padding(.bottom, AppSpacing.lg)
         .background(
             BottomSheetShape(radius: 20)
-                .fill(Color.white)
+                .fill(AppColors.backgroundPrimary)
         )
         .background(
-            Color.white
+            AppColors.backgroundPrimary
                 .ignoresSafeArea(.container, edges: .bottom)
         )
         .shadow(color: .black.opacity(0.12), radius: 12, x: 0, y: -4)
+        .animation(.spring(response: 0.4, dampingFraction: 0.85), value: isExpanded)
     }
 
-    /// Three tappable tier options, matching this file's existing inline
-    /// button-styling convention (the "visa" payment badge above uses the
-    /// same solid-background/rounded-corner shape) rather than introducing
-    /// a new component.
-    private var tierPicker: some View {
-        HStack(spacing: 10) {
-            ForEach(RideType.allCases) { type in
+    private var dragHandle: some View {
+        Capsule()
+            .fill(AppColors.borderHairline)
+            .frame(width: 50, height: 6)
+            .contentShape(Rectangle().inset(by: -12)) // easier drag target than the visible handle alone
+            .gesture(
+                DragGesture(minimumDistance: 10)
+                    .onEnded { value in
+                        if value.translation.height < -20 { isExpanded = true }
+                        else if value.translation.height > 20 { isExpanded = false }
+                    }
+            )
+            .onTapGesture { isExpanded.toggle() }
+            .accessibilityIdentifier("ride_request_sheet_handle")
+    }
+
+    /// "Current location → [destination]" — the same underlying selection
+    /// (`selectedYallaGoLocation`) the old pickup/dropoff rows already read,
+    /// just condensed to a single line per the confirmed design. The inline
+    /// save-star only appears here in the collapsed state — the expanded
+    /// state has its own dedicated "Choose from Saved Places" row instead.
+    private var routeSummary: some View {
+        HStack(spacing: AppSpacing.sm) {
+            HStack(spacing: AppSpacing.xs) {
+                Text("Current location")
+                Image(systemName: "arrow.right")
+                    .font(.caption.weight(.semibold))
+                Text(locationViewModel.selectedYallaGoLocation?.titel ?? "")
+                    .lineLimit(1)
+            }
+            .font(.subheadline.weight(.semibold))
+            .foregroundStyle(AppColors.textPrimary)
+
+            Spacer()
+
+            if !isExpanded {
                 Button {
-                    selectedRideType = type
+                    isSavingDestinationAsPlace = true
                 } label: {
-                    Text(type.description)
-                        .font(.system(size: 14, weight: .semibold))
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 10)
-                        .background(selectedRideType == type ? Color.blue : Color(.systemGroupedBackground))
-                        .foregroundColor(selectedRideType == type ? .white : .black)
-                        .cornerRadius(10)
+                    Image(systemName: "star")
+                        .foregroundStyle(AppColors.accent)
+                        .padding(AppSpacing.xs)
+                        .background(AppColors.accentTint, in: Circle())
                 }
-                .accessibilityIdentifier("ride_tier_\(type.rawValue)_button")
+                .accessibilityLabel("Save this place")
+                .accessibilityIdentifier("save_destination_as_place_button")
             }
         }
-        .padding(.horizontal)
-        .padding(.bottom, 8)
+    }
+
+    // MARK: - Collapsed state
+
+    private var collapsedContent: some View {
+        VStack(spacing: AppSpacing.md) {
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: AppSpacing.sm) {
+                    ForEach(RideType.allCases) { type in
+                        RideTierCard(
+                            tier: type,
+                            price: price(for: type),
+                            isSelected: selectedRideType == type,
+                            style: .compact
+                        )
+                        .onTapGesture { selectedRideType = type }
+                        .accessibilityIdentifier("ride_tier_\(type.rawValue)_button")
+                    }
+                }
+            }
+
+            splitConfirmButton
+        }
+    }
+
+    // MARK: - Expanded state
+
+    private var expandedContent: some View {
+        VStack(spacing: AppSpacing.lg) {
+            savedPlacesRow
+
+            VStack(alignment: .leading, spacing: AppSpacing.sm) {
+                Text("Choose your ride")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(AppColors.textMuted)
+
+                ForEach(RideType.allCases) { type in
+                    RideTierCard(
+                        tier: type,
+                        price: price(for: type),
+                        isSelected: selectedRideType == type,
+                        style: .expanded
+                    )
+                    .onTapGesture { selectedRideType = type }
+                    .accessibilityIdentifier("ride_tier_\(type.rawValue)_button")
+                }
+            }
+
+            estimateNote
+
+            paymentRow
+
+            splitConfirmButton
+        }
+    }
+
+    private var savedPlacesRow: some View {
+        Button {
+            isChoosingSavedPlace = true
+        } label: {
+            HStack(spacing: AppSpacing.sm) {
+                Image(systemName: "star.fill")
+                    .foregroundStyle(AppColors.accent)
+                Text("Choose from Saved Places")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(AppColors.textPrimary)
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(AppColors.textDisabled)
+            }
+            .padding(AppSpacing.md)
+            .background(AppColors.backgroundSecondary, in: RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous))
+        }
+    }
+
+    /// Pre-request-only estimate, client-side, never sent to the backend —
+    /// the real, authoritative fare comes back on `Trip.fare` once the ride
+    /// actually exists (see `TripBookingStatusView`) and is what's shown
+    /// from then on.
+    private var estimateNote: some View {
+        HStack {
+            Text("Estimated fare")
+            Spacer()
+            Text("Estimate only — final fare may vary")
+        }
+        .font(.caption)
+        .foregroundStyle(AppColors.textMuted)
+    }
+
+    private var paymentRow: some View {
+        HStack(spacing: AppSpacing.md) {
+            Text("VISA")
+                .font(.caption.weight(.bold))
+                .foregroundStyle(AppColors.textOnAccent)
+                .padding(.horizontal, AppSpacing.sm)
+                .padding(.vertical, AppSpacing.xs)
+                .background(AppColors.accent, in: RoundedRectangle(cornerRadius: AppRadius.card / 3, style: .continuous))
+            Text("•••• 123")
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(AppColors.textPrimary)
+            Spacer()
+            Image(systemName: "chevron.right")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(AppColors.textDisabled)
+        }
+        .padding(AppSpacing.md)
+        .background(AppColors.backgroundSecondary, in: RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous))
+    }
+
+    // MARK: - Shared confirm control
+
+    /// Left half: "Confirm ride" on a solid accent fill. Right half: the
+    /// price on a plain background — one tappable control, visually split
+    /// into two halves inside a single pill.
+    private var splitConfirmButton: some View {
+        Button {
+            confirmRide()
+        } label: {
+            HStack(spacing: 0) {
+                Text("Confirm ride")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(AppColors.textOnAccent)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 52)
+                    .background(AppColors.accent)
+
+                Text(estimatedFare.toCurrency())
+                    .font(.subheadline.weight(.bold))
+                    .foregroundStyle(AppColors.accentTextDark)
+                    .padding(.horizontal, AppSpacing.lg)
+                    .frame(height: 52)
+                    .background(AppColors.backgroundPrimary)
+            }
+            .clipShape(Capsule())
+            .overlay(Capsule().stroke(AppColors.accent, lineWidth: 1))
+        }
+        .disabled(locationViewModel.userLocation == nil || locationViewModel.selectedYallaGoLocation == nil)
+        .opacity(locationViewModel.userLocation == nil || locationViewModel.selectedYallaGoLocation == nil ? 0.5 : 1)
+        .accessibilityIdentifier("confirm_ride_button")
+    }
+
+    private func price(for type: RideType) -> Double {
+        locationViewModel.computeRidePrice(forType: type)
     }
 
     private var estimatedFare: Double {
@@ -243,9 +304,6 @@ struct RideRequestView: View {
     }
 }
 
-
-
-
 /// Rounds only the top-left and top-right corners so the sheet merges
 /// seamlessly with the Tab Bar below it.
 private struct BottomSheetShape: Shape {
@@ -262,5 +320,7 @@ private struct BottomSheetShape: Shape {
 struct RideRequestView_Previews: PreviewProvider {
     static var previews: some View {
         RideRequestView(bookingViewModel: TripBookingDependencies().makeTripBookingViewModel())
+            .environmentObject(LocationSearchViewModel())
+            .environmentObject(AppSessionStore())
     }
 }
