@@ -15,18 +15,19 @@ struct ProfileInfoRow: View {
     let value: String
 
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: AppSpacing.md) {
             Image(systemName: systemImage)
-                .foregroundStyle(Color.accentColor)
+                .foregroundStyle(AppColors.accent)
                 .frame(width: 24)
                 .accessibilityHidden(true)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppColors.textMuted)
                 Text(displayValue)
                     .font(.body)
+                    .foregroundStyle(AppColors.textPrimary)
             }
         }
         .accessibilityElement(children: .ignore)

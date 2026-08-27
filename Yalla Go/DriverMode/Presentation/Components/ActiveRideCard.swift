@@ -35,7 +35,7 @@ struct ActiveRideCard: View {
                     .accessibilityIdentifier("driver_start_ride_button")
             } else {
                 actionButton(title: "Complete Ride", isLoading: isCompleting,
-                            background: AppColors.textPrimary, action: onComplete)
+                            background: AppColors.solidDark, action: onComplete)
                     .accessibilityIdentifier("driver_complete_ride_button")
             }
         }

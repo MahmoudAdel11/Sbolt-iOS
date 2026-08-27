@@ -31,18 +31,20 @@ struct TierBadge: View {
 
     /// Street: a fixed medium-dark gray, deliberately NOT `AppColors.textSecondary`
     /// (which flips to a *light* gray in dark mode) — the white icon needs a
-    /// badge that stays dark in both themes. Ride: solid accent. Black: a
-    /// fixed near-black, not `textPrimary` (flips to near-white in dark mode).
+    /// badge that stays dark in both themes. Ride: solid accent. Black:
+    /// `AppColors.solidDark` — a fixed near-black, not `textPrimary` (flips
+    /// to near-white in dark mode). This is the value `AppColors.solidDark`
+    /// was promoted from; every other "must stay dark in both themes"
+    /// background should use that shared token instead of duplicating it.
     private var backgroundColor: Color {
         switch tier {
         case .economy: return Self.fixedMediumGray
         case .comfort: return AppColors.accent
-        case .premium: return Self.fixedNearBlack
+        case .premium: return AppColors.solidDark
         }
     }
 
     private static let fixedMediumGray = Color(red: 0.42, green: 0.42, blue: 0.42)
-    private static let fixedNearBlack = Color(red: 0.08, green: 0.08, blue: 0.08)
 }
 
 #if DEBUG
