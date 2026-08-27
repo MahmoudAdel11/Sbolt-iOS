@@ -27,13 +27,13 @@ struct MockSettingsRepositoryTests {
     @Test func saveUpdatesAndPersistsSettings() async throws {
         let sut = MockSettingsRepository(artificialDelay: 0)
         var updated = AppSettings.default
-        updated.isDarkModeEnabled = true
+        updated.isPushNotificationsEnabled = false
 
         let saved = try await sut.saveSettings(updated)
-        #expect(saved.isDarkModeEnabled == true)
+        #expect(saved.isPushNotificationsEnabled == false)
 
         let reloaded = try await sut.loadSettings()
-        #expect(reloaded.isDarkModeEnabled == true)
+        #expect(reloaded.isPushNotificationsEnabled == false)
     }
 
     @Test func saveFails() async {

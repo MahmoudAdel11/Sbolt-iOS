@@ -56,6 +56,16 @@ enum AppColors {
     /// (or other saturated, dark-enough) fill — always near-white regardless
     /// of theme, since the fill itself already carries the light/dark contrast.
     static let textOnAccent = Color(light: "#FFFFFF", dark: "#FFFFFF")
+    /// A fixed, non-theme-flipping near-black — for a solid BACKGROUND fill
+    /// that must stay dark in both light and dark mode (e.g. a "Complete
+    /// Ride"-style secondary action button, the Black tier's badge).
+    /// Deliberately distinct from `textPrimary`: that token is designed to
+    /// flip (near-black in light mode, near-white in dark mode) for TEXT
+    /// legibility on the *screen* background — using it as a BACKGROUND
+    /// fill turns white-on-white in dark mode. Same value TierBadge already
+    /// established for the Black tier badge, promoted here so it has one
+    /// definition instead of being duplicated at each use site.
+    static let solidDark = Color(red: 0.08, green: 0.08, blue: 0.08)
 
     // MARK: - Semantic status colors
 
