@@ -236,6 +236,40 @@ struct RemoteTripBookingRepositoryTests {
         }
     }
 
+    @Test func getActiveRideReturnsTripWhenOneExists() async throws {
+        let client = StubAPIClient()
+        client.result = .success(rideJSON(status: "accepted", driverId: "driver-9"))
+        let sut = RemoteTripBookingRepository(client: client)
+
+        let trip = try await sut.getActiveRide()
+
+        #expect(trip?.status == .accepted)
+        #expect(client.capturedEndpoint?.path == "/rides/active")
+        #expect(client.capturedEndpoint?.method == .get)
+    }
+
+    @Test func getActiveRideReturnsNilOnNullBody() async throws {
+        let client = StubAPIClient()
+        // Backend returns 200 with a literal JSON `null` body when the rider
+        // has no active ride - not an error, not an empty body.
+        client.result = .success(Data("null".utf8))
+        let sut = RemoteTripBookingRepository(client: client)
+
+        let trip = try await sut.getActiveRide()
+
+        #expect(trip == nil)
+    }
+
+    @Test func getActiveRideMapsUnauthorizedToSessionExpired() async {
+        let client = StubAPIClient()
+        client.result = .failure(NetworkError.unauthorized)
+        let sut = RemoteTripBookingRepository(client: client)
+
+        await #expect(throws: RideError.sessionExpired) {
+            _ = try await sut.getActiveRide()
+        }
+    }
+
     @Test func unauthorizedMapsToSessionExpiredOnAllCalls() async {
         let client = StubAPIClient()
         client.result = .failure(NetworkError.unauthorized)

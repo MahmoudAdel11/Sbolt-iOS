@@ -56,6 +56,22 @@ final class RemoteTripBookingRepository: TripBookingRepository {
         }
     }
 
+    func getActiveRide() async throws -> Trip? {
+        do {
+            // Backend returns `RideResponse | None` — 200 with a `null` body
+            // when there's no active ride, not an error. `RideDTO.RideResponse?`
+            // decodes that correctly: `Optional`'s own `Decodable` conformance
+            // recognizes a top-level JSON `null` and yields `nil`, no special
+            // handling needed in `APIClient.send` for this to work.
+            let dto: RideDTO.RideResponse? = try await client.send(
+                Endpoint(path: "/rides/active", method: .get)
+            )
+            return dto?.toDomain()
+        } catch {
+            throw mapped(error, conflict: .unknown)
+        }
+    }
+
     func submitRating(rideID: String, score: Int) async throws {
         do {
             let body = try JSONEncoder.backend.encode(RatingDTO.RatingRequest(score: score))
