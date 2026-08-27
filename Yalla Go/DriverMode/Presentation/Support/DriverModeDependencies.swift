@@ -30,4 +30,11 @@ struct DriverModeDependencies {
             completeRideUseCase: CompleteRideUseCase(repository: repository)
         )
     }
+
+    @MainActor
+    func makeVehicleSettingsViewModel() -> VehicleSettingsViewModel {
+        VehicleSettingsViewModel(
+            updateDriverVehicleUseCase: UpdateDriverVehicleUseCase(repository: repository)
+        )
+    }
 }

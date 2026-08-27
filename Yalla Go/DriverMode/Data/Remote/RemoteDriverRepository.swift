@@ -77,6 +77,27 @@ final class RemoteDriverRepository: DriverRepository {
         }
     }
 
+    func updateVehicle(
+        vehicleType: String?, vehicleColor: String?, licensePlate: String?, scooterType: RideType?
+    ) async throws -> User {
+        do {
+            let body = try JSONEncoder.backend.encode(
+                DriverDTO.VehicleUpdateRequest(
+                    vehicleType: vehicleType,
+                    vehicleColor: vehicleColor,
+                    licensePlate: licensePlate,
+                    scooterType: scooterType?.rawValue
+                )
+            )
+            let dto: AuthDTO.UserResponse = try await client.send(
+                Endpoint(path: "/drivers/me/vehicle", method: .patch, body: body)
+            )
+            return dto.toDomain()
+        } catch {
+            throw mapped(error)
+        }
+    }
+
     // MARK: - Error mapping
 
     private func mapped(_ error: Error, conflict: DriverError = .unknown) -> DriverError {

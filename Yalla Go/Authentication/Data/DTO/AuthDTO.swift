@@ -69,9 +69,13 @@ enum AuthDTO {
     }
 
     /// Nested on UserResponse — presence (non-nil) means the user has driver
-    /// capability. Matches backend's DriverProfileResponse { is_online }.
+    /// capability. Matches backend's DriverProfileResponse.
     struct DriverProfileResponse: Decodable {
         let isOnline: Bool
+        let vehicleType: String?
+        let vehicleColor: String?
+        let licensePlate: String?
+        let scooterType: String?
     }
 
     /// Response for GET /auth/me, and nested inside RegisterResponse — user
@@ -93,7 +97,13 @@ enum AuthDTO {
                 phoneNumber: phoneNumber,
                 profileImageURL: nil,
                 createdAt: createdAt,
-                driverProfile: driverProfile.map { DriverProfile(isOnline: $0.isOnline) }
+                driverProfile: driverProfile.map {
+                    DriverProfile(isOnline: $0.isOnline,
+                                 vehicleType: $0.vehicleType,
+                                 vehicleColor: $0.vehicleColor,
+                                 licensePlate: $0.licensePlate,
+                                 scooterType: $0.scooterType.flatMap(RideType.init(rawValue:)))
+                }
             )
         }
     }
