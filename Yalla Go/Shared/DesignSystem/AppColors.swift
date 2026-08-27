@@ -52,6 +52,10 @@ enum AppColors {
     static let accentTextSecondary = Color(light: "#185FA5", dark: "#9FCBF2")
     /// Light accent wash, used as a background behind accent-colored text/icons.
     static let accentTint = Color(light: "#E6F1FB", dark: "#16283D")
+    /// Text/icon color for content sitting directly on a solid `accent`
+    /// (or other saturated, dark-enough) fill — always near-white regardless
+    /// of theme, since the fill itself already carries the light/dark contrast.
+    static let textOnAccent = Color(light: "#FFFFFF", dark: "#FFFFFF")
 
     // MARK: - Semantic status colors
 

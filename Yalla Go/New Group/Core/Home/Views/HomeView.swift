@@ -58,6 +58,15 @@ struct HomeView: View {
                 MapActionButton(mapState: $mapState)
                     .padding(.leading)
                     .padding(.top, 5)
+
+                // Floating status card over the map while a ride is active —
+                // reads the same `bookingViewModel` `RideRequestView`'s
+                // bottom sheet already observes, just surfaced here too since
+                // it belongs at the top of the screen per the confirmed design.
+                if case let .active(trip) = bookingViewModel.phase {
+                    TripTrackingStatusBar(trip: trip)
+                        .padding(.top, 60)
+                }
             }
             // Shown either because the rider picked a destination (normal
             // flow) or because a pending ride was recovered from the backend
