@@ -24,6 +24,11 @@ final class TripBookingViewModel: ObservableObject {
     private let getActiveRideUseCase: GetActiveRideUseCase
     private let timings: TripFlowTimings
     private let errorPresenter: TripBookingErrorPresenter
+    /// Resolves pickup/dropoff coordinates to place names right before the
+    /// request goes out — see `runBooking`. Failure is swallowed at the
+    /// `ReverseGeocoding` boundary itself (never throws), so it can't block
+    /// ride creation.
+    private let reverseGeocoding: ReverseGeocoding
 
     /// The single owner of the booking flow. Exposed read-only for awaiting in tests.
     private(set) var bookingTask: Task<Void, Never>?
@@ -49,13 +54,15 @@ final class TripBookingViewModel: ObservableObject {
          pollRideStatusUseCase: PollRideStatusUseCase,
          getActiveRideUseCase: GetActiveRideUseCase,
          timings: TripFlowTimings = TripFlowTimings(),
-         errorPresenter: TripBookingErrorPresenter = TripBookingErrorPresenter()) {
+         errorPresenter: TripBookingErrorPresenter = TripBookingErrorPresenter(),
+         reverseGeocoding: ReverseGeocoding = CLGeocoderReverseGeocoding()) {
         self.requestRideUseCase = requestRideUseCase
         self.cancelRideUseCase = cancelRideUseCase
         self.pollRideStatusUseCase = pollRideStatusUseCase
         self.getActiveRideUseCase = getActiveRideUseCase
         self.timings = timings
         self.errorPresenter = errorPresenter
+        self.reverseGeocoding = reverseGeocoding
     }
 
     deinit {
@@ -103,7 +110,12 @@ final class TripBookingViewModel: ObservableObject {
 
     private func runBooking(pickup: Coordinate, dropoff: Coordinate, tier: RideType) async {
         do {
-            let trip = try await requestRideUseCase.execute(pickup: pickup, dropoff: dropoff, tier: tier)
+            async let pickupAddress = reverseGeocoding.placeName(for: pickup)
+            async let dropoffAddress = reverseGeocoding.placeName(for: dropoff)
+            let trip = try await requestRideUseCase.execute(
+                pickup: pickup, dropoff: dropoff, tier: tier,
+                pickupAddress: await pickupAddress, dropoffAddress: await dropoffAddress
+            )
             try Task.checkCancellation()
             phase = .active(trip)
             await trackTrip(trip)
