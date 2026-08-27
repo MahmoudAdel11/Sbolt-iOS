@@ -224,6 +224,7 @@
 		EACEBCB8CCBC7D233D000403 /* RatingDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F7669993CA09DF6F19627B3 /* RatingDTO.swift */; };
 		EC2CA9E025A2BDA280477AB5 /* AppColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF86FDDAB8E9F99C36F2F206 /* AppColors.swift */; };
 		EE19143E1065E9950BD94B00 /* AuthenticationUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF6A51A4309665F722F6FA50 /* AuthenticationUseCaseTests.swift */; };
+		F2ED957B41B11A9C9D2A57EC /* RecentTripsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4021D16D5479064DD304AC45 /* RecentTripsSection.swift */; };
 		F4FC3BFF274CB2021059D958 /* GetTripHistoryUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 350D39ADE19B72101B2049B6 /* GetTripHistoryUseCaseTests.swift */; };
 		FEF356C67FF315F14A43733D /* PollAvailableRidesUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2192B834B86DBFFF40AE1FFE /* PollAvailableRidesUseCase.swift */; };
 		FF8E0DA7ACA857300684B6DA /* RemoteTripRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21AE469295E5C761A0B96431 /* RemoteTripRepositoryTests.swift */; };
@@ -284,6 +285,7 @@
 		350D39ADE19B72101B2049B6 /* GetTripHistoryUseCaseTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GetTripHistoryUseCaseTests.swift; sourceTree = "<group>"; };
 		391429785C3C31BC966D002C /* VehicleSettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = VehicleSettingsView.swift; path = DriverMode/Presentation/Views/VehicleSettingsView.swift; sourceTree = "<group>"; };
 		3B02631181B3A4990A41ADD0 /* RidePollingService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RidePollingService.swift; path = Support/RidePollingService.swift; sourceTree = "<group>"; };
+		4021D16D5479064DD304AC45 /* RecentTripsSection.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RecentTripsSection.swift; sourceTree = "<group>"; };
 		44E723FC8F65F97A6EA2ECA0 /* NWPathMonitorReachability.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NWPathMonitorReachability.swift; path = "New Group/Core/Networking/Reachability/NWPathMonitorReachability.swift"; sourceTree = "<group>"; };
 		47F361E41E030BC45A5C323D /* UpdateFavoritePlaceUseCase.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UpdateFavoritePlaceUseCase.swift; sourceTree = "<group>"; };
 		4A5E83495DD5EF4E3306E779 /* ProfileUseCaseTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ProfileUseCaseTests.swift; sourceTree = "<group>"; };
@@ -632,6 +634,7 @@
 				1E4C386A2C91EA79006AB83B /* HomeView.swift */,
 				1E4C386C2C926DB5006AB83B /* YallaMapViewRepresentable.swift */,
 				1EA2B90A2D4BFFFD00440D86 /* MapActionButton.swift */,
+				4021D16D5479064DD304AC45 /* RecentTripsSection.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2163,6 +2166,7 @@
 				EC2CA9E025A2BDA280477AB5 /* AppColors.swift in Sources */,
 				6AB62BC6AE5A0ED96D2EBEC9 /* AppTheme.swift in Sources */,
 				6B2BA7BFC955763DB6691BE6 /* DesignSystemPreview.swift in Sources */,
+				F2ED957B41B11A9C9D2A57EC /* RecentTripsSection.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
