@@ -19,6 +19,10 @@ protocol TripBookingRepository {
     func cancelRide(id: String) async throws -> Trip
     /// Fetches the current state of a ride — the polling target.
     func getRideDetails(id: String) async throws -> Trip
+    /// The rider's current non-terminal ride (requested/accepted/ongoing), if
+    /// any — lets the app recover a pending ride after a relaunch/backgrounding
+    /// wiped its in-memory state. `nil` when the rider has no active ride.
+    func getActiveRide() async throws -> Trip?
     /// Submits a 1-5 star rating for a completed ride. Optional from the
     /// rider's perspective — callers should treat failure as non-blocking.
     func submitRating(rideID: String, score: Int) async throws

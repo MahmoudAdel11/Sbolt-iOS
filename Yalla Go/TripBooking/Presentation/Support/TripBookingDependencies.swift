@@ -29,6 +29,7 @@ struct TripBookingDependencies {
             requestRideUseCase: RequestRideUseCase(repository: repository),
             cancelRideUseCase: CancelRideUseCase(repository: repository),
             pollRideStatusUseCase: PollRideStatusUseCase(repository: repository, interval: pollInterval),
+            getActiveRideUseCase: GetActiveRideUseCase(repository: repository),
             timings: timings
         )
     }

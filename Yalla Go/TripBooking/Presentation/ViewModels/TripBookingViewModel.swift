@@ -21,6 +21,7 @@ final class TripBookingViewModel: ObservableObject {
     private let requestRideUseCase: RequestRideUseCase
     private let cancelRideUseCase: CancelRideUseCase
     private let pollRideStatusUseCase: PollRideStatusUseCase
+    private let getActiveRideUseCase: GetActiveRideUseCase
     private let timings: TripFlowTimings
     private let errorPresenter: TripBookingErrorPresenter
 
@@ -46,11 +47,13 @@ final class TripBookingViewModel: ObservableObject {
     init(requestRideUseCase: RequestRideUseCase,
          cancelRideUseCase: CancelRideUseCase,
          pollRideStatusUseCase: PollRideStatusUseCase,
+         getActiveRideUseCase: GetActiveRideUseCase,
          timings: TripFlowTimings = TripFlowTimings(),
          errorPresenter: TripBookingErrorPresenter = TripBookingErrorPresenter()) {
         self.requestRideUseCase = requestRideUseCase
         self.cancelRideUseCase = cancelRideUseCase
         self.pollRideStatusUseCase = pollRideStatusUseCase
+        self.getActiveRideUseCase = getActiveRideUseCase
         self.timings = timings
         self.errorPresenter = errorPresenter
     }
@@ -103,7 +106,22 @@ final class TripBookingViewModel: ObservableObject {
             let trip = try await requestRideUseCase.execute(pickup: pickup, dropoff: dropoff, tier: tier)
             try Task.checkCancellation()
             phase = .active(trip)
+            await trackTrip(trip)
+        } catch is CancellationError {
+            // Cancellation is owned by `cancelTrip`, which already set the phase.
+        } catch {
+            phase = .failed(message: errorPresenter.message(for: error))
+            if case RideError.sessionExpired = error { isSessionExpired = true }
+        }
+    }
 
+    /// Polls `trip` until it reaches a terminal status, driving `phase`
+    /// throughout. Shared by `runBooking` (right after a fresh request) and
+    /// `checkForActiveRide` (resuming tracking of a ride recovered from the
+    /// backend, whose `.active` phase was never entered via a request in this
+    /// app session).
+    private func trackTrip(_ trip: Trip) async {
+        do {
             for try await updated in pollRideStatusUseCase.execute(rideID: trip.id) {
                 try Task.checkCancellation()
                 if updated.status == .completed {
@@ -129,6 +147,40 @@ final class TripBookingViewModel: ObservableObject {
         } catch {
             phase = .failed(message: errorPresenter.message(for: error))
             if case RideError.sessionExpired = error { isSessionExpired = true }
+        }
+    }
+
+    /// Recovers a pending/accepted/ongoing ride whose in-memory `phase` was
+    /// lost (app relaunch, backgrounding, a fresh `TripBookingViewModel`
+    /// instance, etc.) by asking the backend directly. A no-op whenever a
+    /// booking flow is already in progress this session (`phase` isn't
+    /// `.idle`) — this is specifically for recovering state lost ACROSS a
+    /// screen transition or relaunch, never for interrupting a live flow.
+    /// Safe to call repeatedly (e.g. on every Home-screen appearance): once
+    /// `phase` becomes non-idle, subsequent calls are no-ops until it's idle
+    /// again.
+    func checkForActiveRide() {
+        guard phase.isIdle else { return }
+        bookingTask = Task { [weak self] in
+            await self?.recoverActiveRideIfAny()
+        }
+    }
+
+    private func recoverActiveRideIfAny() async {
+        do {
+            guard let trip = try await getActiveRideUseCase.execute() else { return }
+            try Task.checkCancellation()
+            // Re-check after the `await` above: a booking flow could have
+            // started in the meantime (e.g. the rider tapped Confirm Ride
+            // while this check was in flight) - don't clobber it.
+            guard phase.isIdle else { return }
+            phase = .active(trip)
+            await trackTrip(trip)
+        } catch is CancellationError {
+        } catch {
+            // Best-effort: a failed recovery check shouldn't disrupt the
+            // normal idle state - the rider can still request a new ride,
+            // and the next Home-screen appearance will simply retry.
         }
     }
 
