@@ -15,72 +15,121 @@ struct RatingSubmissionView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var selectedScore = 0
 
-    init(rideID: String, dependencies: TripBookingDependencies = TripBookingDependencies()) {
+    /// Driver name + fare are display-only, sourced from the `Trip` the
+    /// caller already has in hand (`TripBookingStatusView`'s `.completed`
+    /// phase) — not fetched here. `RatingSubmissionViewModel` itself still
+    /// only knows the ride ID, unchanged: submitting a rating needs nothing
+    /// else.
+    private let driverName: String?
+    private let fare: Double
+
+    init(rideID: String, driverName: String?, fare: Double,
+         dependencies: TripBookingDependencies = TripBookingDependencies()) {
         _viewModel = StateObject(wrappedValue: dependencies.makeRatingSubmissionViewModel(rideID: rideID))
+        self.driverName = driverName
+        self.fare = fare
     }
 
     var body: some View {
-        VStack(spacing: 20) {
+        VStack {
             Capsule()
-                .foregroundColor(Color(.systemGray5))
+                .fill(AppColors.borderHairline)
                 .frame(width: 50, height: 6)
+                .padding(.top, AppSpacing.sm)
 
-            Image(systemName: "flag.checkered")
-                .font(.system(size: 40))
-                .foregroundStyle(.green)
-                .accessibilityHidden(true)
+            Spacer()
 
-            Text("How was your ride?")
-                .font(.title2).bold()
+            VStack(spacing: AppSpacing.lg) {
+                completedIcon
 
-            starPicker
+                VStack(spacing: AppSpacing.xs) {
+                    Text("TRIP COMPLETED · \(fare.toCurrency())")
+                        .font(.caption.weight(.bold))
+                        .foregroundStyle(AppColors.accent)
 
-            if let errorMessage = viewModel.errorMessage {
-                Text(errorMessage)
-                    .font(.subheadline)
-                    .foregroundStyle(.red)
-                    .multilineTextAlignment(.center)
-                    .accessibilityIdentifier("rating_error_message")
-            }
+                    Text("How was \(driverName ?? "your driver")'s ride?")
+                        .font(.title2.weight(.bold))
+                        .foregroundStyle(AppColors.textPrimary)
+                        .multilineTextAlignment(.center)
 
-            Button {
-                viewModel.submit(score: selectedScore)
-            } label: {
-                HStack {
-                    Spacer()
-                    if viewModel.isSubmitting {
-                        ProgressView()
-                    } else {
-                        Text("Submit")
-                    }
-                    Spacer()
+                    Text("Your feedback helps improve the community")
+                        .font(.subheadline)
+                        .foregroundStyle(AppColors.textMuted)
+                }
+
+                starPicker
+
+                if let errorMessage = viewModel.errorMessage {
+                    Text(errorMessage)
+                        .font(.subheadline)
+                        .foregroundStyle(AppColors.danger)
+                        .multilineTextAlignment(.center)
+                        .accessibilityIdentifier("rating_error_message")
                 }
             }
-            .buttonStyle(.borderedProminent)
-            .disabled(selectedScore == 0 || viewModel.isSubmitting)
-            .accessibilityIdentifier("rating_submit_button")
+            .padding(.horizontal, AppSpacing.xl)
 
-            Button("Skip") { dismiss() }
-                .disabled(viewModel.isSubmitting)
-                .accessibilityIdentifier("rating_skip_button")
+            Spacer()
+
+            VStack(spacing: AppSpacing.md) {
+                Button {
+                    viewModel.submit(score: selectedScore)
+                } label: {
+                    ZStack {
+                        Text("Submit rating")
+                            .font(.subheadline.weight(.semibold))
+                            .opacity(viewModel.isSubmitting ? 0 : 1)
+                        if viewModel.isSubmitting {
+                            ProgressView().tint(AppColors.textOnAccent)
+                        }
+                    }
+                    .frame(maxWidth: .infinity, minHeight: 52)
+                }
+                .foregroundStyle(AppColors.textOnAccent)
+                .background(AppColors.textPrimary, in: Capsule())
+                .disabled(selectedScore == 0 || viewModel.isSubmitting)
+                .opacity(selectedScore == 0 ? 0.5 : 1)
+                .accessibilityIdentifier("rating_submit_button")
+
+                Button("Skip for now") { dismiss() }
+                    .font(.subheadline)
+                    .foregroundStyle(AppColors.textMuted)
+                    .disabled(viewModel.isSubmitting)
+                    .accessibilityIdentifier("rating_skip_button")
+            }
+            .padding(.horizontal, AppSpacing.xl)
+            .padding(.bottom, AppSpacing.lg)
         }
-        .padding(24)
+        .frame(maxHeight: .infinity)
         .interactiveDismissDisabled(viewModel.isSubmitting)
         .onChange(of: viewModel.didSubmit) { didSubmit in
             if didSubmit { dismiss() }
         }
     }
 
+    private var completedIcon: some View {
+        ZStack {
+            Circle().fill(AppColors.accent)
+            Image(systemName: "checkmark")
+                .font(.system(size: 28, weight: .bold))
+                .foregroundStyle(AppColors.textOnAccent)
+        }
+        .frame(width: 72, height: 72)
+        .shadow(color: AppColors.accent.opacity(0.35), radius: 12, x: 0, y: 6)
+        .accessibilityHidden(true)
+    }
+
     private var starPicker: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: AppSpacing.md) {
             ForEach(1...5, id: \.self) { star in
                 Image(systemName: star <= selectedScore ? "star.fill" : "star")
-                    .font(.system(size: 32))
-                    .foregroundStyle(.orange)
+                    .font(.system(size: 34))
+                    .foregroundStyle(star <= selectedScore ? AppColors.ratingGold : AppColors.borderHairline)
                     .onTapGesture { selectedScore = star }
                     .accessibilityIdentifier("rating_star_\(star)")
             }
         }
+        .frame(maxWidth: .infinity)
         .accessibilityElement(children: .combine)
         .accessibilityLabel("Rating: \(selectedScore) out of 5 stars")
         .accessibilityAdjustableAction { direction in
@@ -96,7 +145,7 @@ struct RatingSubmissionView: View {
 #if DEBUG
 struct RatingSubmissionView_Previews: PreviewProvider {
     static var previews: some View {
-        RatingSubmissionView(rideID: "ride-1")
+        RatingSubmissionView(rideID: "ride-1", driverName: "Jane Driver", fare: 42.5)
     }
 }
 #endif

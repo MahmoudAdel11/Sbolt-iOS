@@ -26,6 +26,7 @@ private struct DesignSystemPreviewView: View {
                 swatchRow("accentTextDark", AppColors.accentTextDark)
                 swatchRow("accentTextSecondary", AppColors.accentTextSecondary)
                 swatchRow("accentTint", AppColors.accentTint)
+                swatchRow("textOnAccent", AppColors.textOnAccent)
                 swatchRow("danger", AppColors.danger)
                 swatchRow("successBackground", AppColors.successBackground)
                 swatchRow("successText", AppColors.successText)
