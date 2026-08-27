@@ -83,10 +83,6 @@ final class SettingsViewModel: ObservableObject {
         }
     }
 
-    func setDarkMode(_ isOn: Bool) {
-        persist { $0.isDarkModeEnabled = isOn }
-    }
-
     func setPushNotifications(_ isOn: Bool) {
         persist { $0.isPushNotificationsEnabled = isOn }
     }

@@ -14,6 +14,12 @@ struct SettingsView: View {
     @StateObject private var viewModel: SettingsViewModel
     @EnvironmentObject private var session: AppSessionStore
     @State private var showLogoutConfirmation = false
+    /// Same key `Yalla_GoApp` reads via `.preferredColorScheme` — a local,
+    /// device-only preference, not routed through `SettingsViewModel`/
+    /// `SettingsRepository` (unlike Push Notifications/Language, this has no
+    /// backend concept to sync and needs to be readable from the app root,
+    /// which doesn't have a `SettingsViewModel` instance).
+    @AppStorage(AppearanceMode.storageKey) private var appearanceModeRawValue = AppearanceMode.system.rawValue
 
     init(dependencies: SettingsDependencies = SettingsDependencies()) {
         _viewModel = StateObject(wrappedValue: dependencies.makeSettingsViewModel())
@@ -58,19 +64,33 @@ struct SettingsView: View {
 
     // MARK: - Sections
 
+    /// A genuine 3-state control (System/Light/Dark), not the previous
+    /// on/off toggle that had no way to express "follow the system" — see
+    /// `AppearanceMode`'s own doc comment. Reads/writes the same
+    /// `@AppStorage` key `Yalla_GoApp` applies via `.preferredColorScheme`,
+    /// so picking a value here changes the whole app's appearance live.
     private var appearanceSection: some View {
         Section("Appearance") {
-            Toggle(isOn: darkModeBinding) {
-                SettingsRow(systemImage: "moon.fill", title: "Dark Mode", tint: .indigo)
+            VStack(alignment: .leading, spacing: AppSpacing.sm) {
+                SettingsRow(systemImage: "moon.fill", title: "Appearance")
+
+                Picker("Appearance", selection: appearanceModeBinding) {
+                    ForEach(AppearanceMode.allCases) { mode in
+                        Text(mode.displayName).tag(mode)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .labelsHidden()
             }
-            .accessibilityIdentifier("settings_dark_mode_toggle")
+            .padding(.vertical, AppSpacing.xs)
+            .accessibilityIdentifier("settings_appearance_picker")
         }
     }
 
     private var notificationsSection: some View {
         Section("Notifications") {
             Toggle(isOn: notificationsBinding) {
-                SettingsRow(systemImage: "bell.fill", title: "Push Notifications", tint: .red)
+                SettingsRow(systemImage: "bell.fill", title: "Push Notifications")
             }
             .accessibilityIdentifier("settings_notifications_toggle")
         }
@@ -83,8 +103,7 @@ struct SettingsView: View {
                                         systemImage: "globe",
                                         message: "Language selection isn't available yet.")
             } label: {
-                SettingsRow(systemImage: "globe", title: "Language",
-                            tint: .blue, value: viewModel.settings.language)
+                SettingsRow(systemImage: "globe", title: "Language", value: viewModel.settings.language)
             }
             .accessibilityIdentifier("settings_language_row")
         }
@@ -97,7 +116,7 @@ struct SettingsView: View {
                                         systemImage: "hand.raised.fill",
                                         message: "Our privacy policy will appear here.")
             } label: {
-                SettingsRow(systemImage: "hand.raised.fill", title: "Privacy Policy", tint: .gray)
+                SettingsRow(systemImage: "hand.raised.fill", title: "Privacy Policy")
             }
 
             NavigationLink {
@@ -105,7 +124,7 @@ struct SettingsView: View {
                                         systemImage: "doc.text.fill",
                                         message: "Our terms & conditions will appear here.")
             } label: {
-                SettingsRow(systemImage: "doc.text.fill", title: "Terms & Conditions", tint: .gray)
+                SettingsRow(systemImage: "doc.text.fill", title: "Terms & Conditions")
             }
         }
     }
@@ -117,7 +136,7 @@ struct SettingsView: View {
                                         systemImage: "star.fill",
                                         message: "App Store rating will be available in a future update.")
             } label: {
-                SettingsRow(systemImage: "star.fill", title: "Rate App", tint: .orange)
+                SettingsRow(systemImage: "star.fill", title: "Rate App")
             }
 
             NavigationLink {
@@ -125,16 +144,16 @@ struct SettingsView: View {
                                         systemImage: "square.and.arrow.up",
                                         message: "Sharing will be available in a future update.")
             } label: {
-                SettingsRow(systemImage: "square.and.arrow.up", title: "Share App", tint: .green)
+                SettingsRow(systemImage: "square.and.arrow.up", title: "Share App")
             }
         }
     }
 
     private var aboutSection: some View {
         Section("About") {
-            SettingsRow(systemImage: "app.fill", title: "Application", tint: .teal, value: AppInfo.name)
-            SettingsRow(systemImage: "person.2.fill", title: "Developer", tint: .teal, value: AppInfo.developer)
-            SettingsRow(systemImage: "number", title: "Version", tint: .teal, value: AppInfo.version)
+            SettingsRow(systemImage: "app.fill", title: "Application", value: AppInfo.name)
+            SettingsRow(systemImage: "person.2.fill", title: "Developer", value: AppInfo.developer)
+            SettingsRow(systemImage: "number", title: "Version", value: AppInfo.version)
         }
     }
 
@@ -154,7 +173,7 @@ struct SettingsView: View {
                         driverProfile: viewModel.driverProfile
                     )
                 } label: {
-                    SettingsRow(systemImage: "scooter", title: "Vehicle & Scooter Type", tint: .blue)
+                    SettingsRow(systemImage: "scooter", title: "Vehicle & Scooter Type")
                 }
                 .accessibilityIdentifier("settings_vehicle_row")
             } else {
@@ -165,7 +184,7 @@ struct SettingsView: View {
                         message: "Driver sign-up isn't available yet."
                     )
                 } label: {
-                    SettingsRow(systemImage: "car.fill", title: "Become a Driver", tint: .blue)
+                    SettingsRow(systemImage: "car.fill", title: "Become a Driver")
                 }
                 .accessibilityIdentifier("settings_become_driver_row")
             }
@@ -190,9 +209,9 @@ struct SettingsView: View {
 
     // MARK: - Bindings
 
-    private var darkModeBinding: Binding<Bool> {
-        Binding(get: { viewModel.settings.isDarkModeEnabled },
-                set: { viewModel.setDarkMode($0) })
+    private var appearanceModeBinding: Binding<AppearanceMode> {
+        Binding(get: { AppearanceMode(rawValue: appearanceModeRawValue) ?? .system },
+                set: { appearanceModeRawValue = $0.rawValue })
     }
 
     private var notificationsBinding: Binding<Bool> {

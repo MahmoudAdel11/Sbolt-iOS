@@ -86,7 +86,7 @@ struct RatingSubmissionView: View {
                     .frame(maxWidth: .infinity, minHeight: 52)
                 }
                 .foregroundStyle(AppColors.textOnAccent)
-                .background(AppColors.textPrimary, in: Capsule())
+                .background(AppColors.solidDark, in: Capsule())
                 .disabled(selectedScore == 0 || viewModel.isSubmitting)
                 .opacity(selectedScore == 0 ? 0.5 : 1)
                 .accessibilityIdentifier("rating_submit_button")

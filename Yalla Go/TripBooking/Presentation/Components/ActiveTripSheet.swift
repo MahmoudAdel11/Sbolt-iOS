@@ -64,7 +64,7 @@ struct ActiveTripSheet: View {
                     .frame(maxWidth: .infinity, minHeight: 44)
             }
             .foregroundStyle(AppColors.textOnAccent)
-            .background(AppColors.textPrimary, in: Capsule())
+            .background(AppColors.solidDark, in: Capsule())
             .accessibilityIdentifier("trip_call_driver_button")
             .accessibilityHint("Calling isn't available yet")
 

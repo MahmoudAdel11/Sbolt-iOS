@@ -34,13 +34,13 @@ struct SettingsViewModelTests {
 
     @Test func loadSettingsSuccess() async {
         var stored = AppSettings.default
-        stored.isDarkModeEnabled = true
+        stored.isPushNotificationsEnabled = false
         let (sut, _) = makeSUT(settings: stored)
 
         sut.loadSettings()
         await sut.activeTask?.value
 
-        #expect(sut.settings.isDarkModeEnabled == true)
+        #expect(sut.settings.isPushNotificationsEnabled == false)
         #expect(sut.errorMessage == nil)
     }
 
@@ -53,36 +53,26 @@ struct SettingsViewModelTests {
         #expect(sut.errorMessage == "We couldn't load your settings. Please try again.")
     }
 
-    @Test func toggleDarkModeUpdatesImmediatelyAndPersists() async {
+    @Test func toggleNotificationsUpdatesImmediatelyAndPersists() async {
         let (sut, _) = makeSUT()
-        #expect(sut.settings.isDarkModeEnabled == false)
-
-        sut.setDarkMode(true)
-        #expect(sut.settings.isDarkModeEnabled == true) // optimistic, synchronous
-        await sut.activeTask?.value
-
-        #expect(sut.settings.isDarkModeEnabled == true)
-        #expect(sut.errorMessage == nil)
-    }
-
-    @Test func toggleNotificationsUpdatesState() async {
-        let (sut, _) = makeSUT()
+        #expect(sut.settings.isPushNotificationsEnabled == true)
 
         sut.setPushNotifications(false)
-        #expect(sut.settings.isPushNotificationsEnabled == false)
+        #expect(sut.settings.isPushNotificationsEnabled == false) // optimistic, synchronous
         await sut.activeTask?.value
 
         #expect(sut.settings.isPushNotificationsEnabled == false)
+        #expect(sut.errorMessage == nil)
     }
 
     @Test func toggleFailureRevertsAndPublishesError() async {
         let (sut, _) = makeSUT(behavior: .failure)
 
-        sut.setDarkMode(true)
-        #expect(sut.settings.isDarkModeEnabled == true) // optimistic
+        sut.setPushNotifications(false)
+        #expect(sut.settings.isPushNotificationsEnabled == false) // optimistic
         await sut.activeTask?.value
 
-        #expect(sut.settings.isDarkModeEnabled == false) // reverted
+        #expect(sut.settings.isPushNotificationsEnabled == true) // reverted
         #expect(sut.errorMessage == "We couldn't save your settings. Please try again.")
     }
 

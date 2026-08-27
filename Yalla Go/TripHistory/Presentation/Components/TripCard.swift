@@ -24,9 +24,8 @@ struct TripCard: View {
             Divider()
             bottomRow
         }
-        .padding(16)
-        .background(Color(.secondarySystemGroupedBackground),
-                    in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .padding(AppSpacing.lg)
+        .background(AppColors.backgroundSecondary, in: RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous))
         .accessibilityElement(children: .combine)
         .accessibilityLabel(accessibilitySummary)
     }
@@ -34,9 +33,11 @@ struct TripCard: View {
     // MARK: - Pieces
 
     private var topRow: some View {
-        HStack {
-            Label("Ride", systemImage: "car.fill")
+        HStack(spacing: AppSpacing.sm) {
+            TierBadge(tier: trip.tier, size: 24)
+            Text("Ride")
                 .font(.subheadline.weight(.semibold))
+                .foregroundStyle(AppColors.textPrimary)
             Spacer()
             statusBadge
         }
@@ -45,30 +46,30 @@ struct TripCard: View {
     private var statusBadge: some View {
         Text(trip.status.displayName)
             .font(.caption.weight(.semibold))
-            .padding(.horizontal, 8)
-            .padding(.vertical, 4)
-            .background(statusColor.opacity(0.15), in: Capsule())
+            .padding(.horizontal, AppSpacing.sm)
+            .padding(.vertical, AppSpacing.xs)
+            .background(statusBackground, in: Capsule())
             .foregroundStyle(statusColor)
     }
 
     private var fareRow: some View {
-        HStack(spacing: 6) {
+        HStack(spacing: AppSpacing.xs) {
             Text(trip.tier.description)
             Text("·")
             Text(trip.fare.toCurrency())
                 .fontWeight(.semibold)
         }
         .font(.subheadline)
-        .foregroundStyle(.secondary)
+        .foregroundStyle(AppColors.textSecondary)
         .accessibilityIdentifier("trip_card_fare")
     }
 
     private var route: some View {
         HStack(alignment: .top, spacing: 10) {
             VStack(spacing: 2) {
-                Image(systemName: "circle.fill").font(.system(size: 8)).foregroundStyle(.secondary)
-                Rectangle().fill(Color.secondary.opacity(0.4)).frame(width: 1, height: 18)
-                Image(systemName: "mappin.circle.fill").font(.system(size: 10)).foregroundStyle(Color.accentColor)
+                Image(systemName: "circle.fill").font(.system(size: 8)).foregroundStyle(AppColors.textMuted)
+                Rectangle().fill(AppColors.textMuted.opacity(0.4)).frame(width: 1, height: 18)
+                Image(systemName: "mappin.circle.fill").font(.system(size: 10)).foregroundStyle(AppColors.accent)
             }
             .accessibilityHidden(true)
             .padding(.top, 2)
@@ -77,6 +78,7 @@ struct TripCard: View {
                 Text(formatter.placeName(trip.pickupAddress, fallback: trip.pickupCoordinate)).font(.subheadline)
                 Text(formatter.placeName(trip.dropoffAddress, fallback: trip.destinationCoordinate)).font(.subheadline)
             }
+            .foregroundStyle(AppColors.textPrimary)
             Spacer(minLength: 0)
         }
     }
@@ -84,16 +86,32 @@ struct TripCard: View {
     private var bottomRow: some View {
         Text("\(formatter.date(trip.requestedAt)) · \(formatter.time(trip.requestedAt))")
             .font(.caption)
-            .foregroundStyle(.secondary)
+            .foregroundStyle(AppColors.textMuted)
     }
 
+    /// Completed/Cancelled route through the Phase 1 success/warning
+    /// tokens (so they respect dark mode correctly) per this task's
+    /// explicit instruction — Cancelled moves from the previous raw red to
+    /// the warning (orange) token, a deliberate semantic recolor, not a bug
+    /// left in place. Requested/Accepted/Ongoing (not covered by that
+    /// instruction) just get the same design-system-token treatment for the
+    /// in-progress states, in place of raw `.blue`/`.orange`/`.secondary`.
     private var statusColor: Color {
         switch trip.status {
-        case .completed: return .green
-        case .cancelled: return .red
-        case .ongoing:   return .blue
-        case .accepted:  return .orange
-        case .requested: return .secondary
+        case .completed: return AppColors.successText
+        case .cancelled: return AppColors.warningText
+        case .ongoing:   return AppColors.accent
+        case .accepted:  return AppColors.accentTextSecondary
+        case .requested: return AppColors.textMuted
+        }
+    }
+
+    private var statusBackground: Color {
+        switch trip.status {
+        case .completed: return AppColors.successBackground
+        case .cancelled: return AppColors.warningBackground
+        case .ongoing, .accepted: return AppColors.accentTint
+        case .requested: return AppColors.backgroundSubtle
         }
     }
 

@@ -170,6 +170,7 @@
 		B1329CFE301A99DC007D8AA6 /* SettingsPlaceholderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329CFD301A99DC007D8AA6 /* SettingsPlaceholderView.swift */; };
 		B1329D00301A9A22007D8AA6 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329CFF301A9A22007D8AA6 /* SettingsView.swift */; };
 		B1329D03301AA537007D8AA6 /* AppSessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329D02301AA537007D8AA6 /* AppSessionStore.swift */; };
+		922AD56508F99D0F92CF27F4 /* AppearanceMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F619239554745C19B6676D /* AppearanceMode.swift */; };
 		B1329D05301AA53B007D8AA6 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329D04301AA53B007D8AA6 /* MainTabView.swift */; };
 		B1329D07301AA540007D8AA6 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329D06301AA540007D8AA6 /* RootView.swift */; };
 		B1329D16301AA7EB007D8AA6 /* Driver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1329D15301AA7EB007D8AA6 /* Driver.swift */; };
@@ -416,6 +417,7 @@
 		B1329CFD301A99DC007D8AA6 /* SettingsPlaceholderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsPlaceholderView.swift; sourceTree = "<group>"; };
 		B1329CFF301A9A22007D8AA6 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		B1329D02301AA537007D8AA6 /* AppSessionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSessionStore.swift; sourceTree = "<group>"; };
+		04F619239554745C19B6676D /* AppearanceMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceMode.swift; sourceTree = "<group>"; };
 		B1329D04301AA53B007D8AA6 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		B1329D06301AA540007D8AA6 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		B1329D15301AA7EB007D8AA6 /* Driver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Driver.swift; sourceTree = "<group>"; };
@@ -1508,6 +1510,7 @@
 			isa = PBXGroup;
 			children = (
 				B1329D02301AA537007D8AA6 /* AppSessionStore.swift */,
+				04F619239554745C19B6676D /* AppearanceMode.swift */,
 				B1329D04301AA53B007D8AA6 /* MainTabView.swift */,
 				B1329D06301AA540007D8AA6 /* RootView.swift */,
 			);
@@ -2140,6 +2143,7 @@
 				1EA6E3B02D9CAF6D00F8E47A /* YallaGoLocation .swift in Sources */,
 				B1329C7E301983B8007D8AA6 /* ProfileError.swift in Sources */,
 				B1329D03301AA537007D8AA6 /* AppSessionStore.swift in Sources */,
+				922AD56508F99D0F92CF27F4 /* AppearanceMode.swift in Sources */,
 				B152BFAD301D5314004C677C /* RemoteTripRepository.swift in Sources */,
 				B15639C93023C51F001EB8C7 /* JSONCoding.swift in Sources */,
 				B1329CF8301A99BF007D8AA6 /* SettingsDependencies.swift in Sources */,
