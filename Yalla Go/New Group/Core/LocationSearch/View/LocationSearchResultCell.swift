@@ -11,28 +11,28 @@ struct LocationSearchResultCell: View {
     let title  : String
     let subtitle : String
     var body: some View {
-        HStack{
-            Image(systemName: "mappin.circle.fill")
-                .resizable()
-                .foregroundColor(.blue)
-                .accentColor(.white)
-                .frame(width: 40, height: 40)
-            
-            VStack(alignment: .leading, spacing: 4){
+        HStack(spacing: AppSpacing.md) {
+            ZStack {
+                Circle()
+                    .fill(AppColors.accent)
+                    .frame(width: 36, height: 36)
+                Image(systemName: "mappin")
+                    .foregroundStyle(.white)
+            }
+
+            VStack(alignment: .leading, spacing: 2) {
                 Text(title)
                     .font(.body)
-                
-                Text(subtitle)
-                    .font(.system(size: 15))
-                    .foregroundColor(.gray)
-                
-                Divider()
-            }
-            .padding(.leading,8)
-            .padding(.vertical,8)
-        }
-        .padding(.leading)
+                    .foregroundStyle(AppColors.accentTextDark)
 
+                Text(subtitle)
+                    .font(.subheadline)
+                    .foregroundStyle(AppColors.accentTextSecondary)
+            }
+            Spacer()
+        }
+        .padding(AppSpacing.md)
+        .background(AppColors.accentTint, in: RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous))
     }
 }
 
