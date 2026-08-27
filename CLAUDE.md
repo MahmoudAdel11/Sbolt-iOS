@@ -1,0 +1,1 @@
+Never run `git add`, `git commit`, or `git push` unless the current task's prompt explicitly instructs you to do so. Completing a coding task and reporting a summary does NOT imply permission to commit — these are always separate, explicit decisions made by the user.
