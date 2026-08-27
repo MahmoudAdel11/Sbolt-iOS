@@ -147,6 +147,16 @@ struct SettingsView: View {
                 }
                 .pickerStyle(.segmented)
                 .accessibilityIdentifier("settings_mode_picker")
+
+                NavigationLink {
+                    VehicleSettingsView(
+                        viewModel: DriverModeDependencies().makeVehicleSettingsViewModel(),
+                        driverProfile: viewModel.driverProfile
+                    )
+                } label: {
+                    SettingsRow(systemImage: "scooter", title: "Vehicle & Scooter Type", tint: .blue)
+                }
+                .accessibilityIdentifier("settings_vehicle_row")
             } else {
                 NavigationLink {
                     SettingsPlaceholderView(

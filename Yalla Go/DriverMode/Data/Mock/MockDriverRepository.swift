@@ -102,6 +102,26 @@ actor MockDriverRepository: DriverRepository {
         return completed
     }
 
+    func updateVehicle(
+        vehicleType: String?, vehicleColor: String?, licensePlate: String?, scooterType: RideType?
+    ) async throws -> User {
+        await simulateNetworkDelay()
+        guard behavior == .success else { throw DriverError.networkUnavailable }
+
+        let current = driverUser.driverProfile ?? DriverProfile(isOnline: isOnline)
+        let updated = DriverProfile(
+            isOnline: current.isOnline,
+            vehicleType: vehicleType ?? current.vehicleType,
+            vehicleColor: vehicleColor ?? current.vehicleColor,
+            licensePlate: licensePlate ?? current.licensePlate,
+            scooterType: scooterType ?? current.scooterType
+        )
+        driverUser = User(id: driverUser.id, username: driverUser.username, email: driverUser.email,
+                          phoneNumber: driverUser.phoneNumber, profileImageURL: driverUser.profileImageURL,
+                          createdAt: driverUser.createdAt, driverProfile: updated)
+        return driverUser
+    }
+
     // MARK: - Helpers
 
     private func simulateNetworkDelay() async {
