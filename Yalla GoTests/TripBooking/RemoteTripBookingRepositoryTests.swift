@@ -28,8 +28,11 @@ private final class StubAPIClient: APIClient {
 }
 
 private func rideJSON(id: String = "ride-1", status: String = "requested", driverId: String? = nil,
-                      driverSummaryJSON: String = "null", tier: String = "economy", fare: Double = 15.0) -> Data {
+                      driverSummaryJSON: String = "null", tier: String = "economy", fare: Double = 15.0,
+                      pickupAddress: String? = nil, dropoffAddress: String? = nil) -> Data {
     let driverField = driverId.map { "\"\($0)\"" } ?? "null"
+    let pickupAddressField = pickupAddress.map { "\"\($0)\"" } ?? "null"
+    let dropoffAddressField = dropoffAddress.map { "\"\($0)\"" } ?? "null"
     let json = """
     {
         "id": "\(id)", "rider_id": "rider-1", "driver_id": \(driverField),
@@ -37,6 +40,7 @@ private func rideJSON(id: String = "ride-1", status: String = "requested", drive
         "status": "\(status)", "tier": "\(tier)", "fare": \(fare),
         "pickup_latitude": 30.05, "pickup_longitude": 31.23,
         "dropoff_latitude": 30.06, "dropoff_longitude": 31.24,
+        "pickup_address": \(pickupAddressField), "dropoff_address": \(dropoffAddressField),
         "requested_at": "2026-01-01T00:00:00.000000Z",
         "accepted_at": null, "completed_at": null, "cancelled_at": null
     }
@@ -90,6 +94,67 @@ struct RemoteTripBookingRepositoryTests {
 
         #expect(trip.tier == .premium)
         #expect(trip.fare == 40.0)
+    }
+
+    @Test func requestRideSendsResolvedAddressesInRequestBody() async throws {
+        let client = StubAPIClient()
+        client.result = .success(rideJSON())
+        let sut = RemoteTripBookingRepository(client: client)
+
+        _ = try await sut.requestRide(
+            pickup: pickup, dropoff: dropoff, tier: .economy,
+            pickupAddress: "New Cairo", dropoffAddress: "Downtown Cairo"
+        )
+
+        let body = try #require(client.capturedEndpoint?.body)
+        let json = try #require(try JSONSerialization.jsonObject(with: body) as? [String: Any])
+        #expect(json["pickup_address"] as? String == "New Cairo")
+        #expect(json["dropoff_address"] as? String == "Downtown Cairo")
+    }
+
+    /// Per the confirmed decision, a failed/unavailable geocoding lookup must
+    /// still let the ride be created — nil addresses either encode as JSON
+    /// `null` or are omitted entirely (both mean "no address" to the
+    /// backend's optional, defaulted `RideRequestSchema` fields); either way
+    /// the request body must never contain a non-null placeholder string.
+    @Test func requestRideSendsNilAddressesWhenGeocodingFailed() async throws {
+        let client = StubAPIClient()
+        client.result = .success(rideJSON())
+        let sut = RemoteTripBookingRepository(client: client)
+
+        _ = try await sut.requestRide(
+            pickup: pickup, dropoff: dropoff, tier: .economy,
+            pickupAddress: nil, dropoffAddress: nil
+        )
+
+        let body = try #require(client.capturedEndpoint?.body)
+        let json = try #require(try JSONSerialization.jsonObject(with: body) as? [String: Any])
+        let pickupAddress = json["pickup_address"]
+        let dropoffAddress = json["dropoff_address"]
+        #expect(pickupAddress == nil || pickupAddress is NSNull)
+        #expect(dropoffAddress == nil || dropoffAddress is NSNull)
+    }
+
+    @Test func requestRideDecodesResolvedAddressesFromResponse() async throws {
+        let client = StubAPIClient()
+        client.result = .success(rideJSON(pickupAddress: "New Cairo", dropoffAddress: "Downtown Cairo"))
+        let sut = RemoteTripBookingRepository(client: client)
+
+        let trip = try await sut.requestRide(pickup: pickup, dropoff: dropoff, tier: .economy)
+
+        #expect(trip.pickupAddress == "New Cairo")
+        #expect(trip.dropoffAddress == "Downtown Cairo")
+    }
+
+    @Test func requestRideDecodesNilAddressesWhenBackendHasNone() async throws {
+        let client = StubAPIClient()
+        client.result = .success(rideJSON())
+        let sut = RemoteTripBookingRepository(client: client)
+
+        let trip = try await sut.requestRide(pickup: pickup, dropoff: dropoff, tier: .economy)
+
+        #expect(trip.pickupAddress == nil)
+        #expect(trip.dropoffAddress == nil)
     }
 
     @Test func requestRideMapsConflictToActiveRideAlreadyExists() async {
