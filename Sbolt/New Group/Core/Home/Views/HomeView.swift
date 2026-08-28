@@ -55,9 +55,22 @@ struct HomeView: View {
                     idleContent
                 }
 
-                MapActionButton(mapState: $mapState)
-                    .padding(.leading)
-                    .padding(.top, 5)
+                // Only shown once there's an active search/selection to back
+                // out of. In `.noInput` this rendered as an unused hamburger
+                // icon (`imageNameForState` -> "line.3.horizontal") whose
+                // action was a bare `print` — confirmed no navigation
+                // destination or side effect anywhere. The button itself
+                // stays wired for the other two states, where it's a real
+                // back/clear-selection control (`actionForState`) — only the
+                // idle-state rendering is removed, not the component.
+                if mapState != .noInput {
+                    MapActionButton(mapState: $mapState)
+                        .padding(.leading)
+                        .padding(.top, 5)
+                } else {
+                    greetingHeader
+                        .padding(.top, AppSpacing.xl)
+                }
 
                 // Floating status card over the map while a ride is active —
                 // reads the same `bookingViewModel` `RideRequestView`'s
@@ -107,12 +120,12 @@ struct HomeView: View {
     /// Search bar + recent trips, stacked below the shrunk map preview.
     /// A fixed top spacer (rather than nesting this inside the map's own
     /// layout) keeps the map view's declaration site untouched — see the
-    /// identity-preservation note above.
+    /// identity-preservation note above. The greeting itself now renders
+    /// above the map (see the `greetingHeader`/hamburger-removal site in
+    /// `body`), not here.
     private var idleContent: some View {
         VStack(spacing: AppSpacing.lg) {
             Color.clear.frame(height: 60 + mapPreviewHeight + AppSpacing.lg)
-
-            greetingHeader
 
             LocationSearchActivationView()
                 .onTapGesture {
