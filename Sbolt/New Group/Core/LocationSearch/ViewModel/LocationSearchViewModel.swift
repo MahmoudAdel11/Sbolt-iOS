@@ -29,12 +29,10 @@ class LocationSearchViewModel : NSObject , ObservableObject {
         }
     }
     var userLocation :CLLocationCoordinate2D?
-    //
      init(routeRepository: RouteRepository = MapKitRouteRepository()){
          self.routeRepository = routeRepository
          super.init()
          searchCompleter.delegate = self
-         //.......queryFragment ...... for  search completer
          searchCompleter.queryFragment = queryFragment
     }
 

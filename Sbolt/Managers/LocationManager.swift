@@ -20,7 +20,7 @@ class LocationManager : NSObject ,ObservableObject{
     override init() {
         super.init()
         locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest//............best user locc    aa
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.distanceFilter = 10
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
