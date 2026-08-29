@@ -35,7 +35,14 @@ enum AuthValidationError: Error, Equatable {
 /// Stateless input validation shared by the authentication view models.
 struct AuthInputValidator {
 
-    static let minimumPasswordLength = 6
+    /// Must match the backend's `UserRegisterRequest.password` Pydantic
+    /// field (`Field(min_length=8)`, `app/api/v1/schemas/user.py`) — this
+    /// was previously 6, silently out of sync with the server's actual
+    /// requirement of 8. A 6-7 character password passed client-side
+    /// validation, then failed server-side with a 422 that the client
+    /// mapped to a generic "Please check your details and try again."
+    /// message, giving no indication of what was actually wrong.
+    static let minimumPasswordLength = 8
 
     func validateLogin(email: String, password: String) throws {
         try validateEmail(email)

@@ -45,7 +45,7 @@ struct RegisterView: View {
 
     private var header: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Join Yalla Go")
+            Text("Join Sbolt")
                 .font(.title).bold()
             Text("Create an account to start booking rides.")
                 .font(.subheadline)
