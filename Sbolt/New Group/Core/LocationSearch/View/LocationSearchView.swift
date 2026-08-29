@@ -9,7 +9,7 @@ import SwiftUI
 
 struct LocationSearchView: View {
     @Binding var mapState: MapViewState
-    @EnvironmentObject var viewModel : LocationSearchViewModel // CASTING OBJECT .............................
+    @EnvironmentObject var viewModel : LocationSearchViewModel
 
     var body: some View {
         VStack(spacing: AppSpacing.md) {

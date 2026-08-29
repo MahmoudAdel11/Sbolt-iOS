@@ -18,9 +18,7 @@ struct YallaMapViewRepresentable:UIViewRepresentable{
    
     
     func makeUIView(context: Context) -> some UIView {
-        //.......
         mapView.delegate = context.coordinator
-        //.......
         mapView.isRotateEnabled = false
         mapView.showsUserLocation = true
         // NOTE: camera is controlled manually below; do not also enable
@@ -71,33 +69,25 @@ private extension CLLocationCoordinate2D {
     }
 }
 extension YallaMapViewRepresentable{
-    //.........MKMapViewDelegate
     class MapCoordinator: NSObject,MKMapViewDelegate {
-        
-        // NOTE : properties
-        
+
         let parent : YallaMapViewRepresentable
         var userLocationCoordinate :CLLocationCoordinate2D?
         var currentRegion :MKCoordinateRegion?
         /// Destination the route/annotation are currently drawn for.
         var currentDestinationCoordinate :CLLocationCoordinate2D?
         private var hasSetInitialRegion = false
-        
-        // NOTE : Lifecycle
 
-        //.......
        init(parent : YallaMapViewRepresentable) {
            self.parent=parent
            super.init()
         }
-        // NOTE : MKMapViewDelegate
 
         func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
             self.userLocationCoordinate = userLocation.coordinate
             let region = MKCoordinateRegion(
                 center: CLLocationCoordinate2D(latitude: userLocation.coordinate.latitude, longitude: userLocation.coordinate.longitude)
                 , span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05 ))
-            // to update current region
             self.currentRegion = region
 
             // Only recentre once, on the first fix. Recentring on every update
@@ -114,7 +104,6 @@ extension YallaMapViewRepresentable{
             return polyline
         }
         
-        // NOTE : helper
         func addAndSelectAnnotation(withcoordinate coordinate: CLLocationCoordinate2D){
             parent.mapView.removeAnnotations(parent.mapView.annotations)
             let anno = MKPointAnnotation()
@@ -137,7 +126,6 @@ extension YallaMapViewRepresentable{
             
         }
       
-        // func to clear map view ........
         func clearMapViewAndRecentreOnUserLocation(){
             parent.mapView.removeAnnotations(parent.mapView.annotations)
             parent.mapView.removeOverlays(parent.mapView.overlays)
