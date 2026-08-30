@@ -112,7 +112,22 @@ struct AvailableRidesMapViewRepresentable: UIViewRepresentable {
         }
 
         /// Fires whenever a genuinely new ride ID shows up — see `AutoZoomTrigger`.
+        ///
+        /// Gated on `hasSetInitialRegion`: that flag only becomes `true`
+        /// inside `mapView(_:didUpdate:)`, MapKit's own internal
+        /// user-location delegate callback — a separate, independently-timed
+        /// pipeline from the `LocationManager`/`DriverModeViewModel` location
+        /// that gates when ride polling starts. Ride data can arrive before
+        /// MapKit's own blue dot has ever fixed, so `fitCamera` previously
+        /// could silently compute a bounding box from ride pickups alone,
+        /// excluding the driver entirely — invisible when the omitted driver
+        /// happened to be near the ride anyway, but producing an
+        /// unanchored/needlessly wide frame once ride and driver were
+        /// genuinely far apart. Not marking `incomingIDs` as zoomed when
+        /// skipped means the very next poll tick retries once location is
+        /// ready, rather than losing the zoom for these rides permanently.
         func autoZoomIfNeeded(rides: [Trip]) {
+            guard hasSetInitialRegion else { return }
             let incomingIDs = Set(rides.map(\.id))
             guard AutoZoomTrigger.shouldZoom(zoomedRideIDs: zoomedRideIDs, incomingIDs: incomingIDs) else { return }
             zoomedRideIDs.formUnion(incomingIDs)
