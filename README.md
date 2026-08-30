@@ -2,8 +2,35 @@
 
 A full-stack, scooter-hailing platform built end-to-end — native iOS app + FastAPI backend — covering the complete rider and driver experience.
 
-<!-- Add your app screenshots here -->
-<!-- ![Home Screen](screenshots/home.png) ![Ride Request](screenshots/ride-request.png) ![Driver Mode](screenshots/driver-home.png) -->
+## Demo
+
+<table align="center">
+  <tr>
+    <th>Rider Experience</th>
+    <th>Driver Experience</th>
+  </tr>
+  <tr>
+    <td><img src="screenshots/User-Driver.gif" width="280" alt="Rider Demo"></td>
+    <td><img src="screenshots/Driver-Demo.gif" width="280" alt="Driver Demo"></td>
+  </tr>
+</table>
+
+### Screenshots
+
+<p align="center">
+  <img src="screenshots/home.png" width="200" alt="Home Screen">
+  <img src="screenshots/ride-request.png" width="200" alt="Ride Request">
+  <img src="screenshots/trip-tracking.png" width="200" alt="Trip Tracking">
+  <img src="screenshots/driver-home.png" width="200" alt="Driver Home">
+</p>
+
+<p align="center">
+  <img src="screenshots/trip-history.png" width="200" alt="Trip History (Rider)">
+  <img src="screenshots/trip-history(driver).png" width="200" alt="Trip History (Driver)">
+  <img src="screenshots/rating.png" width="200" alt="Rating Screen">
+  <img src="screenshots/profile.png" width="200" alt="Profile">
+  <img src="screenshots/settings.png" width="200" alt="Settings">
+</p>
 
 ## Overview
 
