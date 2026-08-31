@@ -2,6 +2,7 @@
 
 A full-stack, scooter-hailing platform built end-to-end — native iOS app + FastAPI backend — covering the complete rider and driver experience.
 
+📱 iOS app (this repo) · ⚙️ Backend repo
 ## Demo
 
 <table align="center">
