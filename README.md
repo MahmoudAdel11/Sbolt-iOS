@@ -12,7 +12,7 @@ A full-stack, scooter-hailing platform built end-to-end — native iOS app + Fas
     <th>Driver Experience</th>
   </tr>
   <tr>
-    <td><img src="screenshots/User-Driver.gif" width="280" alt="Rider Demo"></td>
+    <td><img src="screenshots/user-demo.gif" width="280" alt="Rider Demo"></td>
     <td><img src="screenshots/Driver-Demo.gif" width="280" alt="Driver Demo"></td>
   </tr>
 </table>
